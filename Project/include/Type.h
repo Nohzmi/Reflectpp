@@ -414,15 +414,54 @@ private:
 		size_t id{ Reflectpp::GetTypeID<T>() };
 		Reflectpp::Assert(GetTypeDatabase().find(id) == GetTypeDatabase().cend(), "Registered type", name);
 
-		Type* type{ new Type() };
+		Type* type{ CreateType<T>(name) };
+		GetTypeDatabase().emplace(id, type);
+
+		return *type;
+	}
+
+	/**
+	* Create a type for reflection
+	*/
+	template<typename T>
+	static Type* CreateType(const std::string& name) noexcept
+	{
+		auto type{ new Type() };
 		type->m_Constructor = Reflectpp::ConstructObject<T>;
 		type->m_CopyConstructor = Reflectpp::CopyObject<T>;
 		type->m_ID = Reflectpp::Hash(name);
 		type->m_Name = name;
 		type->m_Size = sizeof(T);
-		GetTypeDatabase().emplace(id, type);
 
-		return *type;
+		return type;
+	}
+
+	/**
+	* Initialize the type database
+	*/
+	static TypeDatabase CreateTypeDatabase() noexcept
+	{
+		TypeDatabase typeDatabase;
+		typeDatabase.emplace(Reflectpp::GetTypeID<bool>(), CreateType<bool>("bool"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<char>(), CreateType<char>("char"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<char16_t>(), CreateType<char16_t>("char16_t"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<char32_t>(), CreateType<char32_t>("char32_t"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<double>(), CreateType<double>("double"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<float>(), CreateType<float>("float"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<int>(), CreateType<int>("int"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<long>(), CreateType<long>("long"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<long double>(), CreateType<long double>("long double"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<long long>(), CreateType<long long>("long long"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<short>(), CreateType<short>("short"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<signed char>(), CreateType<signed char>("signed char"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned char>(), CreateType<unsigned char>("unsigned char"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned int>(), CreateType<unsigned int>("unsigned int"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned long>(), CreateType<unsigned long>("unsigned long"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned long long>(), CreateType<unsigned long long>("unsigned long long"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned short>(), CreateType<unsigned short>("unsigned short"));
+		typeDatabase.emplace(Reflectpp::GetTypeID<wchar_t>(), CreateType<wchar_t>("wchar_t"));
+
+		return typeDatabase;
 	}
 
 	/**
@@ -443,8 +482,8 @@ private:
 	*/
 	static TypeDatabase& GetTypeDatabase() noexcept
 	{
-		static TypeDatabase m_Types;
-		return m_Types;
+		static TypeDatabase m_TypeDatabase{ CreateTypeDatabase() };
+		return m_TypeDatabase;
 	}
 
 	/**
@@ -452,8 +491,8 @@ private:
 	*/
 	static FieldDatabase& GetFieldDatabase() noexcept
 	{
-		static FieldDatabase m_Fields;
-		return m_Fields;
+		static FieldDatabase m_FieldDatabase;
+		return m_FieldDatabase;
 	}
 
 private:

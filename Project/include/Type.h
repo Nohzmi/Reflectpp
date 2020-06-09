@@ -38,11 +38,25 @@ CAT(Register, __LINE__)::CAT(Register, __LINE__)()
 namespace Reflectpp
 {
 	/**
+	* Allow to assert with a message in the console
+	* @param expr
+	* @param msg
+	*/
+	void Assert(bool expr, const std::string& msg, const std::string& details) noexcept
+	{
+		if (!expr)
+		{
+			printf("Eventpp: %s {%s}\n", msg.c_str(), details.c_str());
+			assert(false);
+		}
+	}
+
+	/**
 	* Returns pointer on created object \n
 	* Allow to save a pointer on constructor function
 	*/
 	template<typename T>
-	inline void* ConstructObject() noexcept
+	void* ConstructObject() noexcept
 	{
 		return new T();
 	}
@@ -52,9 +66,25 @@ namespace Reflectpp
 	* Allow to save a pointer on copy constructor function
 	*/
 	template<typename T>
-	inline void* CopyObject(void* copy) noexcept
+	void* CopyObject(void* copy) noexcept
 	{
 		return new T(*static_cast<T*>(copy));
+	}
+
+	/**
+	* Returns vector of derefenced pointer from vector of pointers
+	* @param pointers
+	*/
+	template<typename T>
+	std::vector<T> Dereference(const std::vector<T*>& pointers)
+	{
+		std::vector<T> reference;
+		reference.reserve(pointers.size());
+
+		for (auto it : pointers)
+			reference.emplace_back(*it);
+
+		return reference;
 	}
 
 	/**
@@ -62,7 +92,7 @@ namespace Reflectpp
 	* Only use to retrieve type representation
 	*/
 	template<typename T>
-	inline size_t GetTypeID() noexcept
+	size_t GetTypeID() noexcept
 	{
 		static size_t typeID{ typeid(T).hash_code() };
 		return typeID;
@@ -195,7 +225,8 @@ class Type final
 
 	using CopyConstructorT = void* (*)(void*);
 	using ConstructorT = void* (*)();
-	using Database = std::unordered_map<size_t, std::unique_ptr<Type>>;
+	using FieldDatabase = std::vector<std::unique_ptr<Field>>;
+	using TypeDatabase = std::unordered_map<size_t, std::unique_ptr<Type>>;
 
 public:
 
@@ -253,10 +284,14 @@ public:
 	template<typename T>
 	Type& base() noexcept
 	{
-		assert(m_BaseType == nullptr && "Base type already registered");
+		Type* base{ GetType<T>() };
 
-		m_BaseType = GetType<T>();
-		m_BaseType->m_DerivedTypes.emplace_back(this);
+		for (Type* it : m_BaseTypes)
+			Reflectpp::Assert(it->GetID() != base->GetID(), "Registered base type", base->GetName());
+
+		base->m_DerivedTypes.emplace_back(this);
+		m_BaseTypes.emplace_back(base);
+		m_Fields.insert(m_Fields.cbegin(), base->m_Fields.cbegin(), base->m_Fields.cbegin());
 
 		return *this;
 	}
@@ -271,11 +306,11 @@ public:
 	}
 
 	/**
-	* Returns base type of this type
+	* Returns base types of this type
 	*/
-	const Type& GetBaseType() const noexcept
+	const std::vector<Type> GetBaseTypes() const noexcept
 	{
-		return *m_BaseType;
+		return Reflectpp::Dereference<Type>(m_BaseTypes);
 	}
 
 	/**
@@ -295,18 +330,25 @@ public:
 	}
 
 	/**
+	* Returns derived types of this type
+	*/
+	const std::vector<Type> GetDerivedTypes() const noexcept
+	{
+		return Reflectpp::Dereference<Type>(m_DerivedTypes);
+	}
+
+	/**
 	* Returns field by name of this type
 	*/
 	const Field& GetField(const std::string& name) const noexcept
 	{
-		auto it{ m_Fields.find(Reflectpp::Hash(name)) };
+		size_t id{ Reflectpp::Hash(name) };
 
-		if (it == m_Fields.cend() && m_BaseType != nullptr)
-			return m_BaseType->GetField(name);
+		for (Field* it : m_Fields)
+			if (it->GetID() == id)
+				return *it;
 
-		assert(it != m_Fields.cend() && "Unregistered field");
-
-		return it->second;
+		Reflectpp::Assert(false, "Unregistered field", name);
 	}
 
 	/**
@@ -314,15 +356,7 @@ public:
 	*/
 	std::vector<Field> GetFields() const noexcept
 	{
-		std::vector<Field> fields;
-
-		if (m_BaseType != nullptr)
-			fields = m_BaseType->GetFields();
-
-		for (auto it : m_Fields)
-			fields.emplace_back(it.second);
-
-		return fields;
+		return Reflectpp::Dereference<Field>(m_Fields);
 	}
 
 	/**
@@ -358,10 +392,13 @@ public:
 	Type& field(const std::string& name, FieldT T::* addr) noexcept
 	{
 		size_t id{ Reflectpp::Hash(name) };
-		assert(m_Fields.find(id) == m_Fields.cend() && "Field already registered");
 
-		Field field{ Field(id, name, Reflectpp::Offset(addr), GetType<FieldT>()) };
-		GetType<T>()->m_Fields.emplace(id, field);
+		for (Field* it : m_Fields)
+			Reflectpp::Assert(it->GetID() != id, "Registered field", name);
+
+		Field* field{ new Field(id, name, Reflectpp::Offset(addr), GetType<FieldT>()) };
+		GetFieldDatabase().emplace_back(field);
+		GetType<T>()->m_Fields.emplace_back(field);
 
 		return *this;
 	}
@@ -375,16 +412,15 @@ private:
 	static Type& AddType(const std::string& name) noexcept
 	{
 		size_t id{ Reflectpp::GetTypeID<T>() };
-		assert(GetTypes().find(id) == GetTypes().cend() && "Type already registered");
+		Reflectpp::Assert(GetTypeDatabase().find(id) == GetTypeDatabase().cend(), "Registered type", name);
 
 		Type* type{ new Type() };
-		GetTypes().emplace(id, type);
-
 		type->m_Constructor = Reflectpp::ConstructObject<T>;
 		type->m_CopyConstructor = Reflectpp::CopyObject<T>;
 		type->m_ID = Reflectpp::Hash(name);
 		type->m_Name = name;
 		type->m_Size = sizeof(T);
+		GetTypeDatabase().emplace(id, type);
 
 		return *type;
 	}
@@ -396,8 +432,8 @@ private:
 	template<typename T>
 	static Type* GetType() noexcept
 	{
-		auto it{ GetTypes().find(Reflectpp::GetTypeID<T>()) };
-		assert(it != GetTypes().cend() && "Unregistered type");
+		auto it{ GetTypeDatabase().find(Reflectpp::GetTypeID<T>()) };
+		Reflectpp::Assert(it != GetTypeDatabase().cend(), "Unregistered type", typeid(T).name());
 
 		return it->second.get();
 	}
@@ -405,19 +441,28 @@ private:
 	/**
 	* Returns database of types representation
 	*/
-	static Database& GetTypes() noexcept
+	static TypeDatabase& GetTypeDatabase() noexcept
 	{
-		static Database m_Types;
+		static TypeDatabase m_Types;
 		return m_Types;
+	}
+
+	/**
+	* Returns database of types representation
+	*/
+	static FieldDatabase& GetFieldDatabase() noexcept
+	{
+		static FieldDatabase m_Fields;
+		return m_Fields;
 	}
 
 private:
 
-	Type* m_BaseType{ nullptr };
+	std::vector<Type*> m_BaseTypes;
 	ConstructorT m_Constructor{ nullptr };
 	CopyConstructorT m_CopyConstructor{ nullptr };
 	std::vector<Type*> m_DerivedTypes;
-	std::unordered_map<size_t, Field> m_Fields;
+	std::vector<Field*> m_Fields;
 	size_t m_ID{ 0u };
 	std::string m_Name{ "" };
 	size_t m_Size{ 0u };

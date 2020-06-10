@@ -17,5 +17,8 @@
     <ClInclude Include="include\Type.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Register.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

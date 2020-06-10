@@ -11,9 +11,12 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <typeinfo>
 #include <unordered_map>
 #include <vector>
+
+#include "Register.h"
 
 /**
 * @addtogroup Reflectpp
@@ -44,7 +47,7 @@ namespace Reflectpp
 	* @param args
 	*/
 	template <class ...Args>
-	void Assert(bool expr, const const char* format, Args... args) noexcept
+	void Assert(bool expr, const char* format, Args... args) noexcept
 	{
 		if (!expr)
 		{
@@ -257,6 +260,7 @@ public:
 	Type(ConstructorT constructor, CopyConstructorT copyConstructor, size_t id, const char* name, size_t size) :
 		m_Constructor{ constructor },
 		m_CopyConstructor{ copyConstructor },
+		m_HierarchyID{ id },
 		m_ID{ id },
 		m_Name{ name },
 		m_Size{ size }
@@ -292,11 +296,35 @@ public:
 		for (auto it : m_BaseTypes)
 			Reflectpp::Assert(it->m_ID != base->m_ID, "%s is already registered in %s\n", base->m_Name, m_Name);
 
+		if (m_BaseTypes.empty()) m_HierarchyID = base->m_HierarchyID;
+		else UpdateHierarchyID(base, m_HierarchyID);
+
 		base->m_DerivedTypes.emplace_back(this);
 		m_BaseTypes.emplace_back(base);
 		m_Fields.insert(m_Fields.cbegin(), base->m_Fields.cbegin(), base->m_Fields.cbegin());
 
 		return *this;
+	}
+
+	/**
+	* Allows to cast between class hierarchies up, down and side
+	* @param object
+	*/
+	template<typename T, typename U>
+	static typename std::enable_if<std::is_pointer_v<T>, T>::type Cast(U* object) noexcept
+	{
+		return (GetType<U>()->m_HierarchyID == GetType<std::remove_pointer_t<T>>()->m_HierarchyID) ? reinterpret_cast<T>(object) : nullptr;
+	}
+
+	/**
+	* Allows to cast between class hierarchies up, down and side
+	* @param object
+	*/
+	template<typename T, typename U>
+	static typename std::enable_if<!std::is_pointer_v<T>, T>::type* Cast(U*) noexcept
+	{
+		Reflectpp::Assert(false, "Invalid cast: not a pointer\n");
+		return nullptr;
 	}
 
 	/**
@@ -306,6 +334,16 @@ public:
 	static const Type* Get() noexcept
 	{
 		return GetType<T>();
+	}
+
+	/**
+	* Returns requested type representation
+	* @param object
+	*/
+	template<typename T>
+	static const Type* Get(const T* object) noexcept
+	{
+		return GetType(object);
 	}
 
 	/**
@@ -342,16 +380,19 @@ public:
 
 	/**
 	* Returns field by name of this type
+	* @param name
 	*/
-	const Field& GetField(const char* name) const noexcept
+	const Field* GetField(const char* name) const noexcept
 	{
 		size_t id{ Reflectpp::Hash(name) };
 
 		for (auto it : m_Fields)
 			if (it->GetID() == id)
-				return *it;
+				return it;
 
 		Reflectpp::Assert(false, "%s isn't registered in %s\n", name, m_Name);
+
+		return nullptr;
 	}
 
 	/**
@@ -410,6 +451,7 @@ private:
 
 	/**
 	* Register a type in reflection
+	* @param name
 	*/
 	template<typename T>
 	static Type& AddType(const char* name) noexcept
@@ -425,6 +467,7 @@ private:
 
 	/**
 	* Create a type for reflection
+	* @param name
 	*/
 	template<typename T>
 	static Type* CreateType(const char* name) noexcept
@@ -462,7 +505,6 @@ private:
 
 	/**
 	* Returns requested type representation
-	* Also register the type if needed
 	*/
 	template<typename T>
 	static Type* GetType() noexcept
@@ -471,6 +513,30 @@ private:
 		Reflectpp::Assert(it != GetTypeDatabase().cend(), "%s isn't registered\n", typeid(T).name());
 
 		return it->second.get();
+	}
+
+	/**
+	* Returns requested type representation
+	* @param object
+	*/
+	template<typename T>
+	static typename std::enable_if <!std::is_class_v<T> || Reflectpp::HasGetTypeID<T>::value, Type>::type* GetType(const T* object) noexcept
+	{
+		auto it{ GetTypeDatabase().find(std::is_class_v<T> ? object->GetTypeID() : Reflectpp::GetTypeID<T>()) };
+		Reflectpp::Assert(it != GetTypeDatabase().cend(), "%s isn't registered\n", typeid(T).name());
+
+		return it->second.get();
+	}
+
+	/**
+	* Returns requested type representation
+	* @param object
+	*/
+	template<typename T>
+	static typename std::enable_if<std::is_class_v<T> && !Reflectpp::HasGetTypeID<T>::value, Type>::type* GetType(const T* object) noexcept
+	{
+		Reflectpp::Assert(false, "%s don't use REFLECT macro\n", typeid(*object).name());
+		return nullptr;
 	}
 
 	/**
@@ -491,6 +557,25 @@ private:
 		return m_FieldDatabase;
 	}
 
+	/**
+	* Update hierarchy id recursively
+	* @param type
+	* @param hierarchyID
+	*/
+	static void UpdateHierarchyID(const Type* type, size_t hierarchyID) noexcept
+	{
+		if (type->m_HierarchyID == hierarchyID)
+			return;
+
+		const_cast<Type*>(type)->m_HierarchyID = hierarchyID;
+
+		for (auto it : type->m_BaseTypes)
+			UpdateHierarchyID(it, hierarchyID);
+
+		for (auto it : type->m_DerivedTypes)
+			UpdateHierarchyID(it, hierarchyID);
+	}
+
 private:
 
 	std::vector<const Type*> m_BaseTypes;
@@ -498,6 +583,7 @@ private:
 	const CopyConstructorT m_CopyConstructor;
 	std::vector<const Type*> m_DerivedTypes;
 	std::vector<const Field*> m_Fields;
+	size_t m_HierarchyID;
 	const size_t m_ID;
 	const char* m_Name;
 	const size_t m_Size;
@@ -510,6 +596,7 @@ struct Register
 {
 	/**
 	* Register a type in reflection
+	* @param name
 	*/
 	template<typename T>
 	static Type& Class(const char* name) noexcept

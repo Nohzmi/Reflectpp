@@ -20,16 +20,16 @@
 * @{
 */
 
-#define _CAT(A, B) A ## B
-#define CAT(A, B) _CAT(A, B)
+#define _REFLECTPP_CAT(A, B) A ## B
+#define REFLECTPP_CAT(A, B) _REFLECTPP_CAT(A, B)
 
-#define REGISTRATION										\
-struct CAT(Register, __LINE__) final : public Register		\
-{															\
-	CAT(Register, __LINE__)();								\
-};															\
-CAT(Register, __LINE__) CAT(Obj, __LINE__);					\
-CAT(Register, __LINE__)::CAT(Register, __LINE__)()
+#define REGISTRATION														\
+struct REFLECTPP_CAT(Register, __LINE__) final : public Register			\
+{																			\
+	REFLECTPP_CAT(Register, __LINE__)();									\
+};																			\
+REFLECTPP_CAT(Register, __LINE__) REFLECTPP_CAT(Obj, __LINE__);				\
+REFLECTPP_CAT(Register, __LINE__)::REFLECTPP_CAT(Register, __LINE__)()
 
 /**
 * Contains all utility functions \n
@@ -40,13 +40,15 @@ namespace Reflectpp
 	/**
 	* Allow to assert with a message in the console
 	* @param expr
-	* @param msg
+	* @param format
+	* @param args
 	*/
-	void Assert(bool expr, const std::string& msg, const std::string& details) noexcept
+	template <class ...Args>
+	void Assert(bool expr, const const char* format, Args... args) noexcept
 	{
 		if (!expr)
 		{
-			printf("Eventpp: %s {%s}\n", msg.c_str(), details.c_str());
+			printf(format, args...);
 			assert(false);
 		}
 	}
@@ -72,22 +74,6 @@ namespace Reflectpp
 	}
 
 	/**
-	* Returns vector of derefenced pointer from vector of pointers
-	* @param pointers
-	*/
-	template<typename T>
-	std::vector<T> Dereference(const std::vector<T*>& pointers)
-	{
-		std::vector<T> reference;
-		reference.reserve(pointers.size());
-
-		for (auto it : pointers)
-			reference.emplace_back(*it);
-
-		return reference;
-	}
-
-	/**
 	* Returns id of the type \n
 	* Only use to retrieve type representation
 	*/
@@ -102,10 +88,10 @@ namespace Reflectpp
 	* Returns hashing of an std::string
 	* @param str
 	*/
-	size_t Hash(const std::string& str) noexcept
+	size_t Hash(const char* str) noexcept
 	{
 		std::hash<std::string> hasher;
-		return hasher(str);
+		return hasher(std::string(str));
 	}
 
 	/**
@@ -141,7 +127,7 @@ public:
 	/**
 	* Copy constructor
 	*/
-	Field(const Field&) = default;
+	Field(const Field&) = delete;
 
 	/**
 	* Move constructor
@@ -151,7 +137,7 @@ public:
 	/**
 	* Copy assignement operator
 	*/
-	Field& operator=(const Field&) = default;
+	Field& operator=(const Field&) = delete;
 
 	/**
 	* Move assignement operator
@@ -165,7 +151,7 @@ public:
 	* @param offset
 	* @param type
 	*/
-	Field(size_t id, const std::string& name, size_t offset, Type* type) noexcept :
+	Field(size_t id, const char* name, size_t offset, Type* type) noexcept :
 		m_ID{ id },
 		m_Name{ name },
 		m_Offset{ offset },
@@ -184,7 +170,7 @@ public:
 	/**
 	* Returns name of this field
 	*/
-	std::string GetName() const noexcept
+	const char* GetName() const noexcept
 	{
 		return m_Name;
 	}
@@ -200,17 +186,17 @@ public:
 	/**
 	* Returns type of this field
 	*/
-	const Type& GetType() const noexcept
+	const Type* GetType() const noexcept
 	{
-		return *m_Type;
+		return m_Type;
 	}
 
 private:
 
-	size_t m_ID{ 0u };
-	std::string m_Name{ "" };
-	size_t m_Offset{ 0u };
-	Type* m_Type{ nullptr };
+	const size_t m_ID;
+	const char* m_Name;
+	const size_t m_Offset;
+	const Type* m_Type;
 };
 
 struct Register;
@@ -233,7 +219,7 @@ public:
 	/**
 	* Constructor
 	*/
-	Type() = default;
+	Type() = delete;
 
 	/**
 	* Destructor
@@ -243,7 +229,7 @@ public:
 	/**
 	* Copy constructor
 	*/
-	Type(const Type&) = default;
+	Type(const Type&) = delete;
 
 	/**
 	* Move constructor
@@ -253,12 +239,29 @@ public:
 	/**
 	* Copy assignement operator
 	*/
-	Type& operator=(const Type&) = default;
+	Type& operator=(const Type&) = delete;
 
 	/**
 	* Move assignement operator
 	*/
 	Type& operator=(Type&&) noexcept = default;
+
+	/**
+	* Construct a type representation
+	* @param constructor
+	* @param copyConstructor
+	* @param id
+	* @param name
+	* @param size
+	*/
+	Type(ConstructorT constructor, CopyConstructorT copyConstructor, size_t id, const char* name, size_t size) :
+		m_Constructor{ constructor },
+		m_CopyConstructor{ copyConstructor },
+		m_ID{ id },
+		m_Name{ name },
+		m_Size{ size }
+	{
+	}
 
 	/**
 	* Returns whether or not two types are the same
@@ -286,8 +289,8 @@ public:
 	{
 		Type* base{ GetType<T>() };
 
-		for (Type* it : m_BaseTypes)
-			Reflectpp::Assert(it->GetID() != base->GetID(), "Registered base type", base->GetName());
+		for (auto it : m_BaseTypes)
+			Reflectpp::Assert(it->m_ID != base->m_ID, "%s is already registered in %s\n", base->m_Name, m_Name);
 
 		base->m_DerivedTypes.emplace_back(this);
 		m_BaseTypes.emplace_back(base);
@@ -300,17 +303,17 @@ public:
 	* Returns requested type representation
 	*/
 	template<typename T>
-	static const Type& Get() noexcept
+	static const Type* Get() noexcept
 	{
-		return *GetType<T>();
+		return GetType<T>();
 	}
 
 	/**
 	* Returns base types of this type
 	*/
-	const std::vector<Type> GetBaseTypes() const noexcept
+	const std::vector<const Type*> GetBaseTypes() const noexcept
 	{
-		return Reflectpp::Dereference<Type>(m_BaseTypes);
+		return m_BaseTypes;
 	}
 
 	/**
@@ -332,31 +335,31 @@ public:
 	/**
 	* Returns derived types of this type
 	*/
-	const std::vector<Type> GetDerivedTypes() const noexcept
+	const std::vector<const Type*> GetDerivedTypes() const noexcept
 	{
-		return Reflectpp::Dereference<Type>(m_DerivedTypes);
+		return m_DerivedTypes;
 	}
 
 	/**
 	* Returns field by name of this type
 	*/
-	const Field& GetField(const std::string& name) const noexcept
+	const Field& GetField(const char* name) const noexcept
 	{
 		size_t id{ Reflectpp::Hash(name) };
 
-		for (Field* it : m_Fields)
+		for (auto it : m_Fields)
 			if (it->GetID() == id)
 				return *it;
 
-		Reflectpp::Assert(false, "Unregistered field", name);
+		Reflectpp::Assert(false, "%s isn't registered in %s\n", name, m_Name);
 	}
 
 	/**
 	* Returns all field of this type
 	*/
-	std::vector<Field> GetFields() const noexcept
+	std::vector<const Field*> GetFields() const noexcept
 	{
-		return Reflectpp::Dereference<Field>(m_Fields);
+		return m_Fields;
 	}
 
 	/**
@@ -370,7 +373,7 @@ public:
 	/**
 	* Returns name of this type
 	*/
-	std::string GetName() const noexcept
+	const char* GetName() const noexcept
 	{
 		return m_Name;
 	}
@@ -389,12 +392,12 @@ public:
 	* @param addr
 	*/
 	template<typename T, typename FieldT>
-	Type& field(const std::string& name, FieldT T::* addr) noexcept
+	Type& field(const char* name, FieldT T::* addr) noexcept
 	{
 		size_t id{ Reflectpp::Hash(name) };
 
-		for (Field* it : m_Fields)
-			Reflectpp::Assert(it->GetID() != id, "Registered field", name);
+		for (auto it : m_Fields)
+			Reflectpp::Assert(it->GetID() != id, "%s is already registered in %s\n", name, m_Name);
 
 		Field* field{ new Field(id, name, Reflectpp::Offset(addr), GetType<FieldT>()) };
 		GetFieldDatabase().emplace_back(field);
@@ -409,10 +412,10 @@ private:
 	* Register a type in reflection
 	*/
 	template<typename T>
-	static Type& AddType(const std::string& name) noexcept
+	static Type& AddType(const char* name) noexcept
 	{
 		size_t id{ Reflectpp::GetTypeID<T>() };
-		Reflectpp::Assert(GetTypeDatabase().find(id) == GetTypeDatabase().cend(), "Registered type", name);
+		Reflectpp::Assert(GetTypeDatabase().find(id) == GetTypeDatabase().cend(), "%s is already registered\n", name);
 
 		Type* type{ CreateType<T>(name) };
 		GetTypeDatabase().emplace(id, type);
@@ -424,16 +427,9 @@ private:
 	* Create a type for reflection
 	*/
 	template<typename T>
-	static Type* CreateType(const std::string& name) noexcept
+	static Type* CreateType(const char* name) noexcept
 	{
-		auto type{ new Type() };
-		type->m_Constructor = Reflectpp::ConstructObject<T>;
-		type->m_CopyConstructor = Reflectpp::CopyObject<T>;
-		type->m_ID = Reflectpp::Hash(name);
-		type->m_Name = name;
-		type->m_Size = sizeof(T);
-
-		return type;
+		return new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(name), name, sizeof(T));
 	}
 
 	/**
@@ -472,7 +468,7 @@ private:
 	static Type* GetType() noexcept
 	{
 		auto it{ GetTypeDatabase().find(Reflectpp::GetTypeID<T>()) };
-		Reflectpp::Assert(it != GetTypeDatabase().cend(), "Unregistered type", typeid(T).name());
+		Reflectpp::Assert(it != GetTypeDatabase().cend(), "%s isn't registered\n", typeid(T).name());
 
 		return it->second.get();
 	}
@@ -497,14 +493,14 @@ private:
 
 private:
 
-	std::vector<Type*> m_BaseTypes;
-	ConstructorT m_Constructor{ nullptr };
-	CopyConstructorT m_CopyConstructor{ nullptr };
-	std::vector<Type*> m_DerivedTypes;
-	std::vector<Field*> m_Fields;
-	size_t m_ID{ 0u };
-	std::string m_Name{ "" };
-	size_t m_Size{ 0u };
+	std::vector<const Type*> m_BaseTypes;
+	const ConstructorT m_Constructor;
+	const CopyConstructorT m_CopyConstructor;
+	std::vector<const Type*> m_DerivedTypes;
+	std::vector<const Field*> m_Fields;
+	const size_t m_ID;
+	const char* m_Name;
+	const size_t m_Size;
 };
 
 /**
@@ -516,7 +512,7 @@ struct Register
 	* Register a type in reflection
 	*/
 	template<typename T>
-	static Type& Class(const std::string& name) noexcept
+	static Type& Class(const char* name) noexcept
 	{
 		return Type::AddType<T>(name);
 	}

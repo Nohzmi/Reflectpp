@@ -40,6 +40,16 @@ REFLECTPP_CAT(Register, __LINE__)::REFLECTPP_CAT(Register, __LINE__)()
 */
 namespace Reflectpp
 {
+	template<typename T>  // TODO - à garder ?
+	struct is_valid : std::bool_constant<
+		!std::is_array_v<T> &&
+		!std::is_const_v<T> &&
+		!std::is_pointer_v<T> &&
+		!std::is_reference_v<T> &&
+		!std::is_void_v<T> &&
+		!std::is_volatile_v<T>>
+	{};
+
 	/**
 	* Allow to assert with a message in the console
 	* @param expr
@@ -74,17 +84,6 @@ namespace Reflectpp
 	void* CopyObject(void* copy) noexcept
 	{
 		return new T(*static_cast<T*>(copy));
-	}
-
-	/**
-	* Returns id of the type \n
-	* Only use to retrieve type representation
-	*/
-	template<typename T>
-	size_t GetTypeID() noexcept
-	{
-		static size_t typeID{ typeid(T).hash_code() };
-		return typeID;
 	}
 
 	/**
@@ -154,7 +153,7 @@ public:
 	* @param offset
 	* @param type
 	*/
-	Field(size_t id, const char* name, size_t offset, Type* type) noexcept :
+	Field(size_t id, const char* name, size_t offset, const Type* type) noexcept :
 		m_ID{ id },
 		m_Name{ name },
 		m_Offset{ offset },
@@ -291,40 +290,56 @@ public:
 	template<typename T>
 	Type& base() noexcept
 	{
-		Type* base{ GetType<T>() };
+		if constexpr (std::is_fundamental_v<T> || !Reflectpp::is_valid<T>::value)
+		{
+			Reflectpp::Assert(false, "Type::base<%s>() : invalid type\n", typeid(T).name());
+			return *const_cast<Type*>(Get<int>());
+		}
+		else
+		{
+			Type* base{ const_cast<Type*>(Get<T>()) };
 
-		for (auto it : m_BaseTypes)
-			Reflectpp::Assert(it->m_ID != base->m_ID, "%s is already registered in %s\n", base->m_Name, m_Name);
+			for (auto it : m_BaseTypes)
+				Reflectpp::Assert(it->m_ID != base->m_ID, "%s is already registered in %s\n", base->m_Name, m_Name);
 
-		if (m_BaseTypes.empty()) m_HierarchyID = base->m_HierarchyID;
-		else UpdateHierarchyID(base, m_HierarchyID);
+			if (m_BaseTypes.empty()) m_HierarchyID = base->m_HierarchyID;
+			else UpdateHierarchyID(base, m_HierarchyID);
 
-		base->m_DerivedTypes.emplace_back(this);
-		m_BaseTypes.emplace_back(base);
-		m_Fields.insert(m_Fields.cbegin(), base->m_Fields.cbegin(), base->m_Fields.cbegin());
+			base->m_DerivedTypes.emplace_back(this);
+			m_BaseTypes.emplace_back(base);
+			m_Fields.insert(m_Fields.cbegin(), base->m_Fields.cbegin(), base->m_Fields.cbegin());
 
-		return *this;
+			return *this;
+		}
 	}
 
 	/**
 	* Allows to cast between class hierarchies up, down and side
 	* @param object
 	*/
-	template<typename T, typename U>
-	static typename std::enable_if<std::is_pointer_v<T>, T>::type Cast(U* object) noexcept
+	template<typename T, typename U, typename V = typename std::remove_pointer_t<T>>
+	static std::remove_pointer_t<T>* Cast(U*& object) noexcept
 	{
-		return (GetType<U>()->m_HierarchyID == GetType<std::remove_pointer_t<T>>()->m_HierarchyID) ? reinterpret_cast<T>(object) : nullptr;
-	}
-
-	/**
-	* Allows to cast between class hierarchies up, down and side
-	* @param object
-	*/
-	template<typename T, typename U>
-	static typename std::enable_if<!std::is_pointer_v<T>, T>::type* Cast(U*) noexcept
-	{
-		Reflectpp::Assert(false, "Invalid cast: not a pointer\n");
-		return nullptr;
+		if constexpr (!std::is_pointer_v<T>)
+		{
+			Reflectpp::Assert(false, "Type::Cast<%s>() : not a pointer\n", typeid(T).name());
+			return nullptr;
+		}
+		else if constexpr (std::is_const_v<V> || std::is_void_v<V> || std::is_volatile_v<V>)
+		{
+			Reflectpp::Assert(false, "Type::Cast<%s>() : invalid type\n", typeid(T).name());
+			return nullptr;
+		}
+		else if constexpr (std::is_const_v<U> || std::is_void_v<U> || std::is_volatile_v<U>)
+		{
+			Reflectpp::Assert(false, "Type::Cast<%s, %s>() : invalid object type\n", typeid(T).name(), typeid(U).name());
+			return nullptr;
+		}
+		else
+		{
+			bool sameHierarchy{ Get(object)->m_HierarchyID == Get<V>()->m_HierarchyID };
+			return sameHierarchy ? reinterpret_cast<T>(object) : nullptr;
+		}
 	}
 
 	/**
@@ -333,7 +348,27 @@ public:
 	template<typename T>
 	static const Type* Get() noexcept
 	{
-		return GetType<T>();
+		if constexpr (!Reflectpp::is_valid<T>::value)
+		{
+			Reflectpp::Assert(false, "Type::Get<%s>() : invalid type\n", typeid(T).name());
+			return nullptr;
+		}
+		if constexpr (std::is_fundamental_v<T>)
+		{
+			const auto it{ GetTypeDatabase().find(typeid(T).hash_code()) };
+			if (it != GetTypeDatabase().cend())
+				return it->second.get();
+
+			Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(typeid(T).name()), typeid(T).name(), sizeof(T)) };
+			GetTypeDatabase().emplace(typeid(T).hash_code(), type);
+			return type;
+		}
+		else
+		{
+			const auto it{ GetTypeDatabase().find(typeid(T).hash_code()) };
+			Reflectpp::Assert(it != GetTypeDatabase().cend(), "Type::Get<%s>() : unregistered type\n", typeid(T).name());
+			return it->second.get();
+		}
 	}
 
 	/**
@@ -341,9 +376,28 @@ public:
 	* @param object
 	*/
 	template<typename T>
-	static const Type* Get(const T* object) noexcept
+	static const Type* Get(T*& object) noexcept
 	{
-		return GetType(object);
+		if constexpr (std::is_void_v<T> || std::is_volatile_v<T>)
+		{
+			Reflectpp::Assert(false, "Type::Get<%s>(T*& object) : invalid type\n", typeid(T).name());
+			return nullptr;
+		}
+		else if constexpr (std::is_fundamental_v<T>)
+		{
+			Reflectpp::Assert(object != nullptr, "Type::Get<%s>(T*& object) : object nullptr\n", typeid(*object).name());
+			return Get<T>();
+		}
+		else if constexpr (!Reflectpp::HasGetTypeID<T>::value)
+		{
+			Reflectpp::Assert(false, "Type::Get<%s>(T*& object) : unregistered type\n", typeid(*object).name());
+			return nullptr;
+		}
+		else
+		{
+			Reflectpp::Assert(object != nullptr, "Type::Get<%s>(T*& object) : object nullptr\n", typeid(T).name());
+			return GetTypeDatabase().find(object->GetTypeID())->second.get();
+		}
 	}
 
 	/**
@@ -440,9 +494,9 @@ public:
 		for (auto it : m_Fields)
 			Reflectpp::Assert(it->GetID() != id, "%s is already registered in %s\n", name, m_Name);
 
-		Field* field{ new Field(id, name, Reflectpp::Offset(addr), GetType<FieldT>()) };
+		Field* field{ new Field(id, name, Reflectpp::Offset(addr), Get<FieldT>()) };
 		GetFieldDatabase().emplace_back(field);
-		GetType<T>()->m_Fields.emplace_back(field);
+		const_cast<Type*>(Get<T>())->m_Fields.emplace_back(field);
 
 		return *this;
 	}
@@ -450,101 +504,11 @@ public:
 private:
 
 	/**
-	* Register a type in reflection
-	* @param name
-	*/
-	template<typename T>
-	static Type& AddType(const char* name) noexcept
-	{
-		size_t id{ Reflectpp::GetTypeID<T>() };
-		Reflectpp::Assert(GetTypeDatabase().find(id) == GetTypeDatabase().cend(), "%s is already registered\n", name);
-
-		Type* type{ CreateType<T>(name) };
-		GetTypeDatabase().emplace(id, type);
-
-		return *type;
-	}
-
-	/**
-	* Create a type for reflection
-	* @param name
-	*/
-	template<typename T>
-	static Type* CreateType(const char* name) noexcept
-	{
-		return new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(name), name, sizeof(T));
-	}
-
-	/**
-	* Initialize the type database
-	*/
-	static TypeDatabase CreateTypeDatabase() noexcept
-	{
-		TypeDatabase typeDatabase;
-		typeDatabase.emplace(Reflectpp::GetTypeID<bool>(), CreateType<bool>("bool"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<char>(), CreateType<char>("char"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<char16_t>(), CreateType<char16_t>("char16_t"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<char32_t>(), CreateType<char32_t>("char32_t"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<double>(), CreateType<double>("double"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<float>(), CreateType<float>("float"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<int>(), CreateType<int>("int"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<long>(), CreateType<long>("long"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<long double>(), CreateType<long double>("long double"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<long long>(), CreateType<long long>("long long"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<short>(), CreateType<short>("short"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<signed char>(), CreateType<signed char>("signed char"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned char>(), CreateType<unsigned char>("unsigned char"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned int>(), CreateType<unsigned int>("unsigned int"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned long>(), CreateType<unsigned long>("unsigned long"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned long long>(), CreateType<unsigned long long>("unsigned long long"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<unsigned short>(), CreateType<unsigned short>("unsigned short"));
-		typeDatabase.emplace(Reflectpp::GetTypeID<wchar_t>(), CreateType<wchar_t>("wchar_t"));
-
-		return typeDatabase;
-	}
-
-	/**
-	* Returns requested type representation
-	*/
-	template<typename T>
-	static Type* GetType() noexcept
-	{
-		auto it{ GetTypeDatabase().find(Reflectpp::GetTypeID<T>()) };
-		Reflectpp::Assert(it != GetTypeDatabase().cend(), "%s isn't registered\n", typeid(T).name());
-
-		return it->second.get();
-	}
-
-	/**
-	* Returns requested type representation
-	* @param object
-	*/
-	template<typename T>
-	static typename std::enable_if <!std::is_class_v<T> || Reflectpp::HasGetTypeID<T>::value, Type>::type* GetType(const T* object) noexcept
-	{
-		auto it{ GetTypeDatabase().find(std::is_class_v<T> ? object->GetTypeID() : Reflectpp::GetTypeID<T>()) };
-		Reflectpp::Assert(it != GetTypeDatabase().cend(), "%s isn't registered\n", typeid(T).name());
-
-		return it->second.get();
-	}
-
-	/**
-	* Returns requested type representation
-	* @param object
-	*/
-	template<typename T>
-	static typename std::enable_if<std::is_class_v<T> && !Reflectpp::HasGetTypeID<T>::value, Type>::type* GetType(const T* object) noexcept
-	{
-		Reflectpp::Assert(false, "%s don't use REFLECT macro\n", typeid(*object).name());
-		return nullptr;
-	}
-
-	/**
 	* Returns database of types representation
 	*/
 	static TypeDatabase& GetTypeDatabase() noexcept
 	{
-		static TypeDatabase m_TypeDatabase{ CreateTypeDatabase() };
+		static TypeDatabase m_TypeDatabase;
 		return m_TypeDatabase;
 	}
 
@@ -601,7 +565,27 @@ struct Register
 	template<typename T>
 	static Type& Class(const char* name) noexcept
 	{
-		return Type::AddType<T>(name);
+		/*if constexpr (!Reflectpp::HasGetTypeID<T>::value)
+		{
+			Reflectpp::Assert(false, "Type::Get<%s>() : REFLECT macro isn't used\n", typeid(*object).name());
+			return nullptr;
+		}*/ ///TEST reflect macro todo here
+
+		if constexpr (std::is_fundamental_v<T>)
+			Reflectpp::Assert(false, "TODO\n");
+
+		Reflectpp::Assert(std::bool_constant<!std::is_array_v<T> && !std::is_pointer_v<T> && !std::is_const_v<T> &&
+			!std::is_volatile_v<T> && !std::is_void_v<T>>(), "invalid type {%s}\n", typeid(T).name()); //////////////////////////////////////////////
+
+		size_t id{ typeid(T).hash_code() };
+		auto it{ Type::GetTypeDatabase().find(id) };
+		bool regitered{ it == Type::GetTypeDatabase().cend() };
+		Reflectpp::Assert(regitered, "%s is already registered\n", regitered ? "" : it->second->GetName());
+
+		Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(name), name, sizeof(T)) };
+		Type::GetTypeDatabase().emplace(id, type);
+
+		return *type;
 	}
 };
 

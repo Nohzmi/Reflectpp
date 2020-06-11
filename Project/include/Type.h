@@ -73,7 +73,10 @@ namespace Reflectpp
 	template<typename T>
 	void* ConstructObject() noexcept
 	{
-		return new T();
+		if constexpr (std::is_constructible_v<T>)
+			return new T();
+		else
+			return nullptr;
 	}
 
 	/**
@@ -83,7 +86,10 @@ namespace Reflectpp
 	template<typename T>
 	void* CopyObject(void* copy) noexcept
 	{
-		return new T(*static_cast<T*>(copy));
+		if constexpr (std::is_copy_constructible_v<T>)
+			return new T(*static_cast<T*>(copy));
+		else
+			return nullptr;
 	}
 
 	/**
@@ -300,10 +306,23 @@ public:
 			Type* base{ const_cast<Type*>(Get<T>()) };
 
 			for (auto it : m_BaseTypes)
-				Reflectpp::Assert(it->m_ID != base->m_ID, "%s is already registered in %s\n", base->m_Name, m_Name);
+				Reflectpp::Assert(it->m_ID != base->m_ID, "Type::base<%s>() : base type already registered\n", base->m_Name);
 
-			if (m_BaseTypes.empty()) m_HierarchyID = base->m_HierarchyID;
-			else UpdateHierarchyID(base, m_HierarchyID);
+			if (m_BaseTypes.empty())
+				m_HierarchyID = base->m_HierarchyID;
+
+			if (!m_BaseTypes.empty())
+			{
+				auto updateHierarchy = [](const Type* type, size_t hierarchyID, const auto& lambda)
+				{
+					if (type->m_HierarchyID == hierarchyID) return;
+					const_cast<Type*>(type)->m_HierarchyID = hierarchyID;
+					for (auto it : type->m_BaseTypes) lambda(it, hierarchyID, lambda);
+					for (auto it : type->m_DerivedTypes) lambda(it, hierarchyID, lambda);
+				};
+
+				updateHierarchy(base, m_HierarchyID, updateHierarchy);
+			}
 
 			base->m_DerivedTypes.emplace_back(this);
 			m_BaseTypes.emplace_back(base);
@@ -337,8 +356,7 @@ public:
 		}
 		else
 		{
-			bool sameHierarchy{ Get(object)->m_HierarchyID == Get<V>()->m_HierarchyID };
-			return sameHierarchy ? reinterpret_cast<T>(object) : nullptr;
+			return (Get(object)->m_HierarchyID == Get<V>()->m_HierarchyID) ? reinterpret_cast<T>(object) : nullptr;
 		}
 	}
 
@@ -356,17 +374,20 @@ public:
 		if constexpr (std::is_fundamental_v<T>)
 		{
 			const auto it{ GetTypeDatabase().find(typeid(T).hash_code()) };
+
 			if (it != GetTypeDatabase().cend())
 				return it->second.get();
 
 			Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(typeid(T).name()), typeid(T).name(), sizeof(T)) };
 			GetTypeDatabase().emplace(typeid(T).hash_code(), type);
+
 			return type;
 		}
 		else
 		{
 			const auto it{ GetTypeDatabase().find(typeid(T).hash_code()) };
 			Reflectpp::Assert(it != GetTypeDatabase().cend(), "Type::Get<%s>() : unregistered type\n", typeid(T).name());
+
 			return it->second.get();
 		}
 	}
@@ -444,7 +465,7 @@ public:
 			if (it->GetID() == id)
 				return it;
 
-		Reflectpp::Assert(false, "%s isn't registered in %s\n", name, m_Name);
+		Reflectpp::Assert(false, "Type::GetField : %s isn't registered\n", name);
 
 		return nullptr;
 	}
@@ -486,17 +507,14 @@ public:
 	* @param name
 	* @param addr
 	*/
-	template<typename T, typename FieldT>
+	template<typename T, typename FieldT, typename U = typename std::remove_cv_t<FieldT>>
 	Type& field(const char* name, FieldT T::* addr) noexcept
 	{
-		size_t id{ Reflectpp::Hash(name) };
-
 		for (auto it : m_Fields)
-			Reflectpp::Assert(it->GetID() != id, "%s is already registered in %s\n", name, m_Name);
+			Reflectpp::Assert(it->GetID() != Reflectpp::Hash(name), "Type::field : %s already registered\n", name);
 
-		Field* field{ new Field(id, name, Reflectpp::Offset(addr), Get<FieldT>()) };
-		GetFieldDatabase().emplace_back(field);
-		const_cast<Type*>(Get<T>())->m_Fields.emplace_back(field);
+		GetFieldDatabase().emplace_back(new Field(Reflectpp::Hash(name), name, Reflectpp::Offset(addr), Get<U>()));
+		const_cast<Type*>(Get<T>())->m_Fields.emplace_back(GetFieldDatabase().back().get());
 
 		return *this;
 	}
@@ -519,25 +537,6 @@ private:
 	{
 		static FieldDatabase m_FieldDatabase;
 		return m_FieldDatabase;
-	}
-
-	/**
-	* Update hierarchy id recursively
-	* @param type
-	* @param hierarchyID
-	*/
-	static void UpdateHierarchyID(const Type* type, size_t hierarchyID) noexcept
-	{
-		if (type->m_HierarchyID == hierarchyID)
-			return;
-
-		const_cast<Type*>(type)->m_HierarchyID = hierarchyID;
-
-		for (auto it : type->m_BaseTypes)
-			UpdateHierarchyID(it, hierarchyID);
-
-		for (auto it : type->m_DerivedTypes)
-			UpdateHierarchyID(it, hierarchyID);
 	}
 
 private:
@@ -565,27 +564,26 @@ struct Register
 	template<typename T>
 	static Type& Class(const char* name) noexcept
 	{
-		/*if constexpr (!Reflectpp::HasGetTypeID<T>::value)
+		if constexpr (std::is_fundamental_v<T> || !Reflectpp::is_valid<T>::value)
 		{
-			Reflectpp::Assert(false, "Type::Get<%s>() : REFLECT macro isn't used\n", typeid(*object).name());
-			return nullptr;
-		}*/ ///TEST reflect macro todo here
+			Reflectpp::Assert(false, "Register::Class<%s>() : invalid type\n", typeid(T).name());
+			return *const_cast<Type*>(Type::Get<int>());
+		}
+		else if constexpr (!Reflectpp::HasGetTypeID<T>::value)
+		{
+			Reflectpp::Assert(false, "Register::Class<%s>() : REFLECT macro not used\n", typeid(T).name());
+			return *const_cast<Type*>(Type::Get<int>());
+		}
+		else
+		{
+			const size_t id{ typeid(T).hash_code() };
+			Reflectpp::Assert(Type::GetTypeDatabase().find(id) == Type::GetTypeDatabase().cend(), "Register::Class<%s>() : type already registered\n", typeid(T).name());
 
-		if constexpr (std::is_fundamental_v<T>)
-			Reflectpp::Assert(false, "TODO\n");
+			Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(name), name, sizeof(T)) };
+			Type::GetTypeDatabase().emplace(id, type);
 
-		Reflectpp::Assert(std::bool_constant<!std::is_array_v<T> && !std::is_pointer_v<T> && !std::is_const_v<T> &&
-			!std::is_volatile_v<T> && !std::is_void_v<T>>(), "invalid type {%s}\n", typeid(T).name()); //////////////////////////////////////////////
-
-		size_t id{ typeid(T).hash_code() };
-		auto it{ Type::GetTypeDatabase().find(id) };
-		bool regitered{ it == Type::GetTypeDatabase().cend() };
-		Reflectpp::Assert(regitered, "%s is already registered\n", regitered ? "" : it->second->GetName());
-
-		Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(name), name, sizeof(T)) };
-		Type::GetTypeDatabase().emplace(id, type);
-
-		return *type;
+			return *type;
+		}
 	}
 };
 

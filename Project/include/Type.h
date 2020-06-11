@@ -44,6 +44,7 @@ namespace Reflectpp
 	struct is_valid : std::bool_constant<
 		!std::is_array_v<T> &&
 		!std::is_const_v<T> &&
+		!std::is_null_pointer_v<T> &&
 		!std::is_pointer_v<T> &&
 		!std::is_reference_v<T> &&
 		!std::is_void_v<T> &&
@@ -296,10 +297,10 @@ public:
 	template<typename T>
 	Type& base() noexcept
 	{
-		if constexpr (std::is_fundamental_v<T> || !Reflectpp::is_valid<T>::value)
+		if constexpr (std::is_arithmetic_v<T> || !Reflectpp::is_valid<T>::value)
 		{
 			Reflectpp::Assert(false, "Type::base<%s>() : invalid type\n", typeid(T).name());
-			return *const_cast<Type*>(Get<int>());
+			return *const_cast<Type*>(Get<void>());
 		}
 		else
 		{
@@ -344,7 +345,7 @@ public:
 			Reflectpp::Assert(false, "Type::Cast<%s>() : not a pointer\n", typeid(T).name());
 			return nullptr;
 		}
-		else if constexpr (std::is_const_v<V> || std::is_void_v<V> || std::is_volatile_v<V>)
+		else if constexpr (std::is_const_v<V> || std::is_pointer_v<V> || std::is_void_v<V> || std::is_volatile_v<V>)
 		{
 			Reflectpp::Assert(false, "Type::Cast<%s>() : invalid type\n", typeid(T).name());
 			return nullptr;
@@ -371,7 +372,7 @@ public:
 			Reflectpp::Assert(false, "Type::Get<%s>() : invalid type\n", typeid(T).name());
 			return nullptr;
 		}
-		if constexpr (std::is_fundamental_v<T>)
+		else if constexpr (std::is_arithmetic_v<T>)
 		{
 			const auto it{ GetTypeDatabase().find(typeid(T).hash_code()) };
 
@@ -399,12 +400,12 @@ public:
 	template<typename T>
 	static const Type* Get(T*& object) noexcept
 	{
-		if constexpr (std::is_void_v<T> || std::is_volatile_v<T>)
+		if constexpr (std::is_null_pointer_v<T> || std::is_void_v<T> || std::is_volatile_v<T>)
 		{
 			Reflectpp::Assert(false, "Type::Get<%s>(T*& object) : invalid type\n", typeid(T).name());
 			return nullptr;
 		}
-		else if constexpr (std::is_fundamental_v<T>)
+		else if constexpr (std::is_arithmetic_v<T>)
 		{
 			Reflectpp::Assert(object != nullptr, "Type::Get<%s>(T*& object) : object nullptr\n", typeid(*object).name());
 			return Get<T>();
@@ -564,15 +565,15 @@ struct Register
 	template<typename T>
 	static Type& Class(const char* name) noexcept
 	{
-		if constexpr (std::is_fundamental_v<T> || !Reflectpp::is_valid<T>::value)
+		if constexpr (std::is_arithmetic_v<T> || !Reflectpp::is_valid<T>::value)
 		{
 			Reflectpp::Assert(false, "Register::Class<%s>() : invalid type\n", typeid(T).name());
-			return *const_cast<Type*>(Type::Get<int>());
+			return *const_cast<Type*>(Type::Get<void>());
 		}
 		else if constexpr (!Reflectpp::HasGetTypeID<T>::value)
 		{
 			Reflectpp::Assert(false, "Register::Class<%s>() : REFLECT macro not used\n", typeid(T).name());
-			return *const_cast<Type*>(Type::Get<int>());
+			return *const_cast<Type*>(Type::Get<void>());
 		}
 		else
 		{

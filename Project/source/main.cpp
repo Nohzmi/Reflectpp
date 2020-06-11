@@ -59,6 +59,9 @@ REGISTRATION
 
 int main()
 {
+	// Entry point
+	printf("Hello World!\n");
+
 	// Reflection test
 	auto test = Type::Get<Test>();
 	auto test0 = Type::Get<Test>();

@@ -7,6 +7,10 @@
 #include "Derived.h"
 #include "Intern.h"
 
+using namespace Reflectpp;
+
+struct Not {};
+
 int main()
 {
 	// Entry point

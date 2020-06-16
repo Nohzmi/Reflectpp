@@ -7,47 +7,38 @@
 */
 
 #pragma once
-#include <typeinfo>
+#include <functional>
+#include <string>
 
 /**
 * @addtogroup Reflectpp
 * @{
 */
 
-#define REFLECT()															\
-public:																		\
-friend void register_function() noexcept;									\
-virtual size_t GetTypeID() const noexcept									\
-{																			\
-	static const size_t typeID{ typeid(decltype(*this)).hash_code() };		\
-	return typeID;															\
-}																			\
-private:																	\
-
-/**
-* Contains all utility functions \n
-* Mainly to generate type informations
-*/
-namespace Reflectpp
-{
-	/**
-	* Allow to know if REFLECT macro is used \n
-	* Works only if GetTypeID() is public
-	*/
-	template <typename T>
-	class HasGetTypeID
-	{
-	private:
-		typedef char TrueType[1];
-		typedef char FalseType[2];
-
-		template <typename C> static TrueType& test(decltype(&C::GetTypeID));
-		template <typename C> static FalseType& test(...);
-
-	public:
-		enum { value = sizeof(test<T>(0)) == sizeof(TrueType) };
-	};
-}
+#define REFLECT(T)												\
+public:															\
+friend void register_function() noexcept;						\
+virtual size_t GetTypeID() const noexcept						\
+{																\
+	static const std::hash<std::string> hasher;					\
+	static const size_t typeID{ hasher(std::string(#T)) };		\
+	return typeID;												\
+}																\
+virtual const char* GetTypeName() const noexcept				\
+{																\
+	return #T;													\
+}																\
+static size_t TypeID() noexcept									\
+{																\
+	static const std::hash<std::string> hasher;					\
+	static const size_t typeID{ hasher(std::string(#T)) };		\
+	return typeID;												\
+}																\
+static const char* TypeName() noexcept							\
+{																\
+	return #T;													\
+}																\
+private:														\
 
 /**
 * @}

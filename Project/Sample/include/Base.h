@@ -11,7 +11,7 @@
 
 class Base
 {
-	REFLECT()
+	REFLECT(Base)
 
 public:
 

@@ -2,12 +2,6 @@
 
 #include "Type.h"
 
-size_t Reflectpp::Hash(const char* str) noexcept
-{
-	std::hash<std::string> hasher;
-	return hasher(std::string(str));
-}
-
 Property::Property(size_t id, const char* name, size_t offset, const Type* type) noexcept :
 	m_ID{ id },
 	m_Name{ name },
@@ -81,7 +75,8 @@ const std::vector<const Type*> Type::GetDerivedTypes() const noexcept
 
 const Property* Type::GetProperty(const char* name) const noexcept
 {
-	size_t id{ Reflectpp::Hash(name) };
+	std::hash<std::string> hasher;
+	size_t id{ hasher(name) };
 
 	for (auto it : m_Properties)
 		if (it->GetID() == id)

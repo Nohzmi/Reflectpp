@@ -11,7 +11,7 @@
 
 class Intern
 {
-	REFLECT()
+	REFLECT(Intern)
 
 public:
 

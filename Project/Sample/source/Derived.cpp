@@ -5,8 +5,7 @@
 
 REGISTRATION
 {
-	Type::class_<Derived>("Derived")
-	.base<Base>()
+	Type::class_<Derived>().base<Base>()
 	.property("DerivedValue0", &Derived::DerivedValue0)
 	.property("DerivedValue1", &Derived::DerivedValue1);
 }

@@ -16,8 +16,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Register.h"
-
 /**
 * @addtogroup Reflectpp
 * @{
@@ -50,6 +48,9 @@ void register_function() noexcept
 */
 namespace Reflectpp
 {
+	/**
+	* Allow to know if a type id valid at compile time
+	*/
 	template<typename T>
 	struct is_valid : std::bool_constant<
 		!std::is_array_v<T> &&
@@ -60,6 +61,24 @@ namespace Reflectpp
 		!std::is_void_v<T> &&
 		!std::is_volatile_v<T>>
 	{};
+
+	/**
+	* Allow to know if REFLECT macro is used \n
+	* Works only for public functions
+	*/
+	template <typename T>
+	class use_macro
+	{
+	private:
+		typedef char TrueType[1];
+		typedef char FalseType[2];
+
+		template <typename C> static TrueType& test(decltype(&C::TypeID));
+		template <typename C> static FalseType& test(...);
+
+	public:
+		enum { value = sizeof(test<T>(0)) == sizeof(TrueType) };
+	};
 
 	/**
 	* Allow to assert with a message in the console
@@ -104,10 +123,54 @@ namespace Reflectpp
 	}
 
 	/**
-	* Returns hashing of an std::string
-	* @param str
+	* Returns type id of the given object
+	* @param object
 	*/
-	REFLECTPP_API size_t Hash(const char* str) noexcept;
+	template<typename T>
+	size_t GetTypeID(T*& object) noexcept
+	{
+		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
+			return typeid(T).hash_code();
+		else
+			return object->GetTypeID();
+	}
+
+	/**
+	* Returns type name of the given object
+	* @param object
+	*/
+	template<typename T>
+	const char* GetTypeName(T*& object) noexcept
+	{
+		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
+			return typeid(T).name();
+		else
+			return object->GetTypeName();
+	}
+
+	/**
+	* Returns type id of the given type
+	*/
+	template<typename T>
+	size_t TypeID() noexcept
+	{
+		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
+			return typeid(T).hash_code();
+		else
+			return T::TypeID();
+	}
+
+	/**
+	* Returns type name of the given type
+	*/
+	template<typename T>
+	const char* TypeName() noexcept
+	{
+		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
+			return typeid(T).name();
+		else
+			return T::TypeName();
+	}
 }
 
 class Type;
@@ -340,7 +403,7 @@ private:
 	* @param name
 	*/
 	template<typename T>
-	static Type& class_(const char* name) noexcept;
+	static Type& class_() noexcept;
 
 private:
 
@@ -362,7 +425,7 @@ inline Type& Type::base() noexcept
 {
 	if constexpr (std::is_arithmetic_v<T> || !Reflectpp::is_valid<T>::value)
 	{
-		Reflectpp::Assert(false, "Type::base<%s>() : invalid type\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::base<%s>() : invalid type\n", Reflectpp::TypeName<T>());
 		return *const_cast<Type*>(Get<void>());
 	}
 	else
@@ -379,10 +442,16 @@ inline Type& Type::base() noexcept
 		{
 			auto updateHierarchy = [](const Type* type, size_t hierarchyID, const auto& lambda)
 			{
-				if (type->m_HierarchyID == hierarchyID) return;
+				if (type->m_HierarchyID == hierarchyID)
+					return;
+
 				const_cast<Type*>(type)->m_HierarchyID = hierarchyID;
-				for (auto it : type->m_BaseTypes) lambda(it, hierarchyID, lambda);
-				for (auto it : type->m_DerivedTypes) lambda(it, hierarchyID, lambda);
+
+				for (auto it : type->m_BaseTypes)
+					lambda(it, hierarchyID, lambda);
+
+				for (auto it : type->m_DerivedTypes)
+					lambda(it, hierarchyID, lambda);
 			};
 
 			updateHierarchy(base, m_HierarchyID, updateHierarchy);
@@ -401,17 +470,17 @@ inline std::remove_pointer_t<T>* Type::Cast(U*& object) noexcept
 {
 	if constexpr (!std::is_pointer_v<T>)
 	{
-		Reflectpp::Assert(false, "Type::Cast<%s>(U*& object) : not a pointer\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : not a pointer\n", Reflectpp::TypeName<T>(), Reflectpp::GetTypeName(object));
 		return nullptr;
 	}
 	else if constexpr (std::is_const_v<V> || std::is_pointer_v<V> || std::is_void_v<V> || std::is_volatile_v<V>)
 	{
-		Reflectpp::Assert(false, "Type::Cast<%s>(U*& object) : invalid type\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : invalid type\n", Reflectpp::TypeName<T>(), Reflectpp::GetTypeName(object));
 		return nullptr;
 	}
 	else if constexpr (std::is_const_v<U> || std::is_void_v<U> || std::is_volatile_v<U>)
 	{
-		Reflectpp::Assert(false, "Type::Cast<%s, %s>(U*& object) : invalid object type\n", typeid(T).name(), typeid(U).name());
+		Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : invalid object type\n", Reflectpp::TypeName<T>(), Reflectpp::GetTypeName(object));
 		return nullptr;
 	}
 	else
@@ -425,25 +494,27 @@ inline const Type* Type::Get() noexcept
 {
 	if constexpr (!Reflectpp::is_valid<T>::value)
 	{
-		Reflectpp::Assert(false, "Type::Get<%s>() : invalid type\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::Get<%s>() : invalid type\n", Reflectpp::TypeName<T>());
 		return nullptr;
-	}
-	else if constexpr (std::is_arithmetic_v<T>)
-	{
-		const auto it{ m_TypeDatabase.find(typeid(T).hash_code()) };
-
-		if (it != m_TypeDatabase.cend())
-			return it->second.get();
-
-		Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(typeid(T).name()), typeid(T).name(), sizeof(T)) };
-		m_TypeDatabase.emplace(typeid(T).hash_code(), type);
-
-		return type;
 	}
 	else
 	{
-		const auto it{ m_TypeDatabase.find(typeid(T).hash_code()) };
-		Reflectpp::Assert(it != m_TypeDatabase.cend(), "Type::Get<%s>() : unregistered type\n", typeid(T).name());
+		const auto it{ m_TypeDatabase.find(Reflectpp::TypeID<T>()) };
+
+		if (it == m_TypeDatabase.cend())
+		{
+			if constexpr (std::is_arithmetic_v<T>)
+			{
+				Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::TypeID<T>(), Reflectpp::TypeName<T>(), sizeof(T)) };
+				m_TypeDatabase.emplace(Reflectpp::TypeID<T>(), type);
+
+				return type;
+			}
+			else
+			{
+				Reflectpp::Assert(false, "Type::Get<%s>() : unregistered type\n", Reflectpp::TypeName<T>());
+			}
+		}
 
 		return it->second.get();
 	}
@@ -454,59 +525,62 @@ inline const Type* Type::Get(T*& object) noexcept
 {
 	if constexpr (std::is_null_pointer_v<T> || std::is_void_v<T> || std::is_volatile_v<T>)
 	{
-		Reflectpp::Assert(false, "Type::Get<%s>(T*& object) : invalid type\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::Get(%s*& object) : invalid type\n", Reflectpp::TypeName<T>());
 		return nullptr;
 	}
-	else if constexpr (std::is_arithmetic_v<T>)
+	else if constexpr (!std::is_arithmetic_v<T> && !Reflectpp::use_macro<T>::value)
 	{
-		Reflectpp::Assert(object != nullptr, "Type::Get<%s>(T*& object) : object nullptr\n", typeid(*object).name());
-		return Get<T>();
-	}
-	else if constexpr (!Reflectpp::HasGetTypeID<T>::value)
-	{
-		Reflectpp::Assert(false, "Type::Get<%s>(T*& object) : unregistered type\n", typeid(*object).name());
+		Reflectpp::Assert(false, "Type::Get(%s*& object) : unregistered type\n", Reflectpp::GetTypeName(object));
 		return nullptr;
 	}
 	else
 	{
-		Reflectpp::Assert(object != nullptr, "Type::Get<%s>(T*& object) : object nullptr\n", typeid(T).name());
-		return m_TypeDatabase.find(object->GetTypeID())->second.get();
+		Reflectpp::Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", Reflectpp::TypeName<T>());
+
+		if constexpr (std::is_arithmetic_v<T>)
+		{
+			return Get<T>();
+		}
+		else
+		{
+			return m_TypeDatabase.find(Reflectpp::GetTypeID(object))->second.get();
+		}
 	}
 }
 
 template<typename T, typename PropertyT>
 inline Type& Type::property(const char* name, PropertyT T::* addr) noexcept
 {
-	for (auto it : m_Properties)
-		Reflectpp::Assert(it->GetID() != Reflectpp::Hash(name), "Type::property<>() : %s already registered\n", name);
+	std::hash<std::string> hasher;
 
-	size_t offset{ reinterpret_cast<size_t>(&(reinterpret_cast<T const volatile*>(nullptr)->*addr)) };
-	m_PropertyDatabase.emplace_back(new Property(Reflectpp::Hash(name), name, offset, Get<std::remove_cv_t<PropertyT>>()));
+	for (auto it : m_Properties)
+		Reflectpp::Assert(it->GetID() != hasher(name), "Type::property(const char* name, %s %s::* addr) : %s already registered\n", Reflectpp::TypeName<PropertyT>(), Reflectpp::TypeName<T>(), name);
+
+	m_PropertyDatabase.emplace_back(new Property(hasher(name), name, reinterpret_cast<size_t>(&(reinterpret_cast<T const volatile*>(nullptr)->*addr)), Get<std::remove_cv_t<PropertyT>>()));
 	const_cast<Type*>(Get<T>())->m_Properties.emplace_back(m_PropertyDatabase.back().get());
 
 	return *this;
 }
 
 template<typename T>
-inline Type& Type::class_(const char* name) noexcept
+inline Type& Type::class_() noexcept
 {
 	if constexpr (std::is_arithmetic_v<T> || !Reflectpp::is_valid<T>::value)
 	{
-		Reflectpp::Assert(false, "Type::class_<%s>() : invalid type\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::class_<%s>() : invalid type\n", Reflectpp::TypeName<T>());
 		return *const_cast<Type*>(Type::Get<void>());
 	}
-	else if constexpr (!Reflectpp::HasGetTypeID<T>::value)
+	else if constexpr (!Reflectpp::use_macro<T>::value)
 	{
-		Reflectpp::Assert(false, "Type::class_<%s>() : REFLECT macro not used\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::class_<%s>() : REFLECT(T) macro not used\n", Reflectpp::TypeName<T>());
 		return *const_cast<Type*>(Type::Get<void>());
 	}
 	else
 	{
-		const size_t id{ typeid(T).hash_code() };
-		Reflectpp::Assert(Type::m_TypeDatabase.find(id) == Type::m_TypeDatabase.cend(), "Type::class_<%s>() : type already registered\n", typeid(T).name());
+		Reflectpp::Assert(Type::m_TypeDatabase.find(Reflectpp::TypeID<T>()) == Type::m_TypeDatabase.cend(), "Type::class_<%s>() : type already registered\n", Reflectpp::TypeName<T>());
 
-		Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(name), name, sizeof(T)) };
-		Type::m_TypeDatabase.emplace(id, type);
+		Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::TypeID<T>(), Reflectpp::TypeName<T>(), sizeof(T)) };
+		Type::m_TypeDatabase.emplace(Reflectpp::TypeID<T>(), type);
 
 		return *type;
 	}

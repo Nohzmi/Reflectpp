@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{b31901fd-f725-4329-9529-05b1b8287740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{93b329b2-20a1-4afd-9059-a627155e7926}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Base.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Derived.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Intern.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Base.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Derived.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Intern.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

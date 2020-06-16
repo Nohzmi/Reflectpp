@@ -2,16 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="include">
-      <UniqueIdentifier>{2c7226d8-d746-42e5-b9c3-717d3f7c18f8}</UniqueIdentifier>
+      <UniqueIdentifier>{24db0a4c-5f86-489b-93e7-43b7791268f4}</UniqueIdentifier>
     </Filter>
     <Filter Include="source">
-      <UniqueIdentifier>{866829ab-d5c3-4bfb-afc6-1c28ee553a28}</UniqueIdentifier>
+      <UniqueIdentifier>{90e60a68-6d0d-44b9-b462-af54b2ab7784}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="source\main.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Type.h">
@@ -20,5 +15,10 @@
     <ClInclude Include="include\Register.h">
       <Filter>include</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Type.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

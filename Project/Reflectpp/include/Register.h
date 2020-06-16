@@ -14,12 +14,26 @@
 * @{
 */
 
+#define REFLECT()															\
+public:																		\
+friend class Type;															\
+virtual size_t GetTypeID() const noexcept									\
+{																			\
+	static const size_t typeID{ typeid(decltype(*this)).hash_code() };		\
+	return typeID;															\
+}																			\
+private:																	\
+
 /**
 * Contains all utility functions \n
 * Mainly to generate type informations
 */
 namespace Reflectpp
 {
+	/**
+	* Allow to know if REFLECT macro is used \n
+	* Works only if GetTypeID() is public
+	*/
 	template <typename T>
 	class HasGetTypeID
 	{
@@ -34,16 +48,6 @@ namespace Reflectpp
 		enum { value = sizeof(test<T>(0)) == sizeof(TrueType) };
 	};
 }
-
-#define REFLECT()															\
-public:																		\
-friend class Type;															\
-virtual size_t GetTypeID() const noexcept									\
-{																			\
-	static const size_t typeID{ typeid(decltype(*this)).hash_code() };		\
-	return typeID;															\
-}																			\
-private:																	\
 
 /**
 * @}

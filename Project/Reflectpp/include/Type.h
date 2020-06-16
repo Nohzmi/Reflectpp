@@ -115,66 +115,66 @@ class Type;
 /**
 * The basic type representation
 */
-class REFLECTPP_API Field final
+class REFLECTPP_API Property final
 {
 public:
 
 	/**
 	* Constructor
 	*/
-	Field() = delete;
+	Property() = delete;
 
 	/**
 	* Destructor
 	*/
-	~Field() = default;
+	~Property() = default;
 
 	/**
 	* Copy constructor
 	*/
-	Field(const Field&) = delete;
+	Property(const Property&) = delete;
 
 	/**
 	* Move constructor
 	*/
-	Field(Field&&) noexcept = default;
+	Property(Property&&) noexcept = default;
 
 	/**
 	* Copy assignement operator
 	*/
-	Field& operator=(const Field&) = delete;
+	Property& operator=(const Property&) = delete;
 
 	/**
 	* Move assignement operator
 	*/
-	Field& operator=(Field&&) noexcept = default;
+	Property& operator=(Property&&) noexcept = default;
 
 	/**
-	* Construct a field
+	* Construct a property
 	* @param id
 	* @param name
 	* @param offset
 	* @param type
 	*/
-	Field(size_t id, const char* name, size_t offset, const Type* type) noexcept;
+	Property(size_t id, const char* name, size_t offset, const Type* type) noexcept;
 
 	/**
-	* Returns id of this field
+	* Returns id of this property
 	*/
 	size_t GetID() const noexcept;
 
 	/**
-	* Returns name of this field
+	* Returns name of this property
 	*/
 	const char* GetName() const noexcept;
 
 	/**
-	* Returns offset of this field
+	* Returns offset of this property
 	*/
 	size_t GetOffset() const noexcept;
 
 	/**
-	* Returns type of this field
+	* Returns type of this property
 	*/
 	const Type* GetType() const noexcept;
 
@@ -196,7 +196,7 @@ class REFLECTPP_API Type final
 
 	using CopyConstructorT = void* (*)(void*);
 	using ConstructorT = void* (*)();
-	using FieldDatabase = std::vector<std::unique_ptr<Field>>;
+	using PropertyDatabase = std::vector<std::unique_ptr<Property>>;
 	using TypeDatabase = std::unordered_map<size_t, std::unique_ptr<Type>>;
 
 public:
@@ -300,15 +300,15 @@ public:
 	const std::vector<const Type*> GetDerivedTypes() const noexcept;
 
 	/**
-	* Returns field by name of this type
+	* Returns property by name of this type
 	* @param name
 	*/
-	const Field* GetField(const char* name) const noexcept;
+	const Property* GetProperty(const char* name) const noexcept;
 
 	/**
-	* Returns all field of this type
+	* Returns all property of this type
 	*/
-	std::vector<const Field*> GetFields() const noexcept;
+	std::vector<const Property*> GetProperties() const noexcept;
 
 	/**
 	* Returns id of this type
@@ -326,12 +326,12 @@ public:
 	size_t GetSize() const noexcept;
 
 	/**
-	* Register a field of the current type
+	* Register a property of the current type
 	* @param name
 	* @param addr
 	*/
-	template<typename T, typename FieldT, typename U = typename std::remove_cv_t<FieldT>>
-	Type& property(const char* name, FieldT T::* addr) noexcept;
+	template<typename T, typename PropertyT>
+	Type& property(const char* name, PropertyT T::* addr) noexcept;
 
 private:
 
@@ -348,8 +348,8 @@ private:
 	const ConstructorT m_Constructor;
 	const CopyConstructorT m_CopyConstructor;
 	std::vector<const Type*> m_DerivedTypes;
-	static FieldDatabase m_FieldDatabase;
-	std::vector<const Field*> m_Fields;
+	static PropertyDatabase m_PropertyDatabase;
+	std::vector<const Property*> m_Properties;
 	size_t m_HierarchyID;
 	const size_t m_ID;
 	const char* m_Name;
@@ -390,7 +390,7 @@ inline Type& Type::base() noexcept
 
 		base->m_DerivedTypes.emplace_back(this);
 		m_BaseTypes.emplace_back(base);
-		m_Fields.insert(m_Fields.cbegin(), base->m_Fields.cbegin(), base->m_Fields.cbegin());
+		m_Properties.insert(m_Properties.cbegin(), base->m_Properties.cbegin(), base->m_Properties.cbegin());
 
 		return *this;
 	}
@@ -401,17 +401,17 @@ inline std::remove_pointer_t<T>* Type::Cast(U*& object) noexcept
 {
 	if constexpr (!std::is_pointer_v<T>)
 	{
-		Reflectpp::Assert(false, "Type::Cast<%s>() : not a pointer\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::Cast<%s>(U*& object) : not a pointer\n", typeid(T).name());
 		return nullptr;
 	}
 	else if constexpr (std::is_const_v<V> || std::is_pointer_v<V> || std::is_void_v<V> || std::is_volatile_v<V>)
 	{
-		Reflectpp::Assert(false, "Type::Cast<%s>() : invalid type\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::Cast<%s>(U*& object) : invalid type\n", typeid(T).name());
 		return nullptr;
 	}
 	else if constexpr (std::is_const_v<U> || std::is_void_v<U> || std::is_volatile_v<U>)
 	{
-		Reflectpp::Assert(false, "Type::Cast<%s, %s>() : invalid object type\n", typeid(T).name(), typeid(U).name());
+		Reflectpp::Assert(false, "Type::Cast<%s, %s>(U*& object) : invalid object type\n", typeid(T).name(), typeid(U).name());
 		return nullptr;
 	}
 	else
@@ -474,15 +474,15 @@ inline const Type* Type::Get(T*& object) noexcept
 	}
 }
 
-template<typename T, typename FieldT, typename U>
-inline Type& Type::property(const char* name, FieldT T::* addr) noexcept
+template<typename T, typename PropertyT>
+inline Type& Type::property(const char* name, PropertyT T::* addr) noexcept
 {
-	for (auto it : m_Fields)
-		Reflectpp::Assert(it->GetID() != Reflectpp::Hash(name), "Type::field : %s already registered\n", name);
+	for (auto it : m_Properties)
+		Reflectpp::Assert(it->GetID() != Reflectpp::Hash(name), "Type::property<>() : %s already registered\n", name);
 
 	size_t offset{ reinterpret_cast<size_t>(&(reinterpret_cast<T const volatile*>(nullptr)->*addr)) };
-	m_FieldDatabase.emplace_back(new Field(Reflectpp::Hash(name), name, offset, Get<U>()));
-	const_cast<Type*>(Get<T>())->m_Fields.emplace_back(m_FieldDatabase.back().get());
+	m_PropertyDatabase.emplace_back(new Property(Reflectpp::Hash(name), name, offset, Get<std::remove_cv_t<PropertyT>>()));
+	const_cast<Type*>(Get<T>())->m_Properties.emplace_back(m_PropertyDatabase.back().get());
 
 	return *this;
 }
@@ -492,18 +492,18 @@ inline Type& Type::class_(const char* name) noexcept
 {
 	if constexpr (std::is_arithmetic_v<T> || !Reflectpp::is_valid<T>::value)
 	{
-		Reflectpp::Assert(false, "Register::Class<%s>() : invalid type\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::class_<%s>() : invalid type\n", typeid(T).name());
 		return *const_cast<Type*>(Type::Get<void>());
 	}
 	else if constexpr (!Reflectpp::HasGetTypeID<T>::value)
 	{
-		Reflectpp::Assert(false, "Register::Class<%s>() : REFLECT macro not used\n", typeid(T).name());
+		Reflectpp::Assert(false, "Type::class_<%s>() : REFLECT macro not used\n", typeid(T).name());
 		return *const_cast<Type*>(Type::Get<void>());
 	}
 	else
 	{
 		const size_t id{ typeid(T).hash_code() };
-		Reflectpp::Assert(Type::m_TypeDatabase.find(id) == Type::m_TypeDatabase.cend(), "Register::Class<%s>() : type already registered\n", typeid(T).name());
+		Reflectpp::Assert(Type::m_TypeDatabase.find(id) == Type::m_TypeDatabase.cend(), "Type::class_<%s>() : type already registered\n", typeid(T).name());
 
 		Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::Hash(name), name, sizeof(T)) };
 		Type::m_TypeDatabase.emplace(id, type);

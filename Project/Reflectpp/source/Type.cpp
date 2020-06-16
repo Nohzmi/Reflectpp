@@ -8,7 +8,7 @@ size_t Reflectpp::Hash(const char* str) noexcept
 	return hasher(std::string(str));
 }
 
-Field::Field(size_t id, const char* name, size_t offset, const Type* type) noexcept :
+Property::Property(size_t id, const char* name, size_t offset, const Type* type) noexcept :
 	m_ID{ id },
 	m_Name{ name },
 	m_Offset{ offset },
@@ -16,27 +16,27 @@ Field::Field(size_t id, const char* name, size_t offset, const Type* type) noexc
 {
 }
 
-size_t Field::GetID() const noexcept
+size_t Property::GetID() const noexcept
 {
 	return m_ID;
 }
 
-const char* Field::GetName() const noexcept
+const char* Property::GetName() const noexcept
 {
 	return m_Name;
 }
 
-size_t Field::GetOffset() const noexcept
+size_t Property::GetOffset() const noexcept
 {
 	return m_Offset;
 }
 
-const Type* Field::GetType() const noexcept
+const Type* Property::GetType() const noexcept
 {
 	return m_Type;
 }
 
-Type::FieldDatabase Type::m_FieldDatabase;
+Type::PropertyDatabase Type::m_PropertyDatabase;
 Type::TypeDatabase Type::m_TypeDatabase;
 
 Type::Type(ConstructorT constructor, CopyConstructorT copyConstructor, size_t id, const char* name, size_t size) :
@@ -79,22 +79,22 @@ const std::vector<const Type*> Type::GetDerivedTypes() const noexcept
 	return m_DerivedTypes;
 }
 
-const Field* Type::GetField(const char* name) const noexcept
+const Property* Type::GetProperty(const char* name) const noexcept
 {
 	size_t id{ Reflectpp::Hash(name) };
 
-	for (auto it : m_Fields)
+	for (auto it : m_Properties)
 		if (it->GetID() == id)
 			return it;
 
-	Reflectpp::Assert(false, "Type::GetField : %s isn't registered\n", name);
+	Reflectpp::Assert(false, "Type::GetProperty : %s isn't registered\n", name);
 
 	return nullptr;
 }
 
-std::vector<const Field*> Type::GetFields() const noexcept
+std::vector<const Property*> Type::GetProperties() const noexcept
 {
-	return m_Fields;
+	return m_Properties;
 }
 
 size_t Type::GetID() const noexcept

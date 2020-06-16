@@ -17,7 +17,7 @@ int main()
 	auto test0 = Type::Get<Derived>();
 	auto test2 = Type::Get<Derived>()->GetBaseTypes();
 	auto test3 = Type::Get<Derived>()->GetDerivedTypes();
-	auto test4 = Type::Get<Derived>()->GetFields();
+	auto test4 = Type::Get<Derived>()->GetProperties();
 
 	Base* tmp0 = new Base();
 	Base* tmp1 = new Derived();

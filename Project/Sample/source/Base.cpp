@@ -5,7 +5,7 @@
 
 REGISTRATION
 {
-	Class<Base>("Base")
-	.field("BaseValue0", &Base::BaseValue0)
-	.field("BaseValue1", &Base::BaseValue1);
+	Type::class_<Base>("Base")
+	.property("BaseValue0", &Base::BaseValue0)
+	.property("BaseValue1", &Base::BaseValue1);
 }

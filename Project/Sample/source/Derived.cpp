@@ -5,8 +5,8 @@
 
 REGISTRATION
 {
-	Class<Derived>("Derived")
+	Type::class_<Derived>("Derived")
 	.base<Base>()
-	.field("DerivedValue0", &Derived::DerivedValue0)
-	.field("DerivedValue1", &Derived::DerivedValue1);
+	.property("DerivedValue0", &Derived::DerivedValue0)
+	.property("DerivedValue1", &Derived::DerivedValue1);
 }

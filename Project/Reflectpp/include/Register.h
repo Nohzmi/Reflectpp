@@ -16,7 +16,7 @@
 
 #define REFLECT()															\
 public:																		\
-friend class Type;															\
+friend void register_function() noexcept;									\
 virtual size_t GetTypeID() const noexcept									\
 {																			\
 	static const size_t typeID{ typeid(decltype(*this)).hash_code() };		\

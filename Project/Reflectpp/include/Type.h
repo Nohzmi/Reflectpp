@@ -29,20 +29,20 @@
 #define REFLECTPP_API __declspec(dllimport)
 #endif
 
-#define REGISTRATION									\
-namespace												\
-{														\
-    struct register_class final : public Register		\
-    {													\
-        register_class()								\
-        {												\
-            register_function();						\
-        }												\
-		static void register_function() noexcept;		\
-    };													\
-}														\
-static const register_class register_obj;				\
-void register_class::register_function() noexcept
+#define REGISTRATION							\
+static void register_function() noexcept;		\
+namespace										\
+{												\
+    struct register_class final					\
+    {											\
+        register_class()						\
+        {										\
+            register_function();				\
+        }										\
+    };											\
+}												\
+static const register_class register_obj;		\
+void register_function() noexcept
 
 /**
 * Contains all utility functions \n
@@ -108,16 +108,6 @@ namespace Reflectpp
 	* @param str
 	*/
 	REFLECTPP_API size_t Hash(const char* str) noexcept;
-
-	/**
-	* Returns offset of a class member
-	* @param member
-	*/
-	template<typename T, typename FieldT>
-	size_t Offset(FieldT T::* addr)
-	{
-		return reinterpret_cast<size_t>(&(reinterpret_cast<T const volatile*>(nullptr)->*addr));
-	}
 }
 
 class Type;
@@ -196,15 +186,13 @@ private:
 	const Type* m_Type;
 };
 
-struct Register;
-
 /**
 * The basic type representation \n
 * Also serves as type database
 */
 class REFLECTPP_API Type final
 {
-	friend Register;
+	friend void register_function() noexcept;
 
 	using CopyConstructorT = void* (*)(void*);
 	using ConstructorT = void* (*)();
@@ -343,7 +331,16 @@ public:
 	* @param addr
 	*/
 	template<typename T, typename FieldT, typename U = typename std::remove_cv_t<FieldT>>
-	Type& field(const char* name, FieldT T::* addr) noexcept;
+	Type& property(const char* name, FieldT T::* addr) noexcept;
+
+private:
+
+	/**
+	* Register a type in reflection
+	* @param name
+	*/
+	template<typename T>
+	static Type& class_(const char* name) noexcept;
 
 private:
 
@@ -358,19 +355,6 @@ private:
 	const char* m_Name;
 	const size_t m_Size;
 	static TypeDatabase m_TypeDatabase;
-};
-
-/**
-* Basic type use in macro for registration
-*/
-struct REFLECTPP_API Register
-{
-	/**
-	* Register a type in reflection
-	* @param name
-	*/
-	template<typename T>
-	static Type& Class(const char* name) noexcept;
 };
 
 template<typename T>
@@ -491,19 +475,20 @@ inline const Type* Type::Get(T*& object) noexcept
 }
 
 template<typename T, typename FieldT, typename U>
-inline Type& Type::field(const char* name, FieldT T::* addr) noexcept
+inline Type& Type::property(const char* name, FieldT T::* addr) noexcept
 {
 	for (auto it : m_Fields)
 		Reflectpp::Assert(it->GetID() != Reflectpp::Hash(name), "Type::field : %s already registered\n", name);
 
-	m_FieldDatabase.emplace_back(new Field(Reflectpp::Hash(name), name, Reflectpp::Offset(addr), Get<U>()));
+	size_t offset{ reinterpret_cast<size_t>(&(reinterpret_cast<T const volatile*>(nullptr)->*addr)) };
+	m_FieldDatabase.emplace_back(new Field(Reflectpp::Hash(name), name, offset, Get<U>()));
 	const_cast<Type*>(Get<T>())->m_Fields.emplace_back(m_FieldDatabase.back().get());
 
 	return *this;
 }
 
 template<typename T>
-inline Type& Register::Class(const char* name) noexcept
+inline Type& Type::class_(const char* name) noexcept
 {
 	if constexpr (std::is_arithmetic_v<T> || !Reflectpp::is_valid<T>::value)
 	{

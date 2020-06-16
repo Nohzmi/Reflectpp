@@ -5,7 +5,7 @@
 
 REGISTRATION
 {
-	Class<Intern>("Intern")
-	.field("InternValue0", &Intern::InternValue0)
-	.field("InternValue1", &Intern::InternValue1);
+	Type::class_<Intern>("Intern")
+	.property("InternValue0", &Intern::InternValue0)
+	.property("InternValue1", &Intern::InternValue1);
 }

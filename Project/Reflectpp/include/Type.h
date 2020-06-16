@@ -111,13 +111,24 @@ namespace Reflectpp
 
 	/**
 	* Returns pointer on created object \n
+	* Allow to save a pointer on destructor function
+	*/
+	template<typename T>
+	void DestructObject(void* object) noexcept
+	{
+		if constexpr (std::is_destructible_v<T>)
+			return delete static_cast<T*>(object);
+	}
+
+	/**
+	* Returns pointer on created object \n
 	* Allow to save a pointer on copy constructor function
 	*/
 	template<typename T>
-	void* CopyObject(void* copy) noexcept
+	void* CopyObject(void* object) noexcept
 	{
 		if constexpr (std::is_copy_constructible_v<T>)
-			return new T(*static_cast<T*>(copy));
+			return new T(*static_cast<T*>(object));
 		else
 			return nullptr;
 	}
@@ -257,8 +268,9 @@ class REFLECTPP_API Type final
 {
 	friend void register_function() noexcept;
 
-	using CopyConstructorT = void* (*)(void*);
 	using ConstructorT = void* (*)();
+	using CopyConstructorT = void* (*)(void*);
+	using DestructorT = void (*)(void*);
 	using PropertyDatabase = std::vector<std::unique_ptr<Property>>;
 	using TypeDatabase = std::unordered_map<size_t, std::unique_ptr<Type>>;
 
@@ -302,7 +314,7 @@ public:
 	* @param name
 	* @param size
 	*/
-	Type(ConstructorT constructor, CopyConstructorT copyConstructor, size_t id, const char* name, size_t size);
+	Type(ConstructorT constructor, CopyConstructorT copyConstructor, DestructorT destructor, size_t id, const char* name, size_t size);
 
 	/**
 	* Returns whether or not two types are the same
@@ -363,6 +375,11 @@ public:
 	const std::vector<const Type*> GetDerivedTypes() const noexcept;
 
 	/**
+	* Returns destructor of this type
+	*/
+	DestructorT GetDestructor() const noexcept;
+
+	/**
 	* Returns property by name of this type
 	* @param name
 	*/
@@ -411,6 +428,7 @@ private:
 	const ConstructorT m_Constructor;
 	const CopyConstructorT m_CopyConstructor;
 	std::vector<const Type*> m_DerivedTypes;
+	const DestructorT m_Destructor;
 	static PropertyDatabase m_PropertyDatabase;
 	std::vector<const Property*> m_Properties;
 	size_t m_HierarchyID;
@@ -505,7 +523,7 @@ inline const Type* Type::Get() noexcept
 		{
 			if constexpr (std::is_arithmetic_v<T>)
 			{
-				Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::TypeID<T>(), Reflectpp::TypeName<T>(), sizeof(T)) };
+				Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::DestructObject<T>, Reflectpp::TypeID<T>(), Reflectpp::TypeName<T>(), sizeof(T)) };
 				m_TypeDatabase.emplace(Reflectpp::TypeID<T>(), type);
 
 				return type;
@@ -537,14 +555,10 @@ inline const Type* Type::Get(T*& object) noexcept
 	{
 		Reflectpp::Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", Reflectpp::TypeName<T>());
 
-		if constexpr (std::is_arithmetic_v<T>)
-		{
-			return Get<T>();
-		}
-		else
-		{
+		if constexpr (!std::is_arithmetic_v<T>)
 			return m_TypeDatabase.find(Reflectpp::GetTypeID(object))->second.get();
-		}
+		else
+			return Get<T>();
 	}
 }
 
@@ -578,8 +592,7 @@ inline Type& Type::class_() noexcept
 	else
 	{
 		Reflectpp::Assert(Type::m_TypeDatabase.find(Reflectpp::TypeID<T>()) == Type::m_TypeDatabase.cend(), "Type::class_<%s>() : type already registered\n", Reflectpp::TypeName<T>());
-
-		Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::TypeID<T>(), Reflectpp::TypeName<T>(), sizeof(T)) };
+		Type* type{ new Type(Reflectpp::ConstructObject<T>, Reflectpp::CopyObject<T>, Reflectpp::DestructObject<T>, Reflectpp::TypeID<T>(), Reflectpp::TypeName<T>(), sizeof(T)) };
 		Type::m_TypeDatabase.emplace(Reflectpp::TypeID<T>(), type);
 
 		return *type;

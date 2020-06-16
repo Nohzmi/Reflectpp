@@ -33,9 +33,10 @@ const Type* Property::GetType() const noexcept
 Type::PropertyDatabase Type::m_PropertyDatabase;
 Type::TypeDatabase Type::m_TypeDatabase;
 
-Type::Type(ConstructorT constructor, CopyConstructorT copyConstructor, size_t id, const char* name, size_t size) :
+Type::Type(ConstructorT constructor, CopyConstructorT copyConstructor, DestructorT destructor, size_t id, const char* name, size_t size) :
 	m_Constructor{ constructor },
 	m_CopyConstructor{ copyConstructor },
+	m_Destructor{ destructor },
 	m_HierarchyID{ id },
 	m_ID{ id },
 	m_Name{ name },
@@ -71,6 +72,11 @@ Type::CopyConstructorT Type::GetCopyConstructor() const noexcept
 const std::vector<const Type*> Type::GetDerivedTypes() const noexcept
 {
 	return m_DerivedTypes;
+}
+
+Type::DestructorT Type::GetDestructor() const noexcept
+{
+	return m_Destructor;
 }
 
 const Property* Type::GetProperty(const char* name) const noexcept

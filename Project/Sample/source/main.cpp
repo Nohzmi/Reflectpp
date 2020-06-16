@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <Type.h>
+
 #include "Base.h"
 #include "Derived.h"
 #include "Intern.h"

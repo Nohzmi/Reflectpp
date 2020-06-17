@@ -93,12 +93,12 @@ namespace Reflectpp
 		return m_TypeInfo != rhs.m_TypeInfo;
 	}
 
-	const std::vector<const Type*> Type::GetBaseTypes() const noexcept
+	const std::vector<const Type*>& Type::GetBaseTypes() const noexcept
 	{
 		return m_BaseTypes;
 	}
 
-	const std::vector<const Type*> Type::GetDerivedTypes() const noexcept
+	const std::vector<const Type*>& Type::GetDerivedTypes() const noexcept
 	{
 		return m_DerivedTypes;
 	}
@@ -132,7 +132,7 @@ namespace Reflectpp
 		return nullptr;
 	}
 
-	std::vector<const Property*> Type::GetProperties() const noexcept
+	const std::vector<const Property*>& Type::GetProperties() const noexcept
 	{
 		return m_Properties;
 	}

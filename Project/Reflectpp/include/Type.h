@@ -15,6 +15,7 @@
 #include <typeinfo>
 #include <unordered_map>
 #include <vector>
+#include "Register.h"
 
 /**
 * @addtogroup Reflectpp
@@ -26,8 +27,6 @@
 #else
 #define REFLECTPP_API __declspec(dllimport)
 #endif
-
-static void register_function() noexcept;
 
 #define REGISTRATION							\
 static void register_function() noexcept;		\
@@ -172,26 +171,6 @@ namespace Reflectpp
 		* @param destructor
 		*/
 		Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
-
-		/**
-		* Returns a pointer on created object
-		*/
-		template<typename T>
-		static void* ConstructorCaller() noexcept;
-
-		/**
-		* Returns a pointer on copied object
-		* @param object
-		*/
-		template<typename T>
-		static void* CopyCaller(void* object) noexcept;
-
-		/**
-		* Destroys given object
-		* @param object
-		*/
-		template<typename T>
-		static void DestructorCaller(void* object) noexcept;
 
 	private:
 
@@ -466,12 +445,12 @@ namespace Reflectpp
 		/**
 		* Returns base types of this type
 		*/
-		const std::vector<const Type*> GetBaseTypes() const noexcept;
+		const std::vector<const Type*>& GetBaseTypes() const noexcept;
 
 		/**
 		* Returns derived types of this type
 		*/
-		const std::vector<const Type*> GetDerivedTypes() const noexcept;
+		const std::vector<const Type*>& GetDerivedTypes() const noexcept;
 
 		/**
 		* Returns factory of this type
@@ -497,7 +476,7 @@ namespace Reflectpp
 		/**
 		* Returns all property of this type
 		*/
-		std::vector<const Property*> GetProperties() const noexcept;
+		const std::vector<const Property*>& GetProperties() const noexcept;
 
 		/**
 		* Returns size of this type
@@ -567,32 +546,29 @@ namespace Reflectpp
 	template<typename T>
 	inline Factory Factory::Get() noexcept
 	{
-		return Factory(ConstructorCaller<T>, CopyCaller<T>, DestructorCaller<T>);
-	}
+		auto constructor = []() -> void*
+		{
+			if constexpr (std::is_constructible_v<T>)
+				return new T();
+			else
+				return nullptr;
+		};
 
-	template<typename T>
-	inline void* Factory::ConstructorCaller() noexcept
-	{
-		if constexpr (std::is_constructible_v<T>)
-			return new T();
-		else
-			return nullptr;
-	}
+		auto copy = [](void* object) -> void*
+		{
+			if constexpr (std::is_copy_constructible_v<T>)
+				return new T(*static_cast<T*>(object));
+			else
+				return nullptr;
+		};
 
-	template<typename T>
-	inline void* Factory::CopyCaller(void* object) noexcept
-	{
-		if constexpr (std::is_copy_constructible_v<T>)
-			return new T(*static_cast<T*>(object));
-		else
-			return nullptr;
-	}
+		auto destructor = [](void* object)
+		{
+			if constexpr (std::is_destructible_v<T>)
+				delete static_cast<T*>(object);
+		};
 
-	template<typename T>
-	inline void Factory::DestructorCaller(void* object) noexcept
-	{
-		if constexpr (std::is_destructible_v<T>)
-			delete static_cast<T*>(object);
+		return Factory(constructor, copy, destructor);
 	}
 
 	template<typename T>
@@ -793,8 +769,6 @@ namespace Reflectpp
 		}
 	}
 }
-
-//#pragma warning (disable : 4211)
 
 /**
 * @}

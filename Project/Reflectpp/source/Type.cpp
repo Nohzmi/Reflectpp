@@ -26,6 +26,32 @@ namespace Reflectpp
 	{
 	}
 
+	bool TypeInfo::operator==(const TypeInfo& rhs) const noexcept
+	{
+		return m_ID == rhs.m_ID;
+	}
+
+	bool TypeInfo::operator!=(const TypeInfo& rhs) const noexcept
+	{
+		return m_ID != rhs.m_ID;
+	}
+
+	size_t TypeInfo::GetID() const noexcept
+	{
+		return m_ID;
+	}
+
+	const char* TypeInfo::GetName() const noexcept
+	{
+		return m_Name;
+	}
+
+	TypeInfo::TypeInfo(size_t id, const char* name) noexcept :
+		m_ID{ id },
+		m_Name{ name }
+	{
+	}
+
 	Property::Property(size_t id, const char* name, size_t offset, const Type* type) noexcept :
 		m_ID{ id },
 		m_Name{ name },
@@ -59,12 +85,12 @@ namespace Reflectpp
 
 	bool Type::operator==(const Type& rhs) const noexcept
 	{
-		return m_ID == rhs.m_ID;
+		return m_TypeInfo == rhs.m_TypeInfo;
 	}
 
 	bool Type::operator!=(const Type& rhs) const noexcept
 	{
-		return m_ID != rhs.m_ID;
+		return m_TypeInfo != rhs.m_TypeInfo;
 	}
 
 	const std::vector<const Type*> Type::GetBaseTypes() const noexcept
@@ -80,6 +106,16 @@ namespace Reflectpp
 	const Factory& Type::GetFactory() const noexcept
 	{
 		return m_Factory;
+	}
+
+	size_t Type::GetID() const noexcept
+	{
+		return m_TypeInfo.GetID();
+	}
+
+	const char* Type::GetName() const noexcept
+	{
+		return m_TypeInfo.GetName();
 	}
 
 	const Property* Type::GetProperty(const char* name) const noexcept
@@ -101,39 +137,33 @@ namespace Reflectpp
 		return m_Properties;
 	}
 
-	size_t Type::GetID() const noexcept
-	{
-		return m_ID;
-	}
-
-	const char* Type::GetName() const noexcept
-	{
-		return m_Name;
-	}
-
 	size_t Type::GetSize() const noexcept
 	{
 		return m_Size;
 	}
 
-	Type::Type(Factory factory, size_t id, const char* name, size_t size) noexcept :
+	const TypeInfo& Type::GetTypeInfo() const noexcept
+	{
+		return m_TypeInfo;
+	}
+
+	Type::Type(const Factory& factory, size_t size, const TypeInfo& typeinfo) noexcept :
 		m_Factory{ factory },
-		m_HierarchyID{ id },
-		m_ID{ id },
-		m_Name{ name },
-		m_Size{ size }
+		m_HierarchyID{ typeinfo.GetID() },
+		m_Size{ size },
+		m_TypeInfo{ typeinfo }
 	{
 	}
 
-	Type* Type::AddType(Factory factory, size_t id, const char* name, size_t size) noexcept
+	Type* Type::AddType(const Factory& factory, size_t size, const TypeInfo& typeinfo) noexcept
 	{
-		auto it{ m_TypeDatabase.find(id) };
+		auto it{ m_TypeDatabase.find(typeinfo.GetID()) };
 
 		if (it != m_TypeDatabase.cend())
 			return nullptr;
 
-		Type* type{ new Type(factory, id, name, size) };
-		m_TypeDatabase.emplace(id, type);
+		Type* type{ new Type(factory, size, typeinfo) };
+		m_TypeDatabase.emplace(typeinfo.GetID(), type);
 
 		return type;
 	}

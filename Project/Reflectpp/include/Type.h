@@ -99,64 +99,10 @@ namespace Reflectpp
 	}
 
 	/**
-	* Returns type id of the given object
-	* @param object
+	* Generic Factory \n
+	* Allow to call on constructor / destructor
 	*/
-	template<typename T>
-	size_t GetTypeID(T*& object) noexcept
-	{
-		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
-			return typeid(T).hash_code();
-		else
-			return object->GetTypeID();
-	}
-
-	/**
-	* Returns type name of the given object
-	* @param object
-	*/
-	template<typename T>
-	const char* GetTypeName(T*& object) noexcept
-	{
-		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
-			return typeid(T).name();
-		else
-			return object->GetTypeName();
-	}
-
-	/**
-	* Returns type id of the given type
-	*/
-	template<typename T>
-	size_t TypeID() noexcept
-	{
-		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
-			return typeid(T).hash_code();
-		else
-			return T::TypeID();
-	}
-
-	/**
-	* Returns type name of the given type
-	*/
-	template<typename T>
-	const char* TypeName() noexcept
-	{
-		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
-			return typeid(T).name();
-		else
-			return T::TypeName();
-	}
-
-	class Type;
-
-	struct Name
-	{
-		const size_t id;
-		const char* str;
-	};
-
-	class Factory final
+	class REFLECTPP_API Factory final
 	{
 		using ConstructorT = void* (*)();
 		using CopyT = void* (*)(void*);
@@ -195,12 +141,6 @@ namespace Reflectpp
 		Factory& operator=(Factory&&) noexcept = default;
 
 		/**
-		* Construct a factory
-		*/
-		template<typename T>
-		static Factory Create() noexcept;
-
-		/**
 		* Returns a pointer on created object
 		*/
 		void* Construct() const noexcept;
@@ -216,6 +156,12 @@ namespace Reflectpp
 		* @param object
 		*/
 		void Destroy(void* object) const noexcept;
+
+		/**
+		* Get factory of requested type
+		*/
+		template<typename T>
+		static Factory Get() noexcept;
 
 	private:
 
@@ -253,6 +199,114 @@ namespace Reflectpp
 		const CopyT m_Copy;
 		const DestructorT m_Destructor;
 	};
+
+	/**
+	* Equivalent to std::type_info
+	*/
+	class REFLECTPP_API TypeInfo final
+	{
+	public:
+
+		/**
+		* Constructor
+		*/
+		TypeInfo() = delete;
+
+		/**
+		* Destructor
+		*/
+		~TypeInfo() = default;
+
+		/**
+		* Copy constructor
+		*/
+		TypeInfo(const TypeInfo&) = default;
+
+		/**
+		* Move constructor
+		*/
+		TypeInfo(TypeInfo&&) noexcept = default;
+
+		/**
+		* Copy assignement operator
+		*/
+		TypeInfo& operator=(const TypeInfo&) = default;
+
+		/**
+		* Move assignement operator
+		*/
+		TypeInfo& operator=(TypeInfo&&) noexcept = default;
+
+		/**
+		* Returns whether or not two types are the same
+		* @param rhs
+		*/
+		bool operator==(const TypeInfo& rhs) const noexcept;
+
+		/**
+		* Returns whether or not two types are the same
+		* @param rhs
+		*/
+		bool operator!=(const TypeInfo& rhs) const noexcept;
+
+		/**
+		* Get type info of the requested type
+		*/
+		template<typename T>
+		static TypeInfo Get() noexcept;
+
+		/**
+		* Returns id of this type
+		*/
+		size_t GetID() const noexcept;
+
+		/**
+		* Returns name of this type
+		*/
+		const char* GetName() const noexcept;
+
+		/**
+		* Returns type id of the given type
+		*/
+		template<typename T>
+		static size_t ID() noexcept;
+
+		/**
+		* Returns type id of the given object
+		* @param object
+		*/
+		template<typename T>
+		static size_t ID(T*& object) noexcept;
+
+		/**
+		* Returns type name of the given type
+		*/
+		template<typename T>
+		static const char* Name() noexcept;
+
+		/**
+		* Returns type name of the given object
+		* @param object
+		*/
+		template<typename T>
+		static const char* Name(T*& object) noexcept;
+
+	private:
+
+		/**
+		* Construct a type info
+		* @param id
+		* @param name
+		*/
+		TypeInfo(size_t id, const char* name) noexcept;
+
+	private:
+
+		const size_t m_ID;
+		const char* m_Name;
+	};
+
+	class Type;
 
 	/**
 	* The basic type representation
@@ -425,6 +479,16 @@ namespace Reflectpp
 		const Factory& GetFactory() const noexcept;
 
 		/**
+		* Returns id of this type
+		*/
+		size_t GetID() const noexcept;
+
+		/**
+		* Returns name of this type
+		*/
+		const char* GetName() const noexcept;
+
+		/**
 		* Returns property by name of this type
 		* @param name
 		*/
@@ -436,19 +500,14 @@ namespace Reflectpp
 		std::vector<const Property*> GetProperties() const noexcept;
 
 		/**
-		* Returns id of this type
-		*/
-		size_t GetID() const noexcept;
-
-		/**
-		* Returns name of this type
-		*/
-		const char* GetName() const noexcept;
-
-		/**
 		* Returns size of this type
 		*/
 		size_t GetSize() const noexcept;
+
+		/**
+		* Returns type info of this type
+		*/
+		const TypeInfo& GetTypeInfo() const noexcept;
 
 		/**
 		* Register a property of the current type
@@ -463,20 +522,18 @@ namespace Reflectpp
 		/**
 		* Construct a type representation
 		* @param factory
-		* @param id
-		* @param name
 		* @param size
+		* @param typeinfo
 		*/
-		Type(Factory factory, size_t id, const char* name, size_t size) noexcept;
+		Type(const Factory& factory, size_t size, const TypeInfo& typeinfo) noexcept;
 
 		/**
 		* Register a type in reflection
 		* @param factory
-		* @param id
-		* @param name
 		* @param size
+		* @param typeinfo
 		*/
-		static Type* AddType(Factory factory, size_t id, const char* name, size_t size) noexcept;
+		static Type* AddType(const Factory& factory, size_t size, const TypeInfo& typeinfo) noexcept;
 
 		/**
 		* Returns requested type representation
@@ -495,13 +552,12 @@ namespace Reflectpp
 		std::vector<const Type*> m_BaseTypes;
 		std::vector<const Type*> m_DerivedTypes;
 		const Factory m_Factory;
-		static PropertyDatabase m_PropertyDatabase;
-		std::vector<const Property*> m_Properties;
 		size_t m_HierarchyID;
-		const size_t m_ID;
-		const char* m_Name;
+		std::vector<const Property*> m_Properties;
+		static PropertyDatabase m_PropertyDatabase;
 		const size_t m_Size;
 		static TypeDatabase m_TypeDatabase;
+		const TypeInfo m_TypeInfo;
 	};
 
 	/**
@@ -509,7 +565,7 @@ namespace Reflectpp
 	*/
 
 	template<typename T>
-	inline Factory Factory::Create() noexcept
+	inline Factory Factory::Get() noexcept
 	{
 		return Factory(ConstructorCaller<T>, CopyCaller<T>, DestructorCaller<T>);
 	}
@@ -540,11 +596,53 @@ namespace Reflectpp
 	}
 
 	template<typename T>
+	inline TypeInfo TypeInfo::Get() noexcept
+	{
+		return TypeInfo(ID<T>(), Name<T>());
+	}
+
+	template<typename T>
+	inline size_t TypeInfo::ID() noexcept
+	{
+		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
+			return typeid(T).hash_code();
+		else
+			return T::TypeID();
+	}
+
+	template<typename T>
+	inline size_t TypeInfo::ID(T*& object) noexcept
+	{
+		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
+			return typeid(T).hash_code();
+		else
+			return object->GetTypeID();
+	}
+
+	template<typename T>
+	inline const char* TypeInfo::Name() noexcept
+	{
+		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
+			return typeid(T).name();
+		else
+			return T::TypeName();
+	}
+
+	template<typename T>
+	inline const char* TypeInfo::Name(T*& object) noexcept
+	{
+		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
+			return typeid(T).name();
+		else
+			return object->GetTypeName();
+	}
+
+	template<typename T>
 	inline Type& Type::base() noexcept
 	{
 		if constexpr (std::is_arithmetic_v<T> || !Reflectpp::is_valid<T>::value)
 		{
-			Reflectpp::Assert(false, "Type::base<%s>() : invalid type\n", Reflectpp::TypeName<T>());
+			Reflectpp::Assert(false, "Type::base<%s>() : invalid type\n", TypeInfo::Name<T>());
 			return *const_cast<Type*>(Get<void>());
 		}
 		else
@@ -552,7 +650,7 @@ namespace Reflectpp
 			Type* base{ const_cast<Type*>(Get<T>()) };
 
 			for (auto it : m_BaseTypes)
-				Reflectpp::Assert(it->m_ID != base->m_ID, "Type::base<%s>() : base type already registered\n", base->m_Name);
+				Reflectpp::Assert(it != base, "Type::base<%s>() : base type already registered\n", base->GetName());
 
 			if (m_BaseTypes.empty())
 				m_HierarchyID = base->m_HierarchyID;
@@ -589,17 +687,17 @@ namespace Reflectpp
 	{
 		if constexpr (!std::is_pointer_v<T>)
 		{
-			Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : not a pointer\n", Reflectpp::TypeName<T>(), Reflectpp::GetTypeName(object));
+			Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : not a pointer\n", TypeInfo::Name<T>(), TypeInfo::Name(object));
 			return nullptr;
 		}
 		else if constexpr (std::is_const_v<V> || std::is_pointer_v<V> || std::is_void_v<V> || std::is_volatile_v<V>)
 		{
-			Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : invalid type\n", Reflectpp::TypeName<T>(), Reflectpp::GetTypeName(object));
+			Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : invalid type\n", TypeInfo::Name<T>(), TypeInfo::Name(object));
 			return nullptr;
 		}
 		else if constexpr (std::is_const_v<U> || std::is_void_v<U> || std::is_volatile_v<U>)
 		{
-			Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : invalid object type\n", Reflectpp::TypeName<T>(), Reflectpp::GetTypeName(object));
+			Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : invalid object type\n", TypeInfo::Name<T>(), TypeInfo::Name(object));
 			return nullptr;
 		}
 		else
@@ -613,22 +711,22 @@ namespace Reflectpp
 	{
 		if constexpr (!Reflectpp::is_valid<T>::value)
 		{
-			Reflectpp::Assert(false, "Type::Get<%s>() : invalid type\n", TypeName<T>());
+			Reflectpp::Assert(false, "Type::Get<%s>() : invalid type\n", TypeInfo::Name<T>());
 			return nullptr;
 		}
 		else
 		{
-			const auto it{ FindType(Reflectpp::TypeID<T>()) };
+			const auto it{ FindType(TypeInfo::ID<T>()) };
 
 			if (it == nullptr)
 			{
 				if constexpr (std::is_arithmetic_v<T>)
 				{
-					return AddType(Factory::Create<T>(), TypeID<T>(), TypeName<T>(), sizeof(T));
+					return AddType(Factory::Get<T>(), sizeof(T), TypeInfo::Get<T>());
 				}
 				else
 				{
-					Reflectpp::Assert(false, "Type::Get<%s>() : unregistered type\n", TypeName<T>());
+					Reflectpp::Assert(false, "Type::Get<%s>() : unregistered type\n", TypeInfo::Name<T>());
 				}
 			}
 
@@ -641,20 +739,20 @@ namespace Reflectpp
 	{
 		if constexpr (std::is_null_pointer_v<T> || std::is_void_v<T> || std::is_volatile_v<T>)
 		{
-			Reflectpp::Assert(false, "Type::Get(%s*& object) : invalid type\n", Reflectpp::TypeName<T>());
+			Reflectpp::Assert(false, "Type::Get(%s*& object) : invalid type\n", TypeInfo::Name<T>());
 			return nullptr;
 		}
 		else if constexpr (!std::is_arithmetic_v<T> && !Reflectpp::use_macro<T>::value)
 		{
-			Reflectpp::Assert(false, "Type::Get(%s*& object) : unregistered type\n", Reflectpp::GetTypeName(object));
+			Reflectpp::Assert(false, "Type::Get(%s*& object) : unregistered type\n", TypeInfo::Name(object));
 			return nullptr;
 		}
 		else
 		{
-			Reflectpp::Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", Reflectpp::TypeName<T>());
+			Reflectpp::Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", TypeInfo::Name<T>());
 
 			if constexpr (!std::is_arithmetic_v<T>)
-				return m_TypeDatabase.find(Reflectpp::GetTypeID(object))->second.get();
+				return m_TypeDatabase.find(TypeInfo::ID(object))->second.get();
 			else
 				return Get<T>();
 		}
@@ -666,7 +764,7 @@ namespace Reflectpp
 		std::hash<std::string> hasher;
 
 		for (auto it : m_Properties)
-			Reflectpp::Assert(it->GetID() != hasher(name), "Type::property(const char* name, %s %s::* addr) : %s already registered\n", Reflectpp::TypeName<PropertyT>(), Reflectpp::TypeName<T>(), name);
+			Reflectpp::Assert(it->GetID() != hasher(name), "Type::property(const char* name, %s %s::* addr) : %s already registered\n", TypeInfo::Name<PropertyT>(), TypeInfo::Name<T>(), name);
 
 		m_PropertyDatabase.emplace_back(new Property(hasher(name), name, reinterpret_cast<size_t>(&(reinterpret_cast<T const volatile*>(nullptr)->*addr)), Get<std::remove_cv_t<PropertyT>>()));
 		const_cast<Type*>(Get<T>())->m_Properties.emplace_back(m_PropertyDatabase.back().get());
@@ -679,18 +777,18 @@ namespace Reflectpp
 	{
 		if constexpr (std::is_arithmetic_v<T> || !is_valid<T>::value)
 		{
-			Assert(false, "Type::class_<%s>() : invalid type\n", TypeName<T>());
+			Assert(false, "Type::class_<%s>() : invalid type\n", TypeInfo::Name<T>());
 			return *const_cast<Type*>(Type::Get<void>());
 		}
 		else if constexpr (!Reflectpp::use_macro<T>::value)
 		{
-			Assert(false, "Type::class_<%s>() : REFLECT(T) macro not used\n", TypeName<T>());
+			Assert(false, "Type::class_<%s>() : REFLECT(T) macro not used\n", TypeInfo::Name<T>());
 			return *const_cast<Type*>(Type::Get<void>());
 		}
 		else
 		{
-			Type* type{ AddType(Factory::Create<T>(), TypeID<T>(), TypeName<T>(), sizeof(T)) };
-			Assert(type != nullptr, "Type::class_<%s>() : type already registered\n", TypeName<T>());
+			Type* type{ AddType(Factory::Get<T>(), sizeof(T), TypeInfo::Get<T>()) };
+			Assert(type != nullptr, "Type::class_<%s>() : type already registered\n", TypeInfo::Name<T>());
 			return *type;
 		}
 	}

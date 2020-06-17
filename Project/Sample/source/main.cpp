@@ -35,6 +35,8 @@ int main()
 	auto test9 = Type::Cast<Derived*>(tmp0);
 	auto test10 = dynamic_cast<Derived*>(tmp0);
 
+	auto test11 = Type::Get<Derived>()->GetFactory().Construct();
+
 	// Serialization test
 	//Test object;
 	//Serializer save("test");

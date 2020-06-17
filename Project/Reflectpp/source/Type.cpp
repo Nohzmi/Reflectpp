@@ -4,6 +4,28 @@
 
 namespace Reflectpp
 {
+	void* Factory::Construct() const noexcept
+	{
+		return m_Constructor();
+	}
+
+	void* Factory::Copy(void* object) const noexcept
+	{
+		return m_Copy(object);
+	}
+
+	void Factory::Destroy(void* object) const noexcept
+	{
+		m_Destructor(object);
+	}
+
+	Factory::Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept :
+		m_Constructor{ constructor },
+		m_Copy{ copy },
+		m_Destructor{ destructor }
+	{
+	}
+
 	Property::Property(size_t id, const char* name, size_t offset, const Type* type) noexcept :
 		m_ID{ id },
 		m_Name{ name },
@@ -35,17 +57,6 @@ namespace Reflectpp
 	Type::PropertyDatabase Type::m_PropertyDatabase;
 	Type::TypeDatabase Type::m_TypeDatabase;
 
-	Type::Type(ConstructorT constructor, CopyT copyConstructor, DestructorT destructor, size_t id, const char* name, size_t size) :
-		m_Constructor{ constructor },
-		m_CopyConstructor{ copyConstructor },
-		m_Destructor{ destructor },
-		m_HierarchyID{ id },
-		m_ID{ id },
-		m_Name{ name },
-		m_Size{ size }
-	{
-	}
-
 	bool Type::operator==(const Type& rhs) const noexcept
 	{
 		return m_ID == rhs.m_ID;
@@ -61,24 +72,14 @@ namespace Reflectpp
 		return m_BaseTypes;
 	}
 
-	Type::ConstructorT Type::GetConstructor() const noexcept
-	{
-		return m_Constructor;
-	}
-
-	Type::CopyT Type::GetCopyConstructor() const noexcept
-	{
-		return m_CopyConstructor;
-	}
-
 	const std::vector<const Type*> Type::GetDerivedTypes() const noexcept
 	{
 		return m_DerivedTypes;
 	}
 
-	Type::DestructorT Type::GetDestructor() const noexcept
+	const Factory& Type::GetFactory() const noexcept
 	{
-		return m_Destructor;
+		return m_Factory;
 	}
 
 	const Property* Type::GetProperty(const char* name) const noexcept
@@ -115,15 +116,23 @@ namespace Reflectpp
 		return m_Size;
 	}
 
-	Type* Type::AddType(ConstructorT ctor, CopyT cctor, DestructorT dtor,
-		size_t id, const char* name, size_t size) noexcept
+	Type::Type(Factory factory, size_t id, const char* name, size_t size) noexcept :
+		m_Factory{ factory },
+		m_HierarchyID{ id },
+		m_ID{ id },
+		m_Name{ name },
+		m_Size{ size }
+	{
+	}
+
+	Type* Type::AddType(Factory factory, size_t id, const char* name, size_t size) noexcept
 	{
 		auto it{ m_TypeDatabase.find(id) };
 
 		if (it != m_TypeDatabase.cend())
 			return nullptr;
 
-		Type* type{ new Type(ctor, cctor, dtor, id, name, size) };
+		Type* type{ new Type(factory, id, name, size) };
 		m_TypeDatabase.emplace(id, type);
 
 		return type;

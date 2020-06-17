@@ -493,7 +493,7 @@ namespace Reflectpp
 		* @param name
 		* @param addr
 		*/
-		template<typename T, typename PropertyT>
+		template<typename T, typename PropertyT, typename U = typename std::remove_cv_t<PropertyT>>
 		Type& property(const char* name, PropertyT T::* addr) noexcept;
 
 	private:
@@ -505,6 +505,20 @@ namespace Reflectpp
 		* @param typeinfo
 		*/
 		Type(const Factory& factory, size_t size, const TypeInfo& typeinfo) noexcept;
+
+		/**
+		* Register the base class of the current type
+		* @param base
+		*/
+		Type* AddBase(Type* base) noexcept;
+
+		/**
+		* Register a property of the current type
+		* @param name
+		* @param offset
+		* @param type
+		*/
+		Property* AddProperty(const char* name, size_t offset, const Type* type) noexcept;
 
 		/**
 		* Register a type in reflection
@@ -616,44 +630,15 @@ namespace Reflectpp
 	template<typename T>
 	inline Type& Type::base() noexcept
 	{
-		if constexpr (std::is_arithmetic_v<T> || !Reflectpp::is_valid<T>::value)
+		if constexpr (std::is_arithmetic_v<T> || !is_valid<T>::value)
 		{
-			Reflectpp::Assert(false, "Type::base<%s>() : invalid type\n", TypeInfo::Name<T>());
+			Assert(false, "Type::base<%s>() : invalid type\n", TypeInfo::Name<T>());
 			return *const_cast<Type*>(Get<void>());
 		}
 		else
 		{
-			Type* base{ const_cast<Type*>(Get<T>()) };
-
-			for (auto it : m_BaseTypes)
-				Reflectpp::Assert(it != base, "Type::base<%s>() : base type already registered\n", base->GetName());
-
-			if (m_BaseTypes.empty())
-				m_HierarchyID = base->m_HierarchyID;
-
-			if (!m_BaseTypes.empty())
-			{
-				auto updateHierarchy = [](const Type* type, size_t hierarchyID, const auto& lambda)
-				{
-					if (type->m_HierarchyID == hierarchyID)
-						return;
-
-					const_cast<Type*>(type)->m_HierarchyID = hierarchyID;
-
-					for (auto it : type->m_BaseTypes)
-						lambda(it, hierarchyID, lambda);
-
-					for (auto it : type->m_DerivedTypes)
-						lambda(it, hierarchyID, lambda);
-				};
-
-				updateHierarchy(base, m_HierarchyID, updateHierarchy);
-			}
-
-			base->m_DerivedTypes.emplace_back(this);
-			m_BaseTypes.emplace_back(base);
-			m_Properties.insert(m_Properties.cbegin(), base->m_Properties.cbegin(), base->m_Properties.cbegin());
-
+			const Type* base{ AddBase(const_cast<Type*>(Get<T>())) };
+			Assert(base != nullptr, "Type::base<%s>() : base type already registered\n", base->GetName());
 			return *this;
 		}
 	}
@@ -663,50 +648,45 @@ namespace Reflectpp
 	{
 		if constexpr (!std::is_pointer_v<T>)
 		{
-			Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : not a pointer\n", TypeInfo::Name<T>(), TypeInfo::Name(object));
+			Assert(false, "Type::Cast<%s>(%s*& object) : not a pointer\n", TypeInfo::Name<T>(), TypeInfo::Name(object));
 			return nullptr;
 		}
 		else if constexpr (std::is_const_v<V> || std::is_pointer_v<V> || std::is_void_v<V> || std::is_volatile_v<V>)
 		{
-			Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : invalid type\n", TypeInfo::Name<T>(), TypeInfo::Name(object));
+			Assert(false, "Type::Cast<%s>(%s*& object) : invalid type\n", TypeInfo::Name<T>(), TypeInfo::Name(object));
 			return nullptr;
 		}
 		else if constexpr (std::is_const_v<U> || std::is_void_v<U> || std::is_volatile_v<U>)
 		{
-			Reflectpp::Assert(false, "Type::Cast<%s>(%s*& object) : invalid object type\n", TypeInfo::Name<T>(), TypeInfo::Name(object));
+			Assert(false, "Type::Cast<%s>(%s*& object) : invalid object type\n", TypeInfo::Name<T>(), TypeInfo::Name(object));
 			return nullptr;
 		}
 		else
 		{
-			return (Get(object)->m_HierarchyID == Get<V>()->m_HierarchyID) ? reinterpret_cast<T>(object) : nullptr;
+			return nullptr; // TODO revoir pour faire comme dynamic_cast et penser à l'interface dll warning
+			//return (Get(object)->m_HierarchyID == Get<V>()->m_HierarchyID) ? reinterpret_cast<T>(object) : nullptr;
 		}
 	}
 
 	template<typename T>
 	inline const Type* Type::Get() noexcept
 	{
-		if constexpr (!Reflectpp::is_valid<T>::value)
+		if constexpr (!is_valid<T>::value)
 		{
-			Reflectpp::Assert(false, "Type::Get<%s>() : invalid type\n", TypeInfo::Name<T>());
+			Assert(false, "Type::Get<%s>() : invalid type\n", TypeInfo::Name<T>());
 			return nullptr;
+		}
+		else if constexpr (std::is_arithmetic_v<T>)
+		{
+			const Type* type{ FindType(TypeInfo::ID<T>()) };
+			if (type == nullptr) return AddType(Factory::Get<T>(), sizeof(T), TypeInfo::Get<T>());
+			return type;
 		}
 		else
 		{
-			const auto it{ FindType(TypeInfo::ID<T>()) };
-
-			if (it == nullptr)
-			{
-				if constexpr (std::is_arithmetic_v<T>)
-				{
-					return AddType(Factory::Get<T>(), sizeof(T), TypeInfo::Get<T>());
-				}
-				else
-				{
-					Reflectpp::Assert(false, "Type::Get<%s>() : unregistered type\n", TypeInfo::Name<T>());
-				}
-			}
-
-			return it;
+			const Type* type{ FindType(TypeInfo::ID<T>()) };
+			Assert(type != nullptr, "Type::Get<%s>() : unregistered type\n", TypeInfo::Name<T>());
+			return type;
 		}
 	}
 
@@ -715,36 +695,32 @@ namespace Reflectpp
 	{
 		if constexpr (std::is_null_pointer_v<T> || std::is_void_v<T> || std::is_volatile_v<T>)
 		{
-			Reflectpp::Assert(false, "Type::Get(%s*& object) : invalid type\n", TypeInfo::Name<T>());
+			Assert(false, "Type::Get(%s*& object) : invalid type\n", TypeInfo::Name<T>());
 			return nullptr;
 		}
-		else if constexpr (!std::is_arithmetic_v<T> && !Reflectpp::use_macro<T>::value)
+		else if constexpr (!std::is_arithmetic_v<T> && !use_macro<T>::value)
 		{
-			Reflectpp::Assert(false, "Type::Get(%s*& object) : unregistered type\n", TypeInfo::Name(object));
+			Assert(false, "Type::Get(%s*& object) : unregistered type\n", TypeInfo::Name(object));
 			return nullptr;
+		}
+		else if constexpr (std::is_arithmetic_v<T>)
+		{
+			Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", TypeInfo::Name<T>());
+			return Get<T>();
 		}
 		else
 		{
-			Reflectpp::Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", TypeInfo::Name<T>());
-
-			if constexpr (!std::is_arithmetic_v<T>)
-				return m_TypeDatabase.find(TypeInfo::ID(object))->second.get();
-			else
-				return Get<T>();
+			Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", TypeInfo::Name<T>());
+			return FindType(TypeInfo::ID(object));
 		}
 	}
 
-	template<typename T, typename PropertyT>
+	template<typename T, typename PropertyT, typename U>
 	inline Type& Type::property(const char* name, PropertyT T::* addr) noexcept
 	{
-		std::hash<std::string> hasher;
-
-		for (auto it : m_Properties)
-			Reflectpp::Assert(it->GetID() != hasher(name), "Type::property(const char* name, %s %s::* addr) : %s already registered\n", TypeInfo::Name<PropertyT>(), TypeInfo::Name<T>(), name);
-
-		m_PropertyDatabase.emplace_back(new Property(hasher(name), name, reinterpret_cast<size_t>(&(reinterpret_cast<T const volatile*>(nullptr)->*addr)), Get<std::remove_cv_t<PropertyT>>()));
-		const_cast<Type*>(Get<T>())->m_Properties.emplace_back(m_PropertyDatabase.back().get());
-
+		Assert(*Get<T>() == *this, "Type::property(const char* name, %s %s::* addr) : %s isn't in %s\n", TypeInfo::Name<U>(), TypeInfo::Name<T>(), name, GetName());
+		const Property* prop{ AddProperty(name, (size_t)(char*)&((T*)nullptr->*addr), Get<U>()) };
+		Assert(prop != nullptr, "Type::property(const char* name, %s %s::* addr) : %s already registered\n", TypeInfo::Name<U>(), TypeInfo::Name<T>(), name);
 		return *this;
 	}
 
@@ -756,9 +732,9 @@ namespace Reflectpp
 			Assert(false, "Type::class_<%s>() : invalid type\n", TypeInfo::Name<T>());
 			return *const_cast<Type*>(Type::Get<void>());
 		}
-		else if constexpr (!Reflectpp::use_macro<T>::value)
+		else if constexpr (!use_macro<T>::value)
 		{
-			Assert(false, "Type::class_<%s>() : REFLECT(T) macro not used\n", TypeInfo::Name<T>());
+			Assert(false, "Type::class_<%s>() : REFLECT(T) macro isn't used\n", TypeInfo::Name<T>());
 			return *const_cast<Type*>(Type::Get<void>());
 		}
 		else

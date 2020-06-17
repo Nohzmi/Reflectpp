@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 #include "Type.h"
+#include <vld.h>//////////////////////////////////////////////
 
 namespace Reflectpp
 {
@@ -123,9 +124,9 @@ namespace Reflectpp
 		std::hash<std::string> hasher;
 		size_t id{ hasher(name) };
 
-		for (auto it : m_Properties)
-			if (it->GetID() == id)
-				return it;
+		for (const Property* prop : m_Properties)
+			if (prop->GetID() == id)
+				return prop;
 
 		Reflectpp::Assert(false, "Type::GetProperty : %s isn't registered\n", name);
 
@@ -155,9 +156,60 @@ namespace Reflectpp
 	{
 	}
 
+	Type* Type::AddBase(Type* base) noexcept
+	{
+		for (const Type* type : m_BaseTypes)
+			if (*type == *base)
+				return nullptr;
+
+		if (m_BaseTypes.empty())
+			m_HierarchyID = base->m_HierarchyID;
+
+		if (!m_BaseTypes.empty())
+		{
+			auto updateHierarchy = [](const Type* type, size_t hierarchyID, const auto& lambda)
+			{
+				if (type->m_HierarchyID == hierarchyID)
+					return;
+
+				const_cast<Type*>(type)->m_HierarchyID = hierarchyID;
+
+				for (const Type* baseType : type->m_BaseTypes)
+					lambda(baseType, hierarchyID, lambda);
+
+				for (const Type* derivedType : type->m_DerivedTypes)
+					lambda(derivedType, hierarchyID, lambda);
+			};
+
+			updateHierarchy(base, m_HierarchyID, updateHierarchy);
+		}
+
+		base->m_DerivedTypes.emplace_back(this);
+		m_BaseTypes.emplace_back(base);
+		m_Properties.insert(m_Properties.cbegin(), base->m_Properties.cbegin(), base->m_Properties.cbegin());
+
+		return base;
+	}
+
+	Property* Type::AddProperty(const char* name, size_t offset, const Type* type) noexcept
+	{
+		const std::hash<std::string> hasher;
+		const size_t id{ hasher(name) };
+
+		for (const Property* prop : GetProperties())
+			if (prop->GetID() == id)
+				return nullptr;
+
+		Property* prop{ new Property(id, name, offset, type) };
+		m_Properties.emplace_back(prop);
+		m_PropertyDatabase.emplace_back(prop);
+
+		return prop;
+	}
+
 	Type* Type::AddType(const Factory& factory, size_t size, const TypeInfo& typeinfo) noexcept
 	{
-		auto it{ m_TypeDatabase.find(typeinfo.GetID()) };
+		const auto it{ m_TypeDatabase.find(typeinfo.GetID()) };
 
 		if (it != m_TypeDatabase.cend())
 			return nullptr;
@@ -170,7 +222,7 @@ namespace Reflectpp
 
 	Type* Type::FindType(size_t id) noexcept
 	{
-		auto it{ m_TypeDatabase.find(id) };
+		const auto it{ m_TypeDatabase.find(id) };
 		return (it != m_TypeDatabase.cend()) ? it->second.get() : nullptr;
 	}
 }

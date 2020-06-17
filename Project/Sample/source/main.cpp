@@ -1,5 +1,6 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
+#include <vld.h>//////////////////////////////////////////////
 #include <cstdio>
 #include <Type.h>
 
@@ -14,7 +15,7 @@ struct Not {};
 int main()
 {
 	// Entry point
-	printf("Hello World!\n");
+	printf("\nHello World!\n\n");
 
 	// Reflection test
 	auto test = Type::Get<Derived>();
@@ -22,6 +23,7 @@ int main()
 	auto test2 = Type::Get<Derived>()->GetBaseTypes();
 	auto test3 = Type::Get<Derived>()->GetDerivedTypes();
 	auto test4 = Type::Get<Derived>()->GetProperties();
+	auto test45 = Type::Get<Base>();
 
 	Base* tmp0 = new Base();
 	Base* tmp1 = new Derived();
@@ -36,7 +38,12 @@ int main()
 	auto test10 = dynamic_cast<Derived*>(tmp0);
 
 	auto test11 = Type::Get<Derived>()->GetFactory().Construct();
+	Type::Get<Derived>()->GetFactory().Destroy(test11);
 	auto test12 = TypeInfo::Get<Intern>();
+
+	delete tmp0;
+	delete tmp1;
+	delete tmp2;
 
 	// Serialization test
 	//Test object;

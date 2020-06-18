@@ -15,29 +15,27 @@ namespace Reflectpp
 
 	Type* Registry::AddBase(Type* type, Type* base) noexcept
 	{
-		// TODO clean
-
-		for (const Type* t : type->m_BaseTypes)
-			if (*t == *base)
+		for (auto& it : type->GetBaseTypes())
+			if (it->GetID() == base->GetID())
 				return nullptr;
 
-		if (type->m_BaseTypes.empty())
+		if (type->GetBaseTypes().empty())
 			type->m_HierarchyID = base->m_HierarchyID;
 
-		if (!type->m_BaseTypes.empty())
+		if (!type->GetBaseTypes().empty())
 		{
-			auto updateHierarchy = [](const Type* type, size_t hierarchyID, const auto& lambda)
+			auto updateHierarchy = [](Type* type, size_t hierarchyID, auto& lambda)
 			{
 				if (type->m_HierarchyID == hierarchyID)
 					return;
 
-				const_cast<Type*>(type)->m_HierarchyID = hierarchyID;
+				type->m_HierarchyID = hierarchyID;
 
-				for (const Type* baseType : type->m_BaseTypes)
-					lambda(baseType, hierarchyID, lambda);
+				for (auto& it : type->m_BaseTypes)
+					lambda(it, hierarchyID, lambda);
 
-				for (const Type* derivedType : type->m_DerivedTypes)
-					lambda(derivedType, hierarchyID, lambda);
+				for (auto& it : type->m_DerivedTypes)
+					lambda(it, hierarchyID, lambda);
 			};
 
 			updateHierarchy(base, type->m_HierarchyID, updateHierarchy);

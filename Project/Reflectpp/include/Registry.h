@@ -198,6 +198,7 @@ namespace Reflectpp
 		{
 			Type* base{ AddBase(type, GetType<T>()) };
 			Assert(base != nullptr, "Registration::base<%s>() : base type already registered\n", base->GetName());
+
 			return base;
 		}
 	}
@@ -205,9 +206,10 @@ namespace Reflectpp
 	template<typename T, typename PropertyT, typename U>
 	inline Property* Registry::AddProperty(Type* type, const char* name, PropertyT T::* addr) noexcept
 	{
-		//Assert(*GetType<T>() == *type, "Registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", TypeName<U>(), TypeName<T>(), name, type->GetName());
+		Assert(*GetType<T>() == *type, "Registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", TypeName<U>(), TypeName<T>(), name, type->GetName());
 		Property* prop{ AddProperty(type, name, (size_t)(char*)&((T*)nullptr->*addr), GetType<U>()) };
 		Assert(prop != nullptr, "Registration::property(const char* name, %s %s::* addr) : %s already registered\n", TypeName<U>(), TypeName<T>(), name);
+
 		return prop;
 	}
 
@@ -228,6 +230,7 @@ namespace Reflectpp
 		{
 			Type* type{ AddType(GetFactory<T>(), sizeof(T), GetTypeInfo<T>()) };
 			Assert(type != nullptr, "Registration::class_<%s>() : type already registered\n", TypeName<T>());
+
 			return type;
 		}
 	}
@@ -276,13 +279,17 @@ namespace Reflectpp
 		else if constexpr (std::is_arithmetic_v<T>)
 		{
 			Type* type{ GetType(TypeID<T>()) };
-			if (type == nullptr) return AddType(GetFactory<T>(), sizeof(T), GetTypeInfo<T>());
+
+			if (type == nullptr)
+				return AddType(GetFactory<T>(), sizeof(T), GetTypeInfo<T>());
+
 			return type;
 		}
 		else
 		{
 			Type* type{ GetType(TypeID<T>()) };
 			Assert(type != nullptr, "Type::Get<%s>() : unregistered type\n", TypeName<T>());
+
 			return type;
 		}
 	}
@@ -303,8 +310,12 @@ namespace Reflectpp
 		else if constexpr (std::is_arithmetic_v<T>)
 		{
 			Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", TypeName<T>());
+
 			Type* type{ GetType(TypeID<T>()) };
-			if (type == nullptr) return AddType(GetFactory<T>(), sizeof(T), GetTypeInfo<T>());
+
+			if (type == nullptr)
+				return AddType(GetFactory<T>(), sizeof(T), GetTypeInfo<T>());
+
 			return type;
 		}
 		else

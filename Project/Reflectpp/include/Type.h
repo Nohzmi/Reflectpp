@@ -43,8 +43,8 @@ class Type;
 class TypeInfo;
 
 /**
-* Generic factory \n
-* Allow to call on constructor and destructor
+* Generic factory class used in reflection \n
+* Independent of the reflection
 */
 class REFLECTPP_API Factory final
 {
@@ -89,7 +89,7 @@ private:
 };
 
 /**
-* The basic type representation
+* Show a property of a class in reflection
 */
 class REFLECTPP_API Property final
 {
@@ -176,8 +176,7 @@ private:
 #pragma warning(disable: 4251)
 
 /**
-* The basic type representation \n
-* Also serves as type database
+* The basic type representation
 */
 class REFLECTPP_API Type final
 {
@@ -278,7 +277,8 @@ private:
 #pragma warning (pop)
 
 /**
-* Equivalent to std::type_info
+* Equivalent to std::type_info \n
+* Independent of the reflection
 */
 class REFLECTPP_API TypeInfo final
 {
@@ -311,12 +311,12 @@ public:
 	static TypeInfo& Get() noexcept;
 
 	/**
-	* Returns id of this type
+	* Returns id of this type info
 	*/
 	size_t GetID() const noexcept;
 
 	/**
-	* Returns name of this type
+	* Returns name of this type info
 	*/
 	const char* GetName() const noexcept;
 

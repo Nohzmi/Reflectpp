@@ -6,10 +6,10 @@
 #include <string>
 #include "Registry.h"
 
-Factory::Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept :
-	m_Constructor{ constructor },
+Factory::Factory(void* (*ctor)(), void* (*copy)(void*), void (*dtor)(void*)) noexcept :
+	m_Constructor{ ctor },
 	m_Copy{ copy },
-	m_Destructor{ destructor }
+	m_Destructor{ dtor }
 {
 }
 
@@ -61,35 +61,9 @@ Registration::Registration(Type* type) noexcept :
 {
 }
 
-TypeInfo::TypeInfo(size_t id, const char* name) noexcept :
-	m_ID{ id },
-	m_Name{ name }
-{
-}
-
-bool TypeInfo::operator==(const TypeInfo& rhs) const noexcept
-{
-	return m_ID == rhs.m_ID;
-}
-
-bool TypeInfo::operator!=(const TypeInfo& rhs) const noexcept
-{
-	return m_ID != rhs.m_ID;
-}
-
-size_t TypeInfo::GetID() const noexcept
-{
-	return m_ID;
-}
-
-const char* TypeInfo::GetName() const noexcept
-{
-	return m_Name;
-}
-
-Type::Type(Factory& factory, size_t size, TypeInfo& typeinfo) noexcept :
+Type::Type(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept :
 	m_Factory{ factory },
-	m_HierarchyID{ typeinfo.GetID() },
+	m_HierarchyID{ typeinfo->GetID() },
 	m_Size{ size },
 	m_TypeInfo{ typeinfo }
 {
@@ -117,17 +91,17 @@ const std::vector<const Type*>& Type::GetDerivedTypes() const noexcept
 
 Factory& Type::GetFactory() const noexcept
 {
-	return *const_cast<Factory*>(&m_Factory);
+	return *m_Factory;
 }
 
 size_t Type::GetID() const noexcept
 {
-	return m_TypeInfo.GetID();
+	return m_TypeInfo->GetID();
 }
 
 const char* Type::GetName() const noexcept
 {
-	return m_TypeInfo.GetName();
+	return m_TypeInfo->GetName();
 }
 
 const Property* Type::GetProperty(const char* name) const noexcept
@@ -156,5 +130,31 @@ size_t Type::GetSize() const noexcept
 
 TypeInfo& Type::GetTypeInfo() const noexcept
 {
-	return *const_cast<TypeInfo*>(&m_TypeInfo);
+	return *m_TypeInfo;
+}
+
+TypeInfo::TypeInfo(size_t id, const char* name) noexcept :
+	m_ID{ id },
+	m_Name{ name }
+{
+}
+
+bool TypeInfo::operator==(const TypeInfo& rhs) const noexcept
+{
+	return m_ID == rhs.m_ID;
+}
+
+bool TypeInfo::operator!=(const TypeInfo& rhs) const noexcept
+{
+	return m_ID != rhs.m_ID;
+}
+
+size_t TypeInfo::GetID() const noexcept
+{
+	return m_ID;
+}
+
+const char* TypeInfo::GetName() const noexcept
+{
+	return m_Name;
 }

@@ -40,6 +40,7 @@ void register_function() noexcept
 
 namespace Reflectpp { class Registry; }
 class Type;
+class TypeInfo;
 
 /**
 * Generic factory \n
@@ -47,10 +48,6 @@ class Type;
 */
 class REFLECTPP_API Factory final
 {
-	using ConstructorT = void* (*)();
-	using CopyT = void* (*)(void*);
-	using DestructorT = void (*)(void*);
-
 public:
 
 	Factory() = delete;
@@ -59,7 +56,7 @@ public:
 	Factory(Factory&&) noexcept = default;
 	Factory& operator=(const Factory&) = default;
 	Factory& operator=(Factory&&) noexcept = default;
-	Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
+	Factory(void* (*ctor)(), void* (*copy)(void*), void (*dtor)(void*)) noexcept;
 
 	/**
 	* Returns a pointer on created object
@@ -86,9 +83,9 @@ public:
 
 private:
 
-	ConstructorT m_Constructor;
-	CopyT m_Copy;
-	DestructorT m_Destructor;
+	void* (*m_Constructor)();
+	void* (*m_Copy)(void*);
+	void (*m_Destructor)(void*);
 };
 
 /**
@@ -175,55 +172,6 @@ private:
 	Type* m_Type;
 };
 
-/**
-* Equivalent to std::type_info
-*/
-class REFLECTPP_API TypeInfo final
-{
-public:
-
-	TypeInfo() = delete;
-	~TypeInfo() = default;
-	TypeInfo(const TypeInfo&) = default;
-	TypeInfo(TypeInfo&&) noexcept = default;
-	TypeInfo& operator=(const TypeInfo&) = default;
-	TypeInfo& operator=(TypeInfo&&) noexcept = default;
-	TypeInfo(size_t id, const char* name) noexcept;
-
-	/**
-	* Returns whether or not two types are the same
-	* @param rhs
-	*/
-	bool operator==(const TypeInfo& rhs) const noexcept;
-
-	/**
-	* Returns whether or not two types are the same
-	* @param rhs
-	*/
-	bool operator!=(const TypeInfo& rhs) const noexcept;
-
-	/**
-	* Get type info of the requested type
-	*/
-	template<typename T>
-	static TypeInfo& Get() noexcept;
-
-	/**
-	* Returns id of this type
-	*/
-	size_t GetID() const noexcept;
-
-	/**
-	* Returns name of this type
-	*/
-	const char* GetName() const noexcept;
-
-private:
-
-	size_t m_ID;
-	const char* m_Name;
-};
-
 #pragma warning(push)
 #pragma warning(disable: 4251)
 
@@ -243,7 +191,7 @@ public:
 	Type(Type&&) noexcept = default;
 	Type& operator=(const Type&) = delete;
 	Type& operator=(Type&&) noexcept = default;
-	Type(Factory& factory, size_t size, TypeInfo& typeinfo) noexcept;
+	Type(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept;
 
 	/**
 	* Returns whether or not two types are the same
@@ -320,14 +268,63 @@ private:
 
 	std::vector<const Type*> m_BaseTypes;
 	std::vector<const Type*> m_DerivedTypes;
-	Factory m_Factory;
+	Factory* m_Factory;
 	size_t m_HierarchyID;
 	std::vector<const Property*> m_Properties;
 	size_t m_Size;
-	TypeInfo m_TypeInfo;
+	TypeInfo* m_TypeInfo;
 };
 
 #pragma warning (pop)
+
+/**
+* Equivalent to std::type_info
+*/
+class REFLECTPP_API TypeInfo final
+{
+public:
+
+	TypeInfo() = delete;
+	~TypeInfo() = default;
+	TypeInfo(const TypeInfo&) = default;
+	TypeInfo(TypeInfo&&) noexcept = default;
+	TypeInfo& operator=(const TypeInfo&) = default;
+	TypeInfo& operator=(TypeInfo&&) noexcept = default;
+	TypeInfo(size_t id, const char* name) noexcept;
+
+	/**
+	* Returns whether or not two types are the same
+	* @param rhs
+	*/
+	bool operator==(const TypeInfo& rhs) const noexcept;
+
+	/**
+	* Returns whether or not two types are the same
+	* @param rhs
+	*/
+	bool operator!=(const TypeInfo& rhs) const noexcept;
+
+	/**
+	* Get type info of the requested type
+	*/
+	template<typename T>
+	static TypeInfo& Get() noexcept;
+
+	/**
+	* Returns id of this type
+	*/
+	size_t GetID() const noexcept;
+
+	/**
+	* Returns name of this type
+	*/
+	const char* GetName() const noexcept;
+
+private:
+
+	size_t m_ID;
+	const char* m_Name;
+};
 
 /**
 * @}
@@ -338,29 +335,7 @@ private:
 template<typename T>
 inline Factory& Factory::Get() noexcept
 {
-	auto constructor = []() -> void*
-	{
-		if constexpr (std::is_constructible_v<T>)
-			return new T();
-		else
-			return nullptr;
-	};
-
-	auto copy = [](void* object) -> void*
-	{
-		if constexpr (std::is_copy_constructible_v<T>)
-			return new T(*static_cast<T*>(object));
-		else
-			return nullptr;
-	};
-
-	auto destructor = [](void* object)
-	{
-		if constexpr (std::is_destructible_v<T>)
-			delete static_cast<T*>(object);
-	};
-
-	return *(new Factory(constructor, copy, destructor)); //TODO va changer
+	return *Reflectpp::Registry::Instance().GetFactory<T>();
 }
 
 template<typename T>
@@ -384,12 +359,6 @@ inline Registration Registration::property(const char* name, PropertyT T::* addr
 }
 
 template<typename T>
-inline TypeInfo& TypeInfo::Get() noexcept
-{
-	return *(new TypeInfo(Reflectpp::TypeID<T>(), Reflectpp::TypeName<T>())); //TODO va changer
-}
-
-template<typename T>
 inline const Type* Type::Get() noexcept
 {
 	return Reflectpp::Registry::Instance().GetType<T>();
@@ -399,4 +368,10 @@ template<typename T>
 inline const Type* Type::Get(T*& object) noexcept
 {
 	return Reflectpp::Registry::Instance().GetType(object);
+}
+
+template<typename T>
+inline TypeInfo& TypeInfo::Get() noexcept
+{
+	return *Reflectpp::Registry::Instance().GetTypeInfo<T>();
 }

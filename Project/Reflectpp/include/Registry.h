@@ -11,6 +11,7 @@
 #include <memory>
 #include <type_traits>
 #include <typeinfo>
+#include <unordered_map>
 #include <vector>
 
 #ifndef REFLECTPP_API
@@ -87,6 +88,8 @@ namespace Reflectpp
 
 		Type* AddBase(Type* type, Type* base) noexcept;
 
+		Factory* AddFactory(size_t id, void* (*ctor)(), void* (*copy)(void*), void (*dtor)(void*)) noexcept;
+
 		template<typename T, typename PropertyT, typename U = typename std::remove_cv_t<PropertyT>>
 		Property* AddProperty(Type* type, const char* name, PropertyT T::* addr) noexcept;
 
@@ -95,9 +98,16 @@ namespace Reflectpp
 		template<typename T>
 		Type* AddType() noexcept;
 
-		Type* AddType(Factory& factory, size_t size, TypeInfo& typeinfo) noexcept;
+		Type* AddType(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept;
+
+		TypeInfo* AddTypeInfo(size_t id, const char* name) noexcept;
 
 		static Registry& Instance() noexcept;
+
+		template<typename T>
+		Factory* GetFactory() noexcept;
+
+		Factory* GetFactory(size_t id) const noexcept;
 
 		template<typename T>
 		Type* GetType() noexcept;
@@ -107,13 +117,20 @@ namespace Reflectpp
 
 		Type* GetType(size_t id) const noexcept;
 
+		template<typename T>
+		TypeInfo* GetTypeInfo() noexcept;
+
+		TypeInfo* GetTypeInfo(size_t id) const noexcept;
+
 		Property* GetProperty(size_t id) const noexcept;
 
 	private:
 
-		static Registry m_Instance;
+		std::unordered_map<size_t, std::unique_ptr<Factory>> m_Factories;
 		std::vector<std::unique_ptr<Property>> m_Properties;
 		std::vector<std::unique_ptr<Type>> m_Types;
+		std::vector<std::unique_ptr<TypeInfo>> m_TypeInfos;
+		static Registry m_Value;
 	};
 
 #pragma warning (pop)
@@ -209,10 +226,43 @@ namespace Reflectpp
 		}
 		else
 		{
-			Type* type{ AddType(Factory::Get<T>(), sizeof(T), TypeInfo::Get<T>()) };
+			Type* type{ AddType(GetFactory<T>(), sizeof(T), GetTypeInfo<T>()) };
 			Assert(type != nullptr, "Registration::class_<%s>() : type already registered\n", TypeName<T>());
 			return type;
 		}
+	}
+
+	template<typename T>
+	inline Factory* Registry::GetFactory() noexcept
+	{
+		Factory* factory{ GetFactory(TypeID<T>()) };
+
+		if (factory != nullptr)
+			return factory;
+
+		auto constructor = []() -> void*
+		{
+			if constexpr (std::is_constructible_v<T>)
+				return new T();
+			else
+				return nullptr;
+		};
+
+		auto copy = [](void* object) -> void*
+		{
+			if constexpr (std::is_copy_constructible_v<T>)
+				return new T(*static_cast<T*>(object));
+			else
+				return nullptr;
+		};
+
+		auto destructor = [](void* object)
+		{
+			if constexpr (std::is_destructible_v<T>)
+				delete static_cast<T*>(object);
+		};
+
+		return AddFactory(TypeID<T>(), constructor, copy, destructor);
 	}
 
 	template<typename T>
@@ -226,7 +276,7 @@ namespace Reflectpp
 		else if constexpr (std::is_arithmetic_v<T>)
 		{
 			Type* type{ GetType(TypeID<T>()) };
-			if (type == nullptr) return AddType(Factory::Get<T>(), sizeof(T), TypeInfo::Get<T>());
+			if (type == nullptr) return AddType(GetFactory<T>(), sizeof(T), GetTypeInfo<T>());
 			return type;
 		}
 		else
@@ -254,7 +304,7 @@ namespace Reflectpp
 		{
 			Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", TypeName<T>());
 			Type* type{ GetType(TypeID<T>()) };
-			if (type == nullptr) return AddType(Factory::Get<T>(), sizeof(T), TypeInfo::Get<T>());
+			if (type == nullptr) return AddType(GetFactory<T>(), sizeof(T), GetTypeInfo<T>());
 			return type;
 		}
 		else
@@ -262,5 +312,15 @@ namespace Reflectpp
 			Assert(object != nullptr, "Type::Get(%s*& object) : object nullptr\n", TypeName<T>());
 			return GetType(TypeID(object));
 		}
+	}
+	template<typename T>
+	inline TypeInfo* Registry::GetTypeInfo() noexcept
+	{
+		TypeInfo* typeInfo{ GetTypeInfo(TypeID<T>()) };
+
+		if (typeInfo != nullptr)
+			return typeInfo;
+
+		return AddTypeInfo(TypeID<T>(), TypeName<T>());
 	}
 }

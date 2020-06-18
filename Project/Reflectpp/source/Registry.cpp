@@ -8,7 +8,7 @@
 
 namespace Reflectpp
 {
-	Registry Registry::m_Instance;
+	Registry Registry::m_Value;
 
 	Registry::Registry() = default;
 	Registry::~Registry() = default;
@@ -50,10 +50,20 @@ namespace Reflectpp
 		return base;
 	}
 
+	Factory* Registry::AddFactory(size_t id, void* (*ctor)(), void* (*copy)(void*), void(*dtor)(void*)) noexcept
+	{
+		for (auto& it : m_Factories)
+			if (it.first == id)
+				return nullptr;
+
+		Factory* factory{ new Factory(ctor, copy, dtor) };
+		m_Factories.emplace(id, factory);
+
+		return factory;
+	}
+
 	Property* Registry::AddProperty(Type* type, const char* name, size_t offset, Type* ptype) noexcept
 	{
-		// TODO clean
-
 		std::hash<std::string> hasher;
 		size_t id{ hasher(name) };
 
@@ -62,25 +72,49 @@ namespace Reflectpp
 				return nullptr;
 
 		Property* prop{ new Property(id, name, offset, ptype) };
-		type->m_Properties.emplace_back(prop);
 		m_Properties.emplace_back(prop);
+
+		type->m_Properties.emplace_back(prop);
 
 		return prop;
 	}
 
-	Type* Registry::AddType(Factory& factory, size_t size, TypeInfo& typeinfo) noexcept
+	Type* Registry::AddType(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept
 	{
 		for (auto& type : m_Types)
-			if (type->GetID() == typeinfo.GetID())
+			if (type->GetID() == typeinfo->GetID())
 				return nullptr;
 
-		m_Types.emplace_back(new Type(factory, size, typeinfo));
-		return m_Types.back().get();
+		Type* type{ new Type(factory, size, typeinfo) };
+		m_Types.emplace_back(type);
+
+		return type;
+	}
+
+	TypeInfo* Registry::AddTypeInfo(size_t id, const char* name) noexcept
+	{
+		for (auto& typeinfo : m_TypeInfos)
+			if (typeinfo->GetID() == id)
+				return nullptr;
+
+		TypeInfo* typeinfo{ new TypeInfo(id, name) };
+		m_TypeInfos.emplace_back(typeinfo);
+
+		return typeinfo;
 	}
 
 	Registry& Registry::Instance() noexcept
 	{
-		return m_Instance;
+		return m_Value;
+	}
+
+	Factory* Registry::GetFactory(size_t id) const noexcept
+	{
+		for (auto& it : m_Factories)
+			if (it.first == id)
+				return it.second.get();
+
+		return nullptr;
 	}
 
 	Type* Registry::GetType(size_t id) const noexcept
@@ -88,6 +122,15 @@ namespace Reflectpp
 		for (auto& type : m_Types)
 			if (type->GetID() == id)
 				return type.get();
+
+		return nullptr;
+	}
+
+	TypeInfo* Registry::GetTypeInfo(size_t id) const noexcept
+	{
+		for (auto& typeinfo : m_TypeInfos)
+			if (typeinfo->GetID() == id)
+				return typeinfo.get();
 
 		return nullptr;
 	}

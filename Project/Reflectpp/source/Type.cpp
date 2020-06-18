@@ -51,9 +51,9 @@ size_t Property::GetOffset() const noexcept
 	return m_Offset;
 }
 
-const Type* Property::GetType() const noexcept
+Type& Property::GetType() const noexcept
 {
-	return m_Type;
+	return *m_Type;
 }
 
 Registration::Registration(Type* type) noexcept :
@@ -79,12 +79,12 @@ bool Type::operator!=(const Type& rhs) const noexcept
 	return m_TypeInfo != rhs.m_TypeInfo;
 }
 
-const std::vector<const Type*>& Type::GetBaseTypes() const noexcept
+const std::vector<Type*>& Type::GetBaseTypes() const noexcept
 {
 	return m_BaseTypes;
 }
 
-const std::vector<const Type*>& Type::GetDerivedTypes() const noexcept
+const std::vector<Type*>& Type::GetDerivedTypes() const noexcept
 {
 	return m_DerivedTypes;
 }
@@ -104,21 +104,20 @@ const char* Type::GetName() const noexcept
 	return m_TypeInfo->GetName();
 }
 
-const Property* Type::GetProperty(const char* name) const noexcept
+Property& Type::GetProperty(const char* name) const noexcept
 {
 	std::hash<std::string> hasher;
 	size_t id{ hasher(name) };
 
 	for (auto& prop : m_Properties)
 		if (prop->GetID() == id)
-			return prop;
+			return *prop;
 
 	Reflectpp::Assert(false, "Type::GetProperty : %s isn't registered\n", name);
-
-	return nullptr;
+	return *m_Properties.back();
 }
 
-const std::vector<const Property*>& Type::GetProperties() const noexcept
+const std::vector<Property*>& Type::GetProperties() const noexcept
 {
 	return m_Properties;
 }

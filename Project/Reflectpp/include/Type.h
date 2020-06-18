@@ -121,7 +121,7 @@ public:
 	/**
 	* Returns type of this property
 	*/
-	const Type* GetType() const noexcept;
+	Type& GetType() const noexcept;
 
 private:
 
@@ -133,7 +133,7 @@ private:
 
 /**
 * Allow to register a type in reflection \n
-* his base type and properties too
+* and his base types and properties too
 */
 class REFLECTPP_API Registration final
 {
@@ -209,24 +209,24 @@ public:
 	* Returns requested type representation
 	*/
 	template<typename T>
-	static const Type* Get() noexcept;
+	static Type& Get() noexcept;
 
 	/**
 	* Returns requested type representation
 	* @param object
 	*/
 	template<typename T>
-	static const Type* Get(T*& object) noexcept;
+	static Type& Get(T*& object) noexcept;
 
 	/**
 	* Returns base types of this type
 	*/
-	const std::vector<const Type*>& GetBaseTypes() const noexcept;
+	const std::vector<Type*>& GetBaseTypes() const noexcept;
 
 	/**
 	* Returns derived types of this type
 	*/
-	const std::vector<const Type*>& GetDerivedTypes() const noexcept;
+	const std::vector<Type*>& GetDerivedTypes() const noexcept;
 
 	/**
 	* Returns factory of this type
@@ -247,12 +247,12 @@ public:
 	* Returns property by name of this type
 	* @param name
 	*/
-	const Property* GetProperty(const char* name) const noexcept;
+	Property& GetProperty(const char* name) const noexcept;
 
 	/**
 	* Returns all property of this type
 	*/
-	const std::vector<const Property*>& GetProperties() const noexcept;
+	const std::vector<Property*>& GetProperties() const noexcept;
 
 	/**
 	* Returns size of this type
@@ -266,11 +266,11 @@ public:
 
 private:
 
-	std::vector<const Type*> m_BaseTypes;
-	std::vector<const Type*> m_DerivedTypes;
+	std::vector<Type*> m_BaseTypes;
+	std::vector<Type*> m_DerivedTypes;
 	Factory* m_Factory;
 	size_t m_HierarchyID;
-	std::vector<const Property*> m_Properties;
+	std::vector<Property*> m_Properties;
 	size_t m_Size;
 	TypeInfo* m_TypeInfo;
 };
@@ -359,15 +359,15 @@ inline Registration Registration::property(const char* name, PropertyT T::* addr
 }
 
 template<typename T>
-inline const Type* Type::Get() noexcept
+inline Type& Type::Get() noexcept
 {
-	return Reflectpp::Registry::Instance().GetType<T>();
+	return *Reflectpp::Registry::Instance().GetType<T>();
 }
 
 template<typename T>
-inline const Type* Type::Get(T*& object) noexcept
+inline Type& Type::Get(T*& object) noexcept
 {
-	return Reflectpp::Registry::Instance().GetType(object);
+	return *Reflectpp::Registry::Instance().GetType(object);
 }
 
 template<typename T>

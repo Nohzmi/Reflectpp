@@ -5,7 +5,7 @@
 
 REGISTRATION
 {
-	Reflectpp::Type::class_<Intern>()
+	Registration::class_<Intern>()
 	.property("InternValue0", &Intern::InternValue0)
 	.property("InternValue1", &Intern::InternValue1);
 }

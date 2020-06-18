@@ -15,9 +15,15 @@
     <ClInclude Include="include\Register.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Registry.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Type.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Registry.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

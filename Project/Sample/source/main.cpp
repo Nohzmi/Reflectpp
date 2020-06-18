@@ -8,8 +8,6 @@
 #include "Derived.h"
 #include "Intern.h"
 
-using namespace Reflectpp;
-
 struct Not {};
 
 int main()
@@ -33,8 +31,8 @@ int main()
 	auto test6 = Type::Get(tmp1);
 	auto test7 = Type::Get(tmp2);
 
-	auto test8 = Type::Cast<Base*>(tmp0);
-	auto test9 = Type::Cast<Derived*>(tmp0);
+	//auto test8 = Type::Cast<Base*>(tmp0);
+	//auto test9 = Type::Cast<Derived*>(tmp0);
 	auto test10 = dynamic_cast<Derived*>(tmp0);
 
 	auto test11 = Type::Get<Derived>()->GetFactory().Construct();

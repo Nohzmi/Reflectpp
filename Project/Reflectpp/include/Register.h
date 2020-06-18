@@ -10,11 +10,6 @@
 #include <functional>
 #include <string>
 
-/**
-* @addtogroup Reflectpp
-* @{
-*/
-
 #define REFLECT(T)												\
 public:															\
 friend void register_function() noexcept;						\
@@ -40,12 +35,4 @@ static const char* TypeName() noexcept							\
 }																\
 private:														\
 
-/**
-* Used in REGISTRATION macro for registration purpose
-* Doesn't have definition in dll on purpose
-*/
 static void register_function() noexcept;
-
-/**
-* @}
-*/

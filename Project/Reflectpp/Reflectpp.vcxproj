@@ -155,10 +155,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Registry.h" />
     <ClInclude Include="include\Register.h" />
     <ClInclude Include="include\Type.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Registry.cpp" />
     <ClCompile Include="source\Type.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -5,7 +5,7 @@
 
 REGISTRATION
 {
-	Reflectpp::Type::class_<Derived>().base<Base>()
+	Registration::class_<Derived>().base<Base>()
 	.property("DerivedValue0", &Derived::DerivedValue0)
 	.property("DerivedValue1", &Derived::DerivedValue1);
 }

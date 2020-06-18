@@ -113,7 +113,7 @@ Property& Type::GetProperty(const char* name) const noexcept
 		if (prop->GetID() == id)
 			return *prop;
 
-	Reflectpp::Assert(false, "Type::GetProperty : %s isn't registered\n", name);
+	Reflectpp::Assert(false, "Type::GetProperty(const char* name) : %s isn't registered\n", name);
 	return *m_Properties.back();
 }
 

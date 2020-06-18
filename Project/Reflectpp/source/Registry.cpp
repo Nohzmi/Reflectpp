@@ -31,10 +31,10 @@ namespace Reflectpp
 
 				type->m_HierarchyID = hierarchyID;
 
-				for (auto& it : type->m_BaseTypes)
+				for (auto& it : type->GetBaseTypes())
 					lambda(it, hierarchyID, lambda);
 
-				for (auto& it : type->m_DerivedTypes)
+				for (auto& it : type->GetDerivedTypes())
 					lambda(it, hierarchyID, lambda);
 			};
 
@@ -99,6 +99,27 @@ namespace Reflectpp
 		m_TypeInfos.emplace_back(typeinfo);
 
 		return typeinfo;
+	}
+
+	bool Registry::Cast(Type* type, Type* otype) const noexcept
+	{
+		if (type->m_HierarchyID != otype->m_HierarchyID)
+			return false;
+
+		auto isBaseOf = [](Type* type, size_t id, auto& lambda) -> bool
+		{
+			if (type->GetID() == id)
+				return true;
+
+			bool res{ false };
+
+			for (auto& it : type->GetBaseTypes())
+				res |= lambda(it, id, lambda);
+
+			return res;
+		};
+
+		return isBaseOf(otype, type->GetID(), isBaseOf);
 	}
 
 	Registry& Registry::Instance() noexcept

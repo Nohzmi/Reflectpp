@@ -86,28 +86,17 @@ namespace Reflectpp
 		template<typename T>
 		Type* AddBase(Type* type) noexcept;
 
-		Type* AddBase(Type* type, Type* base) noexcept;
-
-		Factory* AddFactory(size_t id, void* (*ctor)(), void* (*copy)(void*), void (*dtor)(void*)) noexcept;
-
 		template<typename T, typename PropertyT, typename U = typename std::remove_cv_t<PropertyT>>
 		Property* AddProperty(Type* type, const char* name, PropertyT T::* addr) noexcept;
-
-		Property* AddProperty(Type* type, const char* name, size_t offset, Type* ptype) noexcept;
 
 		template<typename T>
 		Type* AddType() noexcept;
 
-		Type* AddType(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept;
-
-		TypeInfo* AddTypeInfo(size_t id, const char* name) noexcept;
-
-		static Registry& Instance() noexcept;
+		template<typename T, typename U, typename V = typename std::remove_pointer_t<T>>
+		std::remove_pointer_t<T>* Cast(U*& object) noexcept;
 
 		template<typename T>
 		Factory* GetFactory() noexcept;
-
-		Factory* GetFactory(size_t id) const noexcept;
 
 		template<typename T>
 		Type* GetType() noexcept;
@@ -115,16 +104,22 @@ namespace Reflectpp
 		template<typename T>
 		Type* GetType(T*& object) noexcept;
 
-		Type* GetType(size_t id) const noexcept;
-
 		template<typename T>
 		TypeInfo* GetTypeInfo() noexcept;
 
-		TypeInfo* GetTypeInfo(size_t id) const noexcept;
-
-		Property* GetProperty(size_t id) const noexcept;
-
 	private:
+
+		Type* AddBase(Type* type, Type* base) noexcept;
+		Factory* AddFactory(size_t id, void* (*ctor)(), void* (*copy)(void*), void (*dtor)(void*)) noexcept;
+		Property* AddProperty(Type* type, const char* name, size_t offset, Type* ptype) noexcept;
+		Type* AddType(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept;
+		TypeInfo* AddTypeInfo(size_t id, const char* name) noexcept;
+		bool Cast(Type* type, Type* otype) const noexcept;
+		static Registry& Instance() noexcept;
+		Factory* GetFactory(size_t id) const noexcept;
+		Type* GetType(size_t id) const noexcept;
+		TypeInfo* GetTypeInfo(size_t id) const noexcept;
+		Property* GetProperty(size_t id) const noexcept;
 
 		std::unordered_map<size_t, std::unique_ptr<Factory>> m_Factories;
 		std::vector<std::unique_ptr<Property>> m_Properties;
@@ -235,6 +230,28 @@ namespace Reflectpp
 		}
 	}
 
+	template<typename T, typename U, typename V>
+	inline std::remove_pointer_t<T>* Registry::Cast(U*& object) noexcept
+	{
+		if constexpr (!std::is_pointer_v<T>)
+		{
+			Assert(false, "Type::Cast<%s>(%s*& object) : not a pointer\n", TypeName<T>(), TypeName(object));
+			return nullptr;
+		}
+		else if constexpr (std::is_const_v<V> || std::is_pointer_v<V> || std::is_void_v<V> || std::is_volatile_v<V>)
+		{
+			Assert(false, "Type::Cast<%s>(%s*& object) : invalid type\n", TypeName<T>(), TypeName(object));
+			return nullptr;
+		}
+		else if constexpr (std::is_const_v<U> || std::is_void_v<U> || std::is_volatile_v<U>)
+		{
+			Assert(false, "Type::Cast<%s>(%s*& object) : invalid object type\n", TypeName<T>(), TypeName(object));
+			return nullptr;
+		}
+		else
+			return Cast(GetType<V>(), GetType(object)) ? reinterpret_cast<T>(object) : nullptr;
+	}
+
 	template<typename T>
 	inline Factory* Registry::GetFactory() noexcept
 	{
@@ -324,6 +341,7 @@ namespace Reflectpp
 			return GetType(TypeID(object));
 		}
 	}
+
 	template<typename T>
 	inline TypeInfo* Registry::GetTypeInfo() noexcept
 	{

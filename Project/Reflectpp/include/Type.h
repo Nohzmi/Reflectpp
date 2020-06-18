@@ -205,6 +205,13 @@ public:
 	bool operator!=(const Type& rhs) const noexcept;
 
 	/**
+	* Allows to cast between class hierarchies up, down and side
+	* @param object
+	*/
+	template<typename T, typename U>
+	static T Cast(U*& object) noexcept;
+
+	/**
 	* Returns requested type representation
 	*/
 	template<typename T>
@@ -356,6 +363,12 @@ inline Registration Registration::property(const char* name, PropertyT T::* addr
 {
 	Reflectpp::Registry::Instance().AddProperty(m_Type, name, addr);
 	return *this;
+}
+
+template<typename T, typename U>
+inline T Type::Cast(U*& object) noexcept
+{
+	return Reflectpp::Registry::Instance().Cast<T>(object);
 }
 
 template<typename T>

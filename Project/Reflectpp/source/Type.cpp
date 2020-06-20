@@ -6,10 +6,10 @@
 #include <string>
 #include "Registry.h"
 
-Factory::Factory(void* (*ctor)(), void* (*copy)(void*), void (*dtor)(void*)) noexcept :
-	m_Constructor{ ctor },
+Factory::Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept :
+	m_Constructor{ constructor },
 	m_Copy{ copy },
-	m_Destructor{ dtor }
+	m_Destructor{ destructor }
 {
 }
 
@@ -28,10 +28,12 @@ void Factory::Destroy(void* object) const noexcept
 	m_Destructor(object);
 }
 
-Property::Property(size_t id, const char* name, size_t offset, Type* type) noexcept :
+Property::Property(void* getter, size_t id, const char* name, size_t offset, void* setter, Type* type) noexcept :
+	m_Getter{ getter },
 	m_ID{ id },
 	m_Name{ name },
 	m_Offset{ offset },
+	m_Setter{ setter },
 	m_Type{ type }
 {
 }

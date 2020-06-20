@@ -15,6 +15,14 @@ class Base
 
 public:
 
+	float GetValue() const;
+	void SetValue(float value);
+
+	const double& GetValue1() const;
+	void SetValue1(const double& value);
+
+private:
+
 	float BaseValue0;
 	double BaseValue1;
 };

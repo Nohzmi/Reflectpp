@@ -52,6 +52,10 @@ class TypeInfo;
 */
 class REFLECTPP_API Factory final
 {
+	using ConstructorT = void* (*)();
+	using CopyT = void* (*)(void*);
+	using DestructorT = void (*)(void*);
+
 public:
 
 	Factory() = delete;
@@ -60,7 +64,7 @@ public:
 	Factory(Factory&&) noexcept = default;
 	Factory& operator=(const Factory&) = default;
 	Factory& operator=(Factory&&) noexcept = default;
-	Factory(void* (*ctor)(), void* (*copy)(void*), void (*dtor)(void*)) noexcept;
+	Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
 
 	/**
 	* Returns a pointer on created object
@@ -87,9 +91,9 @@ public:
 
 private:
 
-	void* (*m_Constructor)();
-	void* (*m_Copy)(void*);
-	void (*m_Destructor)(void*);
+	ConstructorT m_Constructor;
+	CopyT m_Copy;
+	DestructorT m_Destructor;
 };
 
 /**
@@ -97,6 +101,9 @@ private:
 */
 class REFLECTPP_API Property final
 {
+	using GetterT = void* (*)(void*);
+	using SetterT = void (*)(void*, void*);
+
 public:
 
 	Property() = delete;
@@ -105,7 +112,7 @@ public:
 	Property(Property&&) noexcept = default;
 	Property& operator=(const Property&) = delete;
 	Property& operator=(Property&&) noexcept = default;
-	Property(size_t id, const char* name, size_t offset, Type* type) noexcept;
+	Property(void* getter, size_t id, const char* name, size_t offset, void* setter, Type* type) noexcept;
 
 	/**
 	* Returns id of this property
@@ -129,9 +136,11 @@ public:
 
 private:
 
+	void* m_Getter;
 	size_t m_ID;
 	const char* m_Name;
 	size_t m_Offset;
+	void* m_Setter;
 	Type* m_Type;
 };
 
@@ -219,8 +228,17 @@ public:
 	* @param name
 	* @param addr
 	*/
-	template<typename T, typename PropertyT, typename U = typename std::remove_cv_t<PropertyT>>
+	template<typename T, typename PropertyT>
 	Registration property(const char* name, PropertyT T::* addr) noexcept;
+
+	/**
+	* Register a property of the current type
+	* @param name
+	* @param getter
+	* @param setter
+	*/
+	template<typename T, typename PropertyT>
+	Registration property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) noexcept;
 
 private:
 
@@ -476,10 +494,17 @@ inline Registration Registration::class_() noexcept
 	return Registration(Reflectpp::Registry::Instance().AddType<T>());
 }
 
-template<typename T, typename PropertyT, typename U>
+template<typename T, typename PropertyT>
 inline Registration Registration::property(const char* name, PropertyT T::* addr) noexcept
 {
 	Reflectpp::Registry::Instance().AddProperty(m_Type, name, addr);
+	return *this;
+}
+
+template<typename T, typename PropertyT>
+inline Registration Registration::property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) noexcept
+{
+	Reflectpp::Registry::Instance().AddProperty(m_Type, name, getter, setter);
 	return *this;
 }
 

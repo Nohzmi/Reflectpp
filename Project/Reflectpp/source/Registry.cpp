@@ -54,13 +54,13 @@ namespace Reflectpp
 		return base;
 	}
 
-	Factory* Registry::AddFactory(size_t id, void* (*ctor)(), void* (*copy)(void*), void(*dtor)(void*)) noexcept
+	Factory* Registry::AddFactory(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept
 	{
 		for (auto& it : m_Factories)
 			if (it.first == id)
 				return nullptr;
 
-		Factory* factory{ new Factory(ctor, copy, dtor) };
+		Factory* factory{ new Factory(constructor, copy, destructor) };
 		m_Factories.emplace(id, factory);
 
 		return factory;
@@ -75,7 +75,24 @@ namespace Reflectpp
 			if (prop->GetID() == id)
 				return nullptr;
 
-		Property* prop{ new Property(id, name, offset, ptype) };
+		Property* prop{ new Property(nullptr, id, name, offset, nullptr, ptype) };
+		m_Properties.emplace_back(prop);
+
+		type->m_Properties.m_Vector.emplace_back(prop);
+
+		return prop;
+	}
+
+	Property* Registry::AddProperty(Type* type, const char* name, void* getter, void* setter, Type* ptype) noexcept
+	{
+		std::hash<std::string> hasher;
+		size_t id{ hasher(name) };
+
+		for (auto& prop : type->GetProperties().m_Vector)
+			if (prop->GetID() == id)
+				return nullptr;
+
+		Property* prop{ new Property(getter, id, name, 0, setter, ptype) };
 		m_Properties.emplace_back(prop);
 
 		type->m_Properties.m_Vector.emplace_back(prop);

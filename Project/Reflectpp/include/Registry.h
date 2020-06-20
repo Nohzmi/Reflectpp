@@ -74,6 +74,10 @@ namespace Reflectpp
 
 	class REFLECTPP_API Registry final
 	{
+		using ConstructorT = void* (*)();
+		using CopyT = void* (*)(void*);
+		using DestructorT = void (*)(void*);
+
 	public:
 
 		Registry();
@@ -88,6 +92,9 @@ namespace Reflectpp
 
 		template<typename T, typename PropertyT, typename U = typename std::remove_cv_t<PropertyT>>
 		Property* AddProperty(Type* type, const char* name, PropertyT T::* addr) noexcept;
+
+		template<typename T, typename PropertyT, typename U = typename std::remove_cv_t<std::remove_reference_t<PropertyT>>>
+		Property* AddProperty(Type* type, const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) noexcept;
 
 		template<typename T>
 		Type* AddType() noexcept;
@@ -112,8 +119,9 @@ namespace Reflectpp
 	private:
 
 		Type* AddBase(Type* type, Type* base) noexcept;
-		Factory* AddFactory(size_t id, void* (*ctor)(), void* (*copy)(void*), void (*dtor)(void*)) noexcept;
+		Factory* AddFactory(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
 		Property* AddProperty(Type* type, const char* name, size_t offset, Type* ptype) noexcept;
+		Property* AddProperty(Type* type, const char* name, void* getter, void* setter, Type* ptype) noexcept;
 		Type* AddType(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept;
 		TypeInfo* AddTypeInfo(size_t id, const char* name) noexcept;
 		bool Cast(Type* type, Type* otype) const noexcept;
@@ -204,6 +212,28 @@ namespace Reflectpp
 	{
 		Assert(*GetType<T>() == *type, "Registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", TypeName<U>(), TypeName<T>(), name, type->GetName());
 		Property* prop{ AddProperty(type, name, (size_t)(char*)&((T*)nullptr->*addr), GetType<U>()) };
+		Assert(prop != nullptr, "Registration::property(const char* name, %s %s::* addr) : %s already registered\n", TypeName<U>(), TypeName<T>(), name);
+
+		return prop;
+	}
+
+	template<typename T, typename PropertyT, typename U>
+	inline Property* Registry::AddProperty(Type* type, const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) noexcept
+	{
+		Assert(*GetType<T>() == *type, "Registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", TypeName<U>(), TypeName<T>(), name, type->GetName());
+
+		auto get = [getter](void* object) -> void*
+		{
+			const U& tmp{ (static_cast<T*>(object)->*getter)() };
+			return const_cast<U*>(&tmp);
+		};
+
+		auto set = [setter](void* object, void* value)
+		{
+			(static_cast<T*>(object)->*setter)(*static_cast<U*>(value));
+		};
+
+		Property* prop{ AddProperty(type, name, &get, &set, GetType<U>()) };
 		Assert(prop != nullptr, "Registration::property(const char* name, %s %s::* addr) : %s already registered\n", TypeName<U>(), TypeName<T>(), name);
 
 		return prop;

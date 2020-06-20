@@ -3,9 +3,29 @@
 #include "Base.h"
 #include <Type.h>
 
+float Base::GetValue() const
+{
+	return BaseValue0;
+}
+
+void Base::SetValue(float value)
+{
+	BaseValue0 = value;
+}
+
+const double& Base::GetValue1() const
+{
+	return BaseValue1;
+}
+
+void Base::SetValue1(const double& value)
+{
+	BaseValue1 = value;
+}
+
 REGISTRATION
 {
 	Registration::class_<Base>()
-	.property("BaseValue0", &Base::BaseValue0)
-	.property("BaseValue1", &Base::BaseValue1);
+	.property("BaseValue0", &Base::GetValue, &Base::SetValue)
+	.property("BaseValue1", &Base::GetValue1, &Base::SetValue1);
 }

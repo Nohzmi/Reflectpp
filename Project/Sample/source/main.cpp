@@ -48,5 +48,8 @@ int main()
 	//Serializer save("test");
 	//save.Save(object);
 
+	// Exit point
+	printf("\nSayonara World!\n\n");
+
 	return EXIT_SUCCESS;
 }

@@ -426,16 +426,34 @@ class REFLECTPP_API Variant final
 {
 public:
 
-	Variant() = default;
-	~Variant() = default;
-	Variant(const Variant&) = default;
+	Variant();
+	~Variant();
+	Variant(const Variant&);
 	Variant(Variant&&) noexcept = default;
-	Variant& operator=(const Variant&) = default;
+	Variant& operator=(const Variant&);
 	Variant& operator=(Variant&&) noexcept = default;
 
-private:
+	template<typename T>
+	Variant(T*& object) noexcept;
 
-	Variant(void* data, bool isOwner, Type* type) noexcept;
+	operator bool() const;
+
+	void Clear() noexcept;
+
+	Type& GetType() const noexcept;
+
+	template<typename T>
+	T& GetValue() noexcept;
+
+	template<typename T>
+	const T& GetValue() const noexcept;
+
+	template<typename T>
+	bool IsType() const noexcept;
+
+	bool IsValid() const noexcept;
+
+private:
 
 	void* m_Data;
 	bool m_IsOwner;

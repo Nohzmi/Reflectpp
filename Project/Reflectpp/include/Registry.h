@@ -504,3 +504,35 @@ inline TypeInfo& TypeInfo::Get() noexcept
 {
 	return *Reflectpp::Registry::Instance().GetTypeInfo<T>();
 }
+
+template<typename T>
+inline Variant::Variant(T*& object) noexcept :
+	m_Data{ object },
+	m_IsOwner{ false },
+	m_Type{ &Type::Get(object) }
+{
+}
+
+template<typename T>
+inline T& Variant::GetValue() noexcept
+{
+	Reflectpp::Assert(IsValid(), "Variant::GetValue<%s>() : invalid variant\n", Reflectpp::TypeName<T>());
+	Reflectpp::Assert(Type::Get<T>() == *m_Type, "Variant::GetValue<%s>() : wrong type, stored value is a %s\n", Reflectpp::TypeName<T>(), m_Type->GetName());
+
+	return *static_cast<T*>(m_Data);
+}
+
+template<typename T>
+inline const T& Variant::GetValue() const noexcept
+{
+	Reflectpp::Assert(IsValid(), "Variant::GetValue<%s>() : invalid variant\n", Reflectpp::TypeName<T>());
+	Reflectpp::Assert(Type::Get<T>() == *m_Type, "Variant::GetValue<%s>() : wrong type, stored value is a %s\n", Reflectpp::TypeName<T>(), m_Type->GetName());
+
+	return *static_cast<T*>(m_Data);
+}
+
+template<typename T>
+inline bool Variant::IsType() const noexcept
+{
+	return IsValid() ? Type::Get<T>() == *m_Type : false;
+}

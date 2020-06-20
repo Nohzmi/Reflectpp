@@ -39,6 +39,14 @@ int main()
 	Type::Get<Derived>().GetFactory().Destroy(test10);
 	auto test11 = TypeInfo::Get<Intern>();
 
+	Variant var1 = Variant(tmp0);
+	Variant var2 = var1;
+	Variant var3;
+
+	auto& tmp55 = var1.GetType();
+	auto tmp56 = var1.IsType<Base>();
+	auto& tmp57 = var1.GetValue<Base>();
+
 	delete tmp0;
 	delete tmp1;
 	delete tmp2;
@@ -49,7 +57,7 @@ int main()
 	//save.Save(object);
 
 	// Exit point
-	printf("\nSayonara World!\n\n");
+	printf("\nExit Success!\n\n");
 
 	return EXIT_SUCCESS;
 }

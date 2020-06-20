@@ -160,6 +160,60 @@ const char* TypeInfo::GetName() const noexcept
 	return m_Name;
 }
 
-Variant::Variant(void* data, bool isOwner, Type* type) noexcept
+Variant::Variant() :
+	m_Data{ nullptr },
+	m_IsOwner{ false },
+	m_Type{ nullptr }
 {
+}
+
+Variant::~Variant()
+{
+	if (m_IsOwner && m_Data != nullptr)
+	{
+		m_Type->GetFactory().Destroy(m_Data);
+		m_Data = nullptr;
+	}
+}
+
+Variant::Variant(const Variant& copy) :
+	m_Data{ copy.m_Type->GetFactory().Copy(copy.m_Data) },
+	m_IsOwner{ true },
+	m_Type{ copy.m_Type }
+{
+}
+
+Variant& Variant::operator=(const Variant& copy)
+{
+	m_Data = copy.m_Type->GetFactory().Copy(copy.m_Data);
+	m_IsOwner = true;
+	m_Type = copy.m_Type;
+
+	return *this;
+}
+
+Variant::operator bool() const
+{
+	return IsValid();
+}
+
+void Variant::Clear() noexcept
+{
+	if (m_IsOwner && IsValid())
+		m_Type->GetFactory().Destroy(m_Data);
+
+	m_Data = nullptr;
+	m_IsOwner = false;
+	m_Type = nullptr;
+}
+
+Type& Variant::GetType() const noexcept
+{
+	Reflectpp::Assert(m_Type != nullptr, "Variant::GetType() : invalid variant\n");
+	return *m_Type;
+}
+
+bool Variant::IsValid() const noexcept
+{
+	return m_Data != nullptr;
 }

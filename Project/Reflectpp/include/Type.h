@@ -52,6 +52,8 @@ class TypeInfo;
 */
 class REFLECTPP_API Factory final
 {
+	friend Reflectpp::Registry;
+
 	using ConstructorT = void* (*)();
 	using CopyT = void* (*)(void*);
 	using DestructorT = void (*)(void*);
@@ -64,7 +66,6 @@ public:
 	Factory(Factory&&) noexcept = default;
 	Factory& operator=(const Factory&) = default;
 	Factory& operator=(Factory&&) noexcept = default;
-	Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
 
 	/**
 	* Returns a pointer on created object
@@ -91,6 +92,8 @@ public:
 
 private:
 
+	Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
+
 	ConstructorT m_Constructor;
 	CopyT m_Copy;
 	DestructorT m_Destructor;
@@ -101,6 +104,8 @@ private:
 */
 class REFLECTPP_API Property final
 {
+	friend Reflectpp::Registry;
+
 	using GetterT = void* (*)(void*);
 	using SetterT = void (*)(void*, void*);
 
@@ -112,7 +117,6 @@ public:
 	Property(Property&&) noexcept = default;
 	Property& operator=(const Property&) = delete;
 	Property& operator=(Property&&) noexcept = default;
-	Property(void* getter, size_t id, const char* name, size_t offset, void* setter, Type* type) noexcept;
 
 	/**
 	* Returns id of this property
@@ -135,6 +139,8 @@ public:
 	Type& GetType() const noexcept;
 
 private:
+
+	Property(void* getter, size_t id, const char* name, size_t offset, void* setter, Type* type) noexcept;
 
 	void* m_Getter;
 	size_t m_ID;
@@ -201,6 +207,8 @@ private:
 */
 class REFLECTPP_API Registration final
 {
+	friend Reflectpp::Registry;
+
 public:
 
 	Registration() = delete;
@@ -209,7 +217,6 @@ public:
 	Registration(Registration&&) noexcept = default;
 	Registration& operator=(const Registration&) = default;
 	Registration& operator=(Registration&&) noexcept = default;
-	Registration(Type* type) noexcept;
 
 	/**
 	* Register the base class of the current type
@@ -242,6 +249,8 @@ public:
 
 private:
 
+	Registration(Type* type) noexcept;
+
 	Type* m_Type;
 };
 
@@ -263,7 +272,6 @@ public:
 	Type(Type&&) noexcept = default;
 	Type& operator=(const Type&) = delete;
 	Type& operator=(Type&&) noexcept = default;
-	Type(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept;
 
 	/**
 	* Returns whether or not two types are the same
@@ -345,6 +353,8 @@ public:
 
 private:
 
+	Type(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept;
+
 	Range<Type> m_BaseTypes;
 	Range<Type> m_DerivedTypes;
 	Factory* m_Factory;
@@ -362,6 +372,8 @@ private:
 */
 class REFLECTPP_API TypeInfo final
 {
+	friend Reflectpp::Registry;
+
 public:
 
 	TypeInfo() = delete;
@@ -370,7 +382,6 @@ public:
 	TypeInfo(TypeInfo&&) noexcept = default;
 	TypeInfo& operator=(const TypeInfo&) = default;
 	TypeInfo& operator=(TypeInfo&&) noexcept = default;
-	TypeInfo(size_t id, const char* name) noexcept;
 
 	/**
 	* Returns whether or not two types are the same
@@ -402,8 +413,33 @@ public:
 
 private:
 
+	TypeInfo(size_t id, const char* name) noexcept;
+
 	size_t m_ID;
 	const char* m_Name;
+};
+
+/**
+* Allows to store data of any type
+*/
+class REFLECTPP_API Variant final
+{
+public:
+
+	Variant() = default;
+	~Variant() = default;
+	Variant(const Variant&) = default;
+	Variant(Variant&&) noexcept = default;
+	Variant& operator=(const Variant&) = default;
+	Variant& operator=(Variant&&) noexcept = default;
+
+private:
+
+	Variant(void* data, bool isOwner, Type* type) noexcept;
+
+	void* m_Data;
+	bool m_IsOwner;
+	Type* m_Type;
 };
 
 /**
@@ -411,123 +447,3 @@ private:
 */
 
 #include "Registry.h"
-
-template<typename T>
-inline Factory& Factory::Get() noexcept
-{
-	return *Reflectpp::Registry::Instance().GetFactory<T>();
-}
-
-template<typename T> template<typename U>
-inline bool Range<T>::Iterator<U>::operator==(const Iterator<U>& rhs) const
-{
-	return (m_Index == rhs.m_Index) && (m_Range == rhs.m_Range);
-}
-
-template<typename T> template<typename U>
-inline bool Range<T>::Iterator<U>::operator!=(const Iterator<U>& rhs) const
-{
-	return (m_Index != rhs.m_Index) || (m_Range != rhs.m_Range);
-}
-
-template<typename T> template<typename U>
-inline Range<T>::Iterator<U>& Range<T>::Iterator<U>::operator++()
-{
-	++m_Index;
-	return *this;
-}
-
-template<typename T> template<typename U>
-inline U& Range<T>::Iterator<U>::operator*() const
-{
-	return (*m_Range)[m_Index];
-}
-
-template<typename T>
-inline T& Range<T>::operator[](size_t n) const noexcept
-{
-	return *m_Vector[n];
-}
-
-template<typename T>
-inline Range<T>::Iterator<T> Range<T>::begin() const noexcept
-{
-	Iterator<T> it;
-	it.m_Index = 0;
-	it.m_Range = this;
-
-	return it;
-}
-
-template<typename T>
-inline bool Range<T>::empty() const noexcept
-{
-	return m_Vector.empty();
-}
-
-template<typename T>
-inline Range<T>::Iterator<T> Range<T>::end() const noexcept
-{
-	Iterator<T> it;
-	it.m_Index = size();
-	it.m_Range = this;
-
-	return it;
-}
-
-template<typename T>
-inline size_t Range<T>::size() const noexcept
-{
-	return m_Vector.size();
-}
-
-template<typename T>
-inline Registration Registration::base() noexcept
-{
-	Reflectpp::Registry::Instance().AddBase<T>(m_Type);
-	return *this;
-}
-
-template<typename T>
-inline Registration Registration::class_() noexcept
-{
-	return Registration(Reflectpp::Registry::Instance().AddType<T>());
-}
-
-template<typename T, typename PropertyT>
-inline Registration Registration::property(const char* name, PropertyT T::* addr) noexcept
-{
-	Reflectpp::Registry::Instance().AddProperty(m_Type, name, addr);
-	return *this;
-}
-
-template<typename T, typename PropertyT>
-inline Registration Registration::property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) noexcept
-{
-	Reflectpp::Registry::Instance().AddProperty(m_Type, name, getter, setter);
-	return *this;
-}
-
-template<typename T, typename U>
-inline T Type::Cast(U*& object) noexcept
-{
-	return Reflectpp::Registry::Instance().Cast<T>(object);
-}
-
-template<typename T>
-inline Type& Type::Get() noexcept
-{
-	return *Reflectpp::Registry::Instance().GetType<T>();
-}
-
-template<typename T>
-inline Type& Type::Get(T*& object) noexcept
-{
-	return *Reflectpp::Registry::Instance().GetType(object);
-}
-
-template<typename T>
-inline TypeInfo& TypeInfo::Get() noexcept
-{
-	return *Reflectpp::Registry::Instance().GetTypeInfo<T>();
-}

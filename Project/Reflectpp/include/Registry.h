@@ -384,3 +384,123 @@ namespace Reflectpp
 		return AddTypeInfo(TypeID<T>(), TypeName<T>());
 	}
 }
+
+template<typename T>
+inline Factory& Factory::Get() noexcept
+{
+	return *Reflectpp::Registry::Instance().GetFactory<T>();
+}
+
+template<typename T> template<typename U>
+inline bool Range<T>::Iterator<U>::operator==(const Iterator<U>& rhs) const
+{
+	return (m_Index == rhs.m_Index) && (m_Range == rhs.m_Range);
+}
+
+template<typename T> template<typename U>
+inline bool Range<T>::Iterator<U>::operator!=(const Iterator<U>& rhs) const
+{
+	return (m_Index != rhs.m_Index) || (m_Range != rhs.m_Range);
+}
+
+template<typename T> template<typename U>
+inline Range<T>::Iterator<U>& Range<T>::Iterator<U>::operator++()
+{
+	++m_Index;
+	return *this;
+}
+
+template<typename T> template<typename U>
+inline U& Range<T>::Iterator<U>::operator*() const
+{
+	return (*m_Range)[m_Index];
+}
+
+template<typename T>
+inline T& Range<T>::operator[](size_t n) const noexcept
+{
+	return *m_Vector[n];
+}
+
+template<typename T>
+inline Range<T>::Iterator<T> Range<T>::begin() const noexcept
+{
+	Iterator<T> it;
+	it.m_Index = 0;
+	it.m_Range = this;
+
+	return it;
+}
+
+template<typename T>
+inline bool Range<T>::empty() const noexcept
+{
+	return m_Vector.empty();
+}
+
+template<typename T>
+inline Range<T>::Iterator<T> Range<T>::end() const noexcept
+{
+	Iterator<T> it;
+	it.m_Index = size();
+	it.m_Range = this;
+
+	return it;
+}
+
+template<typename T>
+inline size_t Range<T>::size() const noexcept
+{
+	return m_Vector.size();
+}
+
+template<typename T>
+inline Registration Registration::base() noexcept
+{
+	Reflectpp::Registry::Instance().AddBase<T>(m_Type);
+	return *this;
+}
+
+template<typename T>
+inline Registration Registration::class_() noexcept
+{
+	return Registration(Reflectpp::Registry::Instance().AddType<T>());
+}
+
+template<typename T, typename PropertyT>
+inline Registration Registration::property(const char* name, PropertyT T::* addr) noexcept
+{
+	Reflectpp::Registry::Instance().AddProperty(m_Type, name, addr);
+	return *this;
+}
+
+template<typename T, typename PropertyT>
+inline Registration Registration::property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) noexcept
+{
+	Reflectpp::Registry::Instance().AddProperty(m_Type, name, getter, setter);
+	return *this;
+}
+
+template<typename T, typename U>
+inline T Type::Cast(U*& object) noexcept
+{
+	return Reflectpp::Registry::Instance().Cast<T>(object);
+}
+
+template<typename T>
+inline Type& Type::Get() noexcept
+{
+	return *Reflectpp::Registry::Instance().GetType<T>();
+}
+
+template<typename T>
+inline Type& Type::Get(T*& object) noexcept
+{
+	return *Reflectpp::Registry::Instance().GetType(object);
+}
+
+template<typename T>
+inline TypeInfo& TypeInfo::Get() noexcept
+{
+	return *Reflectpp::Registry::Instance().GetTypeInfo<T>();
+}

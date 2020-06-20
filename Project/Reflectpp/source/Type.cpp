@@ -159,3 +159,7 @@ const char* TypeInfo::GetName() const noexcept
 {
 	return m_Name;
 }
+
+Variant::Variant(void* data, bool isOwner, Type* type) noexcept
+{
+}

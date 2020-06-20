@@ -8,6 +8,7 @@
 
 #pragma once
 #include <cassert>
+#include <functional>
 #include <memory>
 #include <type_traits>
 #include <typeinfo>
@@ -77,11 +78,11 @@ namespace Reflectpp
 		using ConstructorT = void* (*)();
 		using CopyT = void* (*)(void*);
 		using DestructorT = void (*)(void*);
+		using GetterT = std::function<void* (void*, bool&)>;
+		using SetterT = std::function<void(void*, void*)>;
 
 	public:
 
-		Registry();
-		~Registry();
 		Registry(const Registry&) = delete;
 		Registry(Registry&&) noexcept = delete;
 		Registry& operator=(const Registry&) = delete;
@@ -118,10 +119,13 @@ namespace Reflectpp
 
 	private:
 
+		Registry();
+		~Registry();
+
 		Type* AddBase(Type* type, Type* base) noexcept;
 		Factory* AddFactory(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
-		Property* AddProperty(Type* type, const char* name, size_t offset, Type* ptype) noexcept;
-		Property* AddProperty(Type* type, const char* name, void* getter, void* setter, Type* ptype) noexcept;
+		Property* AddProperty(Type* type, const char* name, size_t offset, Type* propertytype) noexcept;
+		Property* AddProperty(Type* type, const char* name, GetterT getter, SetterT setter, Type* propertytype) noexcept;
 		Type* AddType(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept;
 		TypeInfo* AddTypeInfo(size_t id, const char* name) noexcept;
 		bool Cast(Type* type, Type* otype) const noexcept;
@@ -132,8 +136,8 @@ namespace Reflectpp
 
 		std::unordered_map<size_t, std::unique_ptr<Factory>> m_Factories;
 		std::vector<std::unique_ptr<Property>> m_Properties;
-		std::vector<std::unique_ptr<Type>> m_Types;
 		std::vector<std::unique_ptr<TypeInfo>> m_TypeInfos;
+		std::vector<std::unique_ptr<Type>> m_Types;
 		static Registry m_Value;
 	};
 
@@ -222,10 +226,23 @@ namespace Reflectpp
 	{
 		Assert(*GetType<T>() == *type, "Registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", TypeName<U>(), TypeName<T>(), name, type->GetName());
 
-		auto get = [getter](void* object) -> void*
+		auto get = [getter](void* object, bool& isOwner) -> void*
 		{
-			const U& tmp{ (static_cast<T*>(object)->*getter)() };
-			return const_cast<U*>(&tmp);
+			if constexpr (std::is_reference_v<PropertyT>)
+			{
+				isOwner = false;
+				const U& tmp{ (static_cast<T*>(object)->*getter)() };
+
+				return const_cast<U*>(&tmp);
+			}
+			else
+			{
+				isOwner = true;
+				U* val{ new U() };
+				*val = (static_cast<T*>(object)->*getter)();
+
+				return  val;
+			}
 		};
 
 		auto set = [setter](void* object, void* value)
@@ -233,7 +250,7 @@ namespace Reflectpp
 			(static_cast<T*>(object)->*setter)(*static_cast<U*>(value));
 		};
 
-		Property* prop{ AddProperty(type, name, &get, &set, GetType<U>()) };
+		Property* prop{ AddProperty(type, name, get, set, GetType<U>()) };
 		Assert(prop != nullptr, "Registration::property(const char* name, %s %s::* addr) : %s already registered\n", TypeName<U>(), TypeName<T>(), name);
 
 		return prop;
@@ -280,7 +297,7 @@ namespace Reflectpp
 			return nullptr;
 		}
 		else
-			return Cast(GetType<V>(), GetType(object)) ? reinterpret_cast<T>(object) : nullptr;
+			return Cast(GetType<V>(), GetType(object)) ? static_cast<T>(object) : nullptr;
 	}
 
 	template<typename T>
@@ -386,9 +403,57 @@ namespace Reflectpp
 }
 
 template<typename T>
+inline Variant::Variant(T*& object) noexcept :
+	m_Data{ object },
+	m_IsOwner{ false },
+	m_Type{ &Type::Get(object) }
+{
+}
+
+template<typename T>
+inline T& Variant::GetValue() noexcept
+{
+	Reflectpp::Assert(IsValid(), "Variant::GetValue<%s>() : invalid variant\n", Reflectpp::TypeName<T>());
+	Reflectpp::Assert(Type::Get<T>() == *m_Type, "Variant::GetValue<%s>() : wrong type, stored value is a %s\n", Reflectpp::TypeName<T>(), m_Type->GetName());
+
+	return *static_cast<T*>(m_Data);
+}
+
+template<typename T>
+inline const T& Variant::GetValue() const noexcept
+{
+	Reflectpp::Assert(IsValid(), "Variant::GetValue<%s>() : invalid variant\n", Reflectpp::TypeName<T>());
+	Reflectpp::Assert(Type::Get<T>() == *m_Type, "Variant::GetValue<%s>() : wrong type, stored value is a %s\n", Reflectpp::TypeName<T>(), m_Type->GetName());
+
+	return *static_cast<T*>(m_Data);
+}
+
+template<typename T>
+inline bool Variant::IsType() const noexcept
+{
+	return IsValid() ? Type::Get<T>() == *m_Type : false;
+}
+
+template<typename T>
 inline Factory& Factory::Get() noexcept
 {
 	return *Reflectpp::Registry::Instance().GetFactory<T>();
+}
+
+template<typename T>
+inline Variant Property::GetValue(T*& object) const
+{
+	Reflectpp::Assert(Type::Get(object) == *m_Type, "Property::GetValue(%s*& object) : wrong object type, %s is in %s\n", Reflectpp::TypeName(object), m_Name, m_Type->GetName());
+
+	if (m_Getter != nullptr)
+	{
+		bool isOwner{ false };
+		void* data{ m_Getter(object, isOwner) };
+
+		return Variant(data, isOwner, m_PropertyType);
+	}
+	else
+		return Variant(static_cast<char*>(static_cast<void*>(object)) + m_Offset, false, m_PropertyType);
 }
 
 template<typename T> template<typename U>
@@ -485,38 +550,6 @@ template<typename T>
 inline TypeInfo& TypeInfo::Get() noexcept
 {
 	return *Reflectpp::Registry::Instance().GetTypeInfo<T>();
-}
-
-template<typename T>
-inline Variant::Variant(T*& object) noexcept :
-	m_Data{ object },
-	m_IsOwner{ false },
-	m_Type{ &Type::Get(object) }
-{
-}
-
-template<typename T>
-inline T& Variant::GetValue() noexcept
-{
-	Reflectpp::Assert(IsValid(), "Variant::GetValue<%s>() : invalid variant\n", Reflectpp::TypeName<T>());
-	Reflectpp::Assert(Type::Get<T>() == *m_Type, "Variant::GetValue<%s>() : wrong type, stored value is a %s\n", Reflectpp::TypeName<T>(), m_Type->GetName());
-
-	return *static_cast<T*>(m_Data);
-}
-
-template<typename T>
-inline const T& Variant::GetValue() const noexcept
-{
-	Reflectpp::Assert(IsValid(), "Variant::GetValue<%s>() : invalid variant\n", Reflectpp::TypeName<T>());
-	Reflectpp::Assert(Type::Get<T>() == *m_Type, "Variant::GetValue<%s>() : wrong type, stored value is a %s\n", Reflectpp::TypeName<T>(), m_Type->GetName());
-
-	return *static_cast<T*>(m_Data);
-}
-
-template<typename T>
-inline bool Variant::IsType() const noexcept
-{
-	return IsValid() ? Type::Get<T>() == *m_Type : false;
 }
 
 template<typename T, typename U>

@@ -27,6 +27,7 @@ int main()
 	Base* tmp0 = new Base();
 	Base* tmp1 = new Derived();
 	int* tmp2 = new int();
+	Intern* tmp3 = new Intern();
 
 	auto& test5 = Type::Get(tmp0);
 	auto& test6 = Type::Get(tmp1);
@@ -41,7 +42,7 @@ int main()
 
 	Variant var1 = Variant(tmp0);
 	Variant var2 = var1;
-	Variant var3;
+	Variant var3 = Variant(tmp3);
 
 	auto& tmp55 = var1.GetType();
 	auto tmp56 = var1.IsType<Base>();
@@ -49,9 +50,37 @@ int main()
 
 	auto other5 = Type::Get<Base>().Create();
 
+	tmp0->SetValue(5.f);
+	tmp0->SetValue1(6.0);
+	tmp3->InternValue0 = 12.f;
+	tmp3->InternValue1 = 13.0;
+
+	for (auto& prop : Type::Get<Intern>().GetProperties())
+	{
+		//Variant var = prop.GetValue(tmp3);
+		Variant var = prop.GetValue(tmp3);
+
+		if (var.IsType<double>())
+			printf("%s is a double : %f\n", prop.GetName(), var.GetValue<double>());
+		else if (var.IsType<float>())
+			printf("%s is a float : %f\n", prop.GetName(), var.GetValue<float>());
+	}
+
+	for (auto& prop : Type::Get<Base>().GetProperties())
+	{
+		//Variant var = prop.GetValue(tmp3);
+		Variant var = prop.GetValue(tmp0);
+
+		if (var.IsType<double>())
+			printf("%s is a double : %f\n", prop.GetName(), var.GetValue<double>());
+		else if (var.IsType<float>())
+			printf("%s is a float : %f\n", prop.GetName(), var.GetValue<float>());
+	}
+
 	delete tmp0;
 	delete tmp1;
 	delete tmp2;
+	delete tmp3;
 
 	// Serialization test
 	//Test object;

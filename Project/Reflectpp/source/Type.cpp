@@ -6,89 +6,6 @@
 #include <string>
 #include "Registry.h"
 
-void* Factory::Construct() const noexcept
-{
-	return m_Constructor();
-}
-
-void* Factory::Copy(void* object) const noexcept
-{
-	return m_Copy(object);
-}
-
-void Factory::Destroy(void* object) const noexcept
-{
-	m_Destructor(object);
-}
-
-Factory::Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept :
-	m_Constructor{ constructor },
-	m_Copy{ copy },
-	m_Destructor{ destructor }
-{
-}
-
-size_t Property::GetID() const noexcept
-{
-	return m_ID;
-}
-
-const char* Property::GetName() const noexcept
-{
-	return m_Name;
-}
-
-size_t Property::GetOffset() const noexcept
-{
-	return m_Offset;
-}
-
-Type& Property::GetType() const noexcept
-{
-	return *m_Type;
-}
-
-Property::Property(void* getter, size_t id, const char* name, size_t offset, void* setter, Type* type) noexcept :
-	m_Getter{ getter },
-	m_ID{ id },
-	m_Name{ name },
-	m_Offset{ offset },
-	m_Setter{ setter },
-	m_Type{ type }
-{
-}
-
-Registration::Registration(Type* type) noexcept :
-	m_Type{ type }
-{
-}
-
-bool TypeInfo::operator==(const TypeInfo& rhs) const noexcept
-{
-	return m_ID == rhs.m_ID;
-}
-
-bool TypeInfo::operator!=(const TypeInfo& rhs) const noexcept
-{
-	return m_ID != rhs.m_ID;
-}
-
-size_t TypeInfo::GetID() const noexcept
-{
-	return m_ID;
-}
-
-const char* TypeInfo::GetName() const noexcept
-{
-	return m_Name;
-}
-
-TypeInfo::TypeInfo(size_t id, const char* name) noexcept :
-	m_ID{ id },
-	m_Name{ name }
-{
-}
-
 Variant::Variant() :
 	m_Data{ nullptr },
 	m_IsOwner{ false },
@@ -151,6 +68,105 @@ Variant::Variant(void* data, bool isOwner, Type* type) noexcept :
 	m_Data{ data },
 	m_IsOwner{ isOwner },
 	m_Type{ type }
+{
+}
+
+void* Factory::Construct() const noexcept
+{
+	return m_Constructor();
+}
+
+void* Factory::Copy(void* object) const noexcept
+{
+	return m_Copy(object);
+}
+
+void Factory::Destroy(void* object) const noexcept
+{
+	m_Destructor(object);
+}
+
+Factory::Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept :
+	m_Constructor{ constructor },
+	m_Copy{ copy },
+	m_Destructor{ destructor }
+{
+}
+
+size_t Property::GetID() const noexcept
+{
+	return m_ID;
+}
+
+const char* Property::GetName() const noexcept
+{
+	return m_Name;
+}
+
+size_t Property::GetOffset() const noexcept
+{
+	return m_Offset;
+}
+
+Type& Property::GetType() const noexcept
+{
+	return *m_PropertyType;
+}
+
+Variant Property::GetValue(Variant& object) const
+{
+	Reflectpp::Assert(*object.m_Type == *m_Type, "Property::GetValue(Variant& object) : wrong object type, %s is in %s\n", m_Name, m_Type->GetName());
+
+	if (m_Getter != nullptr)
+	{
+		bool isOwner{ false };
+		void* data{ m_Getter(object.m_Data, isOwner) };
+
+		return Variant(data, isOwner, m_PropertyType);
+	}
+	else
+		return Variant(static_cast<char*>(object.m_Data) + m_Offset, false, m_PropertyType);
+}
+
+Property::Property(GetterT getter, size_t id, const char* name, size_t offset, Type* propertyType, SetterT setter, Type* type) noexcept :
+	m_Getter{ getter },
+	m_ID{ id },
+	m_Name{ name },
+	m_Offset{ offset },
+	m_PropertyType{ propertyType },
+	m_Setter{ setter },
+	m_Type{ type }
+{
+}
+
+Registration::Registration(Type* type) noexcept :
+	m_Type{ type }
+{
+}
+
+bool TypeInfo::operator==(const TypeInfo& rhs) const noexcept
+{
+	return m_ID == rhs.m_ID;
+}
+
+bool TypeInfo::operator!=(const TypeInfo& rhs) const noexcept
+{
+	return m_ID != rhs.m_ID;
+}
+
+size_t TypeInfo::GetID() const noexcept
+{
+	return m_ID;
+}
+
+const char* TypeInfo::GetName() const noexcept
+{
+	return m_Name;
+}
+
+TypeInfo::TypeInfo(size_t id, const char* name) noexcept :
+	m_ID{ id },
+	m_Name{ name }
 {
 }
 

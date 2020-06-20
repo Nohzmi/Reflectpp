@@ -10,13 +10,13 @@ namespace Reflectpp
 {
 	Registry Registry::m_Value;
 
-	Registry::Registry() = default;
-	Registry::~Registry() = default;
-
 	Registry& Registry::Instance() noexcept
 	{
 		return m_Value;
 	}
+
+	Registry::Registry() = default;
+	Registry::~Registry() = default;
 
 	Type* Registry::AddBase(Type* type, Type* base) noexcept
 	{
@@ -66,7 +66,7 @@ namespace Reflectpp
 		return factory;
 	}
 
-	Property* Registry::AddProperty(Type* type, const char* name, size_t offset, Type* ptype) noexcept
+	Property* Registry::AddProperty(Type* type, const char* name, size_t offset, Type* propertyType) noexcept
 	{
 		std::hash<std::string> hasher;
 		size_t id{ hasher(name) };
@@ -75,7 +75,7 @@ namespace Reflectpp
 			if (prop->GetID() == id)
 				return nullptr;
 
-		Property* prop{ new Property(nullptr, id, name, offset, nullptr, ptype) };
+		Property* prop{ new Property(nullptr, id, name, offset, propertyType, nullptr, type) };
 		m_Properties.emplace_back(prop);
 
 		type->m_Properties.m_Vector.emplace_back(prop);
@@ -83,7 +83,7 @@ namespace Reflectpp
 		return prop;
 	}
 
-	Property* Registry::AddProperty(Type* type, const char* name, void* getter, void* setter, Type* ptype) noexcept
+	Property* Registry::AddProperty(Type* type, const char* name, GetterT getter, SetterT setter, Type* propertyType) noexcept
 	{
 		std::hash<std::string> hasher;
 		size_t id{ hasher(name) };
@@ -92,7 +92,7 @@ namespace Reflectpp
 			if (prop->GetID() == id)
 				return nullptr;
 
-		Property* prop{ new Property(getter, id, name, 0, setter, ptype) };
+		Property* prop{ new Property(getter, id, name, 0, propertyType, setter, type) };
 		m_Properties.emplace_back(prop);
 
 		type->m_Properties.m_Vector.emplace_back(prop);

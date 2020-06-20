@@ -7,6 +7,7 @@
 */
 
 #pragma once
+#include <functional>
 #include <vector>
 #include "Register.h"
 
@@ -43,7 +44,82 @@ namespace Reflectpp
 	class Registry;
 }
 
+class Property;
 class Type;
+
+/**
+* Allows to store data of any type
+*/
+class REFLECTPP_API Variant final
+{
+	friend Property;
+	friend Type;
+
+public:
+
+	Variant();
+	~Variant();
+	Variant(const Variant&);
+	Variant(Variant&&) noexcept = default;
+	Variant& operator=(const Variant&);
+	Variant& operator=(Variant&&) noexcept = default;
+
+	/**
+	* Create a variant from a object \n
+	* Don't have the ownership in this case
+	* @param object
+	*/
+	template<typename T>
+	Variant(T*& object) noexcept;
+
+	/**
+	* Returns whether or not the stored a value is valid
+	*/
+	operator bool() const;
+
+	/**
+	* Clear the stored value of this variant
+	*/
+	void Clear() noexcept;
+
+	/**
+	* Returns the type of the stored value
+	*/
+	Type& GetType() const noexcept;
+
+	/**
+	* Returns the value as requested type \n
+	* Use IsType() to check if the type is valid
+	*/
+	template<typename T>
+	T& GetValue() noexcept;
+
+	/**
+	* Returns the value as requested type \n
+	* Use IsType() to check if the type is valid
+	*/
+	template<typename T>
+	const T& GetValue() const noexcept;
+
+	/**
+	* Returns whether or not the stored value is the same type as requested type
+	*/
+	template<typename T>
+	bool IsType() const noexcept;
+
+	/**
+	* Returns whether or not the stored a value is valid
+	*/
+	bool IsValid() const noexcept;
+
+private:
+
+	Variant(void* data, bool isOwner, Type* type) noexcept;
+
+	void* m_Data;
+	bool m_IsOwner;
+	Type* m_Type;
+};
 
 /**
 * Generic factory class used in reflection \n
@@ -98,6 +174,9 @@ private:
 	DestructorT m_Destructor;
 };
 
+#pragma warning(push)
+#pragma warning(disable: 4251)
+
 /**
 * Show a property of a class in reflection
 */
@@ -105,8 +184,8 @@ class REFLECTPP_API Property final
 {
 	friend Reflectpp::Registry;
 
-	using GetterT = void* (*)(void*);
-	using SetterT = void (*)(void*, void*);
+	using GetterT = std::function<void* (void*, bool&)>;
+	using SetterT = std::function<void(void*, void*)>;
 
 public:
 
@@ -137,17 +216,33 @@ public:
 	*/
 	Type& GetType() const noexcept;
 
+	/**
+	* Returns value of the property from an object of the type that contains it
+	* @param object
+	*/
+	template<typename T>
+	Variant GetValue(T*& object) const;
+
+	/**
+	* Returns value of the property from an object of the type that contains it
+	* @param object
+	*/
+	Variant GetValue(Variant& object) const;
+
 private:
 
-	Property(void* getter, size_t id, const char* name, size_t offset, void* setter, Type* type) noexcept;
+	Property(GetterT getter, size_t id, const char* name, size_t offset, Type* propertyType, SetterT setter, Type* type) noexcept;
 
-	void* m_Getter;
+	GetterT m_Getter;
 	size_t m_ID;
 	const char* m_Name;
 	size_t m_Offset;
-	void* m_Setter;
+	Type* m_PropertyType;
+	SetterT m_Setter;
 	Type* m_Type;
 };
+
+#pragma warning (pop)
 
 template<typename T>
 class Range final
@@ -304,79 +399,6 @@ private:
 
 	size_t m_ID;
 	const char* m_Name;
-};
-
-/**
-* Allows to store data of any type
-*/
-class REFLECTPP_API Variant final
-{
-	friend Type;
-
-public:
-
-	Variant();
-	~Variant();
-	Variant(const Variant&);
-	Variant(Variant&&) noexcept = default;
-	Variant& operator=(const Variant&);
-	Variant& operator=(Variant&&) noexcept = default;
-
-	/**
-	* Create a variant from a object \n
-	* Don't have the ownership in this case
-	* @param object
-	*/
-	template<typename T>
-	Variant(T*& object) noexcept;
-
-	/**
-	* Returns whether or not the stored a value is valid
-	*/
-	operator bool() const;
-
-	/**
-	* Clear the stored value of this variant
-	*/
-	void Clear() noexcept;
-
-	/**
-	* Returns the type of the stored value
-	*/
-	Type& GetType() const noexcept;
-
-	/**
-	* Returns the value as requested type \n
-	* Use IsType() to check if the type is valid
-	*/
-	template<typename T>
-	T& GetValue() noexcept;
-
-	/**
-	* Returns the value as requested type \n
-	* Use IsType() to check if the type is valid
-	*/
-	template<typename T>
-	const T& GetValue() const noexcept;
-
-	/**
-	* Returns whether or not the stored value is the same type as requested type
-	*/
-	template<typename T>
-	bool IsType() const noexcept;
-
-	/**
-	* Returns whether or not the stored a value is valid
-	*/
-	bool IsValid() const noexcept;
-
-private:
-
-	Variant(void* data, bool isOwner, Type* type) noexcept;
-
-	void* m_Data;
-	bool m_IsOwner;
-	Type* m_Type;
 };
 
 #pragma warning(push)

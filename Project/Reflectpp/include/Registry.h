@@ -481,24 +481,6 @@ inline Registration Registration::property(const char* name, PropertyT(T::* gett
 	return *this;
 }
 
-template<typename T, typename U>
-inline T Type::Cast(U*& object) noexcept
-{
-	return Reflectpp::Registry::Instance().Cast<T>(object);
-}
-
-template<typename T>
-inline Type& Type::Get() noexcept
-{
-	return *Reflectpp::Registry::Instance().GetType<T>();
-}
-
-template<typename T>
-inline Type& Type::Get(T*& object) noexcept
-{
-	return *Reflectpp::Registry::Instance().GetType(object);
-}
-
 template<typename T>
 inline TypeInfo& TypeInfo::Get() noexcept
 {
@@ -535,4 +517,22 @@ template<typename T>
 inline bool Variant::IsType() const noexcept
 {
 	return IsValid() ? Type::Get<T>() == *m_Type : false;
+}
+
+template<typename T, typename U>
+inline T Type::Cast(U*& object) noexcept
+{
+	return Reflectpp::Registry::Instance().Cast<T>(object);
+}
+
+template<typename T>
+inline Type& Type::Get() noexcept
+{
+	return *Reflectpp::Registry::Instance().GetType<T>();
+}
+
+template<typename T>
+inline Type& Type::Get(T*& object) noexcept
+{
+	return *Reflectpp::Registry::Instance().GetType(object);
 }

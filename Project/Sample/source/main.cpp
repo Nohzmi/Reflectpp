@@ -47,6 +47,8 @@ int main()
 	auto tmp56 = var1.IsType<Base>();
 	auto& tmp57 = var1.GetValue<Base>();
 
+	auto other5 = Type::Get<Base>().Create();
+
 	delete tmp0;
 	delete tmp1;
 	delete tmp2;

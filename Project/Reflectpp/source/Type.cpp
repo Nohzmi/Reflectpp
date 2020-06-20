@@ -6,13 +6,6 @@
 #include <string>
 #include "Registry.h"
 
-Factory::Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept :
-	m_Constructor{ constructor },
-	m_Copy{ copy },
-	m_Destructor{ destructor }
-{
-}
-
 void* Factory::Construct() const noexcept
 {
 	return m_Constructor();
@@ -28,13 +21,10 @@ void Factory::Destroy(void* object) const noexcept
 	m_Destructor(object);
 }
 
-Property::Property(void* getter, size_t id, const char* name, size_t offset, void* setter, Type* type) noexcept :
-	m_Getter{ getter },
-	m_ID{ id },
-	m_Name{ name },
-	m_Offset{ offset },
-	m_Setter{ setter },
-	m_Type{ type }
+Factory::Factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept :
+	m_Constructor{ constructor },
+	m_Copy{ copy },
+	m_Destructor{ destructor }
 {
 }
 
@@ -58,85 +48,18 @@ Type& Property::GetType() const noexcept
 	return *m_Type;
 }
 
-Registration::Registration(Type* type) noexcept :
+Property::Property(void* getter, size_t id, const char* name, size_t offset, void* setter, Type* type) noexcept :
+	m_Getter{ getter },
+	m_ID{ id },
+	m_Name{ name },
+	m_Offset{ offset },
+	m_Setter{ setter },
 	m_Type{ type }
 {
 }
 
-Type::Type(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept :
-	m_Factory{ factory },
-	m_HierarchyID{ typeinfo->GetID() },
-	m_Size{ size },
-	m_TypeInfo{ typeinfo }
-{
-}
-
-bool Type::operator==(const Type& rhs) const noexcept
-{
-	return m_TypeInfo == rhs.m_TypeInfo;
-}
-
-bool Type::operator!=(const Type& rhs) const noexcept
-{
-	return m_TypeInfo != rhs.m_TypeInfo;
-}
-
-Range<Type>& Type::GetBaseTypes() const noexcept
-{
-	return *const_cast<Range<Type>*>(&m_BaseTypes);
-}
-
-Range<Type>& Type::GetDerivedTypes() const noexcept
-{
-	return *const_cast<Range<Type>*>(&m_DerivedTypes);
-}
-
-Factory& Type::GetFactory() const noexcept
-{
-	return *m_Factory;
-}
-
-size_t Type::GetID() const noexcept
-{
-	return m_TypeInfo->GetID();
-}
-
-const char* Type::GetName() const noexcept
-{
-	return m_TypeInfo->GetName();
-}
-
-Property& Type::GetProperty(const char* name) const noexcept
-{
-	std::hash<std::string> hasher;
-	size_t id{ hasher(name) };
-
-	for (auto& prop : m_Properties)
-		if (prop.GetID() == id)
-			return prop;
-
-	Reflectpp::Assert(false, "Type::GetProperty(const char* name) : %s isn't registered\n", name);
-	return *m_Properties.begin();
-}
-
-Range<Property>& Type::GetProperties() const noexcept
-{
-	return *const_cast<Range<Property>*>(&m_Properties);
-}
-
-size_t Type::GetSize() const noexcept
-{
-	return m_Size;
-}
-
-TypeInfo& Type::GetTypeInfo() const noexcept
-{
-	return *m_TypeInfo;
-}
-
-TypeInfo::TypeInfo(size_t id, const char* name) noexcept :
-	m_ID{ id },
-	m_Name{ name }
+Registration::Registration(Type* type) noexcept :
+	m_Type{ type }
 {
 }
 
@@ -158,6 +81,12 @@ size_t TypeInfo::GetID() const noexcept
 const char* TypeInfo::GetName() const noexcept
 {
 	return m_Name;
+}
+
+TypeInfo::TypeInfo(size_t id, const char* name) noexcept :
+	m_ID{ id },
+	m_Name{ name }
+{
 }
 
 Variant::Variant() :
@@ -216,4 +145,87 @@ Type& Variant::GetType() const noexcept
 bool Variant::IsValid() const noexcept
 {
 	return m_Data != nullptr;
+}
+
+Variant::Variant(void* data, bool isOwner, Type* type) noexcept :
+	m_Data{ data },
+	m_IsOwner{ isOwner },
+	m_Type{ type }
+{
+}
+
+bool Type::operator==(const Type& rhs) const noexcept
+{
+	return m_TypeInfo == rhs.m_TypeInfo;
+}
+
+bool Type::operator!=(const Type& rhs) const noexcept
+{
+	return m_TypeInfo != rhs.m_TypeInfo;
+}
+
+Variant Type::Create() const
+{
+	return Variant(GetFactory().Construct(), true, const_cast<Type*>(this));
+}
+
+Range<Type>& Type::GetBaseTypes() const noexcept
+{
+	return *const_cast<Range<Type>*>(&m_BaseTypes);
+}
+
+Range<Type>& Type::GetDerivedTypes() const noexcept
+{
+	return *const_cast<Range<Type>*>(&m_DerivedTypes);
+}
+
+Factory& Type::GetFactory() const noexcept
+{
+	return *m_Factory;
+}
+
+size_t Type::GetID() const noexcept
+{
+	return m_TypeInfo->GetID();
+}
+
+const char* Type::GetName() const noexcept
+{
+	return m_TypeInfo->GetName();
+}
+
+Property& Type::GetProperty(const char* name) const noexcept
+{
+	std::hash<std::string> hasher;
+	size_t id{ hasher(name) };
+
+	for (auto& prop : m_Properties)
+		if (prop.GetID() == id)
+			return prop;
+
+	Reflectpp::Assert(false, "Type::GetProperty(const char* name) : %s isn't registered\n", name);
+	return *m_Properties.begin();
+}
+
+Range<Property>& Type::GetProperties() const noexcept
+{
+	return *const_cast<Range<Property>*>(&m_Properties);
+}
+
+size_t Type::GetSize() const noexcept
+{
+	return m_Size;
+}
+
+TypeInfo& Type::GetTypeInfo() const noexcept
+{
+	return *m_TypeInfo;
+}
+
+Type::Type(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept :
+	m_Factory{ factory },
+	m_HierarchyID{ typeinfo->GetID() },
+	m_Size{ size },
+	m_TypeInfo{ typeinfo }
+{
 }

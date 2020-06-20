@@ -44,7 +44,6 @@ namespace Reflectpp
 }
 
 class Type;
-class TypeInfo;
 
 /**
 * Generic factory class used in reflection \n
@@ -254,6 +253,132 @@ private:
 	Type* m_Type;
 };
 
+/**
+* Equivalent to std::type_info \n
+* Independent of the reflection
+*/
+class REFLECTPP_API TypeInfo final
+{
+	friend Reflectpp::Registry;
+
+public:
+
+	TypeInfo() = delete;
+	~TypeInfo() = default;
+	TypeInfo(const TypeInfo&) = default;
+	TypeInfo(TypeInfo&&) noexcept = default;
+	TypeInfo& operator=(const TypeInfo&) = default;
+	TypeInfo& operator=(TypeInfo&&) noexcept = default;
+
+	/**
+	* Returns whether or not two types are the same
+	* @param rhs
+	*/
+	bool operator==(const TypeInfo& rhs) const noexcept;
+
+	/**
+	* Returns whether or not two types are the same
+	* @param rhs
+	*/
+	bool operator!=(const TypeInfo& rhs) const noexcept;
+
+	/**
+	* Get type info of the requested type
+	*/
+	template<typename T>
+	static TypeInfo& Get() noexcept;
+
+	/**
+	* Returns id of this type info
+	*/
+	size_t GetID() const noexcept;
+
+	/**
+	* Returns name of this type info
+	*/
+	const char* GetName() const noexcept;
+
+private:
+
+	TypeInfo(size_t id, const char* name) noexcept;
+
+	size_t m_ID;
+	const char* m_Name;
+};
+
+/**
+* Allows to store data of any type
+*/
+class REFLECTPP_API Variant final
+{
+	friend Type;
+
+public:
+
+	Variant();
+	~Variant();
+	Variant(const Variant&);
+	Variant(Variant&&) noexcept = default;
+	Variant& operator=(const Variant&);
+	Variant& operator=(Variant&&) noexcept = default;
+
+	/**
+	* Create a variant from a object \n
+	* Don't have the ownership in this case
+	* @param object
+	*/
+	template<typename T>
+	Variant(T*& object) noexcept;
+
+	/**
+	* Returns whether or not the stored a value is valid
+	*/
+	operator bool() const;
+
+	/**
+	* Clear the stored value of this variant
+	*/
+	void Clear() noexcept;
+
+	/**
+	* Returns the type of the stored value
+	*/
+	Type& GetType() const noexcept;
+
+	/**
+	* Returns the value as requested type \n
+	* Use IsType() to check if the type is valid
+	*/
+	template<typename T>
+	T& GetValue() noexcept;
+
+	/**
+	* Returns the value as requested type \n
+	* Use IsType() to check if the type is valid
+	*/
+	template<typename T>
+	const T& GetValue() const noexcept;
+
+	/**
+	* Returns whether or not the stored value is the same type as requested type
+	*/
+	template<typename T>
+	bool IsType() const noexcept;
+
+	/**
+	* Returns whether or not the stored a value is valid
+	*/
+	bool IsValid() const noexcept;
+
+private:
+
+	Variant(void* data, bool isOwner, Type* type) noexcept;
+
+	void* m_Data;
+	bool m_IsOwner;
+	Type* m_Type;
+};
+
 #pragma warning(push)
 #pragma warning(disable: 4251)
 
@@ -291,6 +416,11 @@ public:
 	*/
 	template<typename T, typename U>
 	static T Cast(U*& object) noexcept;
+
+	/**
+	* Returns a variant of this type
+	*/
+	Variant Create() const;
 
 	/**
 	* Returns requested type representation
@@ -365,100 +495,6 @@ private:
 };
 
 #pragma warning (pop)
-
-/**
-* Equivalent to std::type_info \n
-* Independent of the reflection
-*/
-class REFLECTPP_API TypeInfo final
-{
-	friend Reflectpp::Registry;
-
-public:
-
-	TypeInfo() = delete;
-	~TypeInfo() = default;
-	TypeInfo(const TypeInfo&) = default;
-	TypeInfo(TypeInfo&&) noexcept = default;
-	TypeInfo& operator=(const TypeInfo&) = default;
-	TypeInfo& operator=(TypeInfo&&) noexcept = default;
-
-	/**
-	* Returns whether or not two types are the same
-	* @param rhs
-	*/
-	bool operator==(const TypeInfo& rhs) const noexcept;
-
-	/**
-	* Returns whether or not two types are the same
-	* @param rhs
-	*/
-	bool operator!=(const TypeInfo& rhs) const noexcept;
-
-	/**
-	* Get type info of the requested type
-	*/
-	template<typename T>
-	static TypeInfo& Get() noexcept;
-
-	/**
-	* Returns id of this type info
-	*/
-	size_t GetID() const noexcept;
-
-	/**
-	* Returns name of this type info
-	*/
-	const char* GetName() const noexcept;
-
-private:
-
-	TypeInfo(size_t id, const char* name) noexcept;
-
-	size_t m_ID;
-	const char* m_Name;
-};
-
-/**
-* Allows to store data of any type
-*/
-class REFLECTPP_API Variant final
-{
-public:
-
-	Variant();
-	~Variant();
-	Variant(const Variant&);
-	Variant(Variant&&) noexcept = default;
-	Variant& operator=(const Variant&);
-	Variant& operator=(Variant&&) noexcept = default;
-
-	template<typename T>
-	Variant(T*& object) noexcept;
-
-	operator bool() const;
-
-	void Clear() noexcept;
-
-	Type& GetType() const noexcept;
-
-	template<typename T>
-	T& GetValue() noexcept;
-
-	template<typename T>
-	const T& GetValue() const noexcept;
-
-	template<typename T>
-	bool IsType() const noexcept;
-
-	bool IsValid() const noexcept;
-
-private:
-
-	void* m_Data;
-	bool m_IsOwner;
-	Type* m_Type;
-};
 
 /**
 * @}

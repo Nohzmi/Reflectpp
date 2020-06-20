@@ -38,7 +38,11 @@ namespace										\
 static const register_class register_obj;		\
 void register_function() noexcept
 
-namespace Reflectpp { class Registry; }
+namespace Reflectpp
+{
+	class Registry;
+}
+
 class Type;
 class TypeInfo;
 
@@ -129,6 +133,57 @@ private:
 	const char* m_Name;
 	size_t m_Offset;
 	Type* m_Type;
+};
+
+template<typename T>
+class Range final
+{
+	friend Reflectpp::Registry;
+
+public:
+
+	template<typename T>
+	class Iterator
+	{
+		friend Range<T>;
+
+	public:
+
+		~Iterator() = default;
+		Iterator(const Iterator&) = default;
+		Iterator(Iterator&&) noexcept = default;
+		Iterator& operator=(const Iterator&) = default;
+		Iterator& operator=(Iterator&&) noexcept = default;
+
+		bool operator==(const Iterator<T>& rhs) const;
+		bool operator!=(const Iterator<T>& rhs) const;
+		Iterator<T>& operator++();
+		T& operator*() const;
+
+	private:
+
+		Iterator() = default;
+
+		size_t m_Index;
+		const Range<T>* m_Range;
+	};
+
+	Range() = default;
+	~Range() = default;
+	Range(const Range&) = delete;
+	Range(Range&&) noexcept = default;
+	Range& operator=(const Range&) = delete;
+	Range& operator=(Range&&) noexcept = default;
+
+	T& operator[] (size_t n) const noexcept;
+	Iterator<T> begin() const noexcept;
+	bool empty() const noexcept;
+	Iterator<T> end() const noexcept;
+	size_t size() const noexcept;
+
+private:
+
+	std::vector<T*> m_Vector;
 };
 
 /**
@@ -227,12 +282,12 @@ public:
 	/**
 	* Returns base types of this type
 	*/
-	const std::vector<Type*>& GetBaseTypes() const noexcept;
+	Range<Type>& GetBaseTypes() const noexcept;
 
 	/**
 	* Returns derived types of this type
 	*/
-	const std::vector<Type*>& GetDerivedTypes() const noexcept;
+	Range<Type>& GetDerivedTypes() const noexcept;
 
 	/**
 	* Returns factory of this type
@@ -258,7 +313,7 @@ public:
 	/**
 	* Returns all property of this type
 	*/
-	const std::vector<Property*>& GetProperties() const noexcept;
+	Range<Property>& GetProperties() const noexcept;
 
 	/**
 	* Returns size of this type
@@ -272,11 +327,11 @@ public:
 
 private:
 
-	std::vector<Type*> m_BaseTypes;
-	std::vector<Type*> m_DerivedTypes;
+	Range<Type> m_BaseTypes;
+	Range<Type> m_DerivedTypes;
 	Factory* m_Factory;
 	size_t m_HierarchyID;
-	std::vector<Property*> m_Properties;
+	Range<Property> m_Properties;
 	size_t m_Size;
 	TypeInfo* m_TypeInfo;
 };
@@ -343,6 +398,69 @@ template<typename T>
 inline Factory& Factory::Get() noexcept
 {
 	return *Reflectpp::Registry::Instance().GetFactory<T>();
+}
+
+template<typename T> template<typename U>
+inline bool Range<T>::Iterator<U>::operator==(const Iterator<U>& rhs) const
+{
+	return (m_Index == rhs.m_Index) && (m_Range == rhs.m_Range);
+}
+
+template<typename T> template<typename U>
+inline bool Range<T>::Iterator<U>::operator!=(const Iterator<U>& rhs) const
+{
+	return (m_Index != rhs.m_Index) || (m_Range != rhs.m_Range);
+}
+
+template<typename T> template<typename U>
+inline Range<T>::Iterator<U>& Range<T>::Iterator<U>::operator++()
+{
+	++m_Index;
+	return *this;
+}
+
+template<typename T> template<typename U>
+inline U& Range<T>::Iterator<U>::operator*() const
+{
+	return (*m_Range)[m_Index];
+}
+
+template<typename T>
+inline T& Range<T>::operator[](size_t n) const noexcept
+{
+	return *m_Vector[n];
+}
+
+template<typename T>
+inline Range<T>::Iterator<T> Range<T>::begin() const noexcept
+{
+	Iterator<T> it;
+	it.m_Index = 0;
+	it.m_Range = this;
+
+	return it;
+}
+
+template<typename T>
+inline bool Range<T>::empty() const noexcept
+{
+	return m_Vector.empty();
+}
+
+template<typename T>
+inline Range<T>::Iterator<T> Range<T>::end() const noexcept
+{
+	Iterator<T> it;
+	it.m_Index = size();
+	it.m_Range = this;
+
+	return it;
+}
+
+template<typename T>
+inline size_t Range<T>::size() const noexcept
+{
+	return m_Vector.size();
 }
 
 template<typename T>

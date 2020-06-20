@@ -13,9 +13,14 @@ namespace Reflectpp
 	Registry::Registry() = default;
 	Registry::~Registry() = default;
 
+	Registry& Registry::Instance() noexcept
+	{
+		return m_Value;
+	}
+
 	Type* Registry::AddBase(Type* type, Type* base) noexcept
 	{
-		for (auto& it : type->GetBaseTypes())
+		for (auto& it : type->GetBaseTypes().m_Vector)
 			if (it->GetID() == base->GetID())
 				return nullptr;
 
@@ -31,19 +36,20 @@ namespace Reflectpp
 
 				type->m_HierarchyID = hierarchyID;
 
-				for (auto& it : type->GetBaseTypes())
+				for (auto& it : type->GetBaseTypes().m_Vector)
 					lambda(it, hierarchyID, lambda);
 
-				for (auto& it : type->GetDerivedTypes())
+				for (auto& it : type->GetDerivedTypes().m_Vector)
 					lambda(it, hierarchyID, lambda);
 			};
 
 			updateHierarchy(base, type->m_HierarchyID, updateHierarchy);
 		}
 
-		base->m_DerivedTypes.emplace_back(type);
-		type->m_BaseTypes.emplace_back(base);
-		type->m_Properties.insert(type->m_Properties.cbegin(), base->m_Properties.cbegin(), base->m_Properties.cbegin());
+		base->m_DerivedTypes.m_Vector.emplace_back(type);
+		type->m_BaseTypes.m_Vector.emplace_back(base);
+		type->m_Properties.m_Vector.insert(type->m_Properties.m_Vector.cbegin(),
+			base->m_Properties.m_Vector.cbegin(), base->m_Properties.m_Vector.cbegin());
 
 		return base;
 	}
@@ -65,14 +71,14 @@ namespace Reflectpp
 		std::hash<std::string> hasher;
 		size_t id{ hasher(name) };
 
-		for (auto& prop : type->GetProperties())
+		for (auto& prop : type->GetProperties().m_Vector)
 			if (prop->GetID() == id)
 				return nullptr;
 
 		Property* prop{ new Property(id, name, offset, ptype) };
 		m_Properties.emplace_back(prop);
 
-		type->m_Properties.emplace_back(prop);
+		type->m_Properties.m_Vector.emplace_back(prop);
 
 		return prop;
 	}
@@ -113,18 +119,13 @@ namespace Reflectpp
 
 			bool res{ false };
 
-			for (auto& it : type->GetBaseTypes())
+			for (auto& it : type->GetBaseTypes().m_Vector)
 				res |= lambda(it, id, lambda);
 
 			return res;
 		};
 
 		return isBaseOf(otype, type->GetID(), isBaseOf);
-	}
-
-	Registry& Registry::Instance() noexcept
-	{
-		return m_Value;
 	}
 
 	Factory* Registry::GetFactory(size_t id) const noexcept

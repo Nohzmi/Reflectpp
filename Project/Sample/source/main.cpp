@@ -7,12 +7,6 @@
 #include "Derived.h"
 #include "Intern.h"
 
-struct Not {};
-
-struct A { virtual ~A() {} };
-struct B { virtual ~B() {} };
-struct C : public A, B { virtual ~C() {} };
-
 int main()
 {
 	// Entry point
@@ -24,8 +18,11 @@ int main()
 	auto& test2 = Type::Get<Derived>().GetBaseTypes();
 	auto& test3 = Type::Get<Derived>().GetDerivedTypes();
 	auto& test4 = Type::Get<Derived>().GetProperties();
-	auto& test45 = Type::Get<Base>();
-	auto& test46 = Type::Get<Intern>();
+	auto& other0 = Type::Get<Base>();
+	auto& other1 = Type::Get<Intern>();
+
+	for (auto& it : Type::Get<Derived>().GetBaseTypes())
+		printf("%s\n", it.GetName());
 
 	Base* tmp0 = new Base();
 	Base* tmp1 = new Derived();
@@ -36,13 +33,11 @@ int main()
 	auto& test7 = Type::Get(tmp2);
 
 	auto test8 = Type::Cast<Base*>(tmp0);
-	auto test754 = Type::Cast<Derived*>(tmp0);
+	auto test9 = Type::Cast<Derived*>(tmp0);
 
-	auto test11 = Type::Get<Derived>().GetFactory().Construct();
-	Type::Get<Derived>().GetFactory().Destroy(test11);
-	auto test12 = TypeInfo::Get<Intern>();
-	auto test13 = TypeInfo::Get<Not>();
-	auto test14 = Factory::Get<Not>();
+	auto test10 = Type::Get<Derived>().GetFactory().Construct();
+	Type::Get<Derived>().GetFactory().Destroy(test10);
+	auto test11 = TypeInfo::Get<Intern>();
 
 	delete tmp0;
 	delete tmp1;

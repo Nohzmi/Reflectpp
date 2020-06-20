@@ -79,14 +79,14 @@ bool Type::operator!=(const Type& rhs) const noexcept
 	return m_TypeInfo != rhs.m_TypeInfo;
 }
 
-const std::vector<Type*>& Type::GetBaseTypes() const noexcept
+Range<Type>& Type::GetBaseTypes() const noexcept
 {
-	return m_BaseTypes;
+	return *const_cast<Range<Type>*>(&m_BaseTypes);
 }
 
-const std::vector<Type*>& Type::GetDerivedTypes() const noexcept
+Range<Type>& Type::GetDerivedTypes() const noexcept
 {
-	return m_DerivedTypes;
+	return *const_cast<Range<Type>*>(&m_DerivedTypes);
 }
 
 Factory& Type::GetFactory() const noexcept
@@ -110,16 +110,16 @@ Property& Type::GetProperty(const char* name) const noexcept
 	size_t id{ hasher(name) };
 
 	for (auto& prop : m_Properties)
-		if (prop->GetID() == id)
-			return *prop;
+		if (prop.GetID() == id)
+			return prop;
 
 	Reflectpp::Assert(false, "Type::GetProperty(const char* name) : %s isn't registered\n", name);
-	return *m_Properties.back();
+	return *m_Properties.begin();
 }
 
-const std::vector<Property*>& Type::GetProperties() const noexcept
+Range<Property>& Type::GetProperties() const noexcept
 {
-	return m_Properties;
+	return *const_cast<Range<Property>*>(&m_Properties);
 }
 
 size_t Type::GetSize() const noexcept

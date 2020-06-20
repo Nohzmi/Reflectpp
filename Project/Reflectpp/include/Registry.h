@@ -95,6 +95,8 @@ namespace Reflectpp
 		template<typename T, typename U, typename V = typename std::remove_pointer_t<T>>
 		std::remove_pointer_t<T>* Cast(U*& object) noexcept;
 
+		static Registry& Instance() noexcept;
+
 		template<typename T>
 		Factory* GetFactory() noexcept;
 
@@ -115,7 +117,6 @@ namespace Reflectpp
 		Type* AddType(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept;
 		TypeInfo* AddTypeInfo(size_t id, const char* name) noexcept;
 		bool Cast(Type* type, Type* otype) const noexcept;
-		static Registry& Instance() noexcept;
 		Factory* GetFactory(size_t id) const noexcept;
 		Type* GetType(size_t id) const noexcept;
 		TypeInfo* GetTypeInfo(size_t id) const noexcept;

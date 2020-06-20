@@ -28,12 +28,13 @@ int main()
 	Base* tmp1 = new Derived();
 	int* tmp2 = new int();
 	Intern* tmp3 = new Intern();
+	Intern tmp4 = Intern();
 
 	auto& test5 = Type::Get(tmp0);
 	auto& test6 = Type::Get(tmp1);
-	auto& test7 = Type::Get(tmp2);
+	auto& test7 = Type::Get(&tmp4);
 
-	auto test8 = Type::Cast<Base*>(tmp0);
+	auto test8 = Type::Cast<Base*>(&tmp4);
 	auto test9 = Type::Cast<Derived*>(tmp0);
 
 	auto test10 = Type::Get<Derived>().GetFactory().Construct();
@@ -43,6 +44,7 @@ int main()
 	Variant var1 = Variant(tmp0);
 	Variant var2 = var1;
 	Variant var3 = Variant(tmp3);
+	Variant var4 = Variant(&tmp4);
 
 	auto& tmp55 = var1.GetType();
 	auto tmp56 = var1.IsType<Base>();
@@ -55,10 +57,15 @@ int main()
 	tmp3->InternValue0 = 12.f;
 	tmp3->InternValue1 = 13.0;
 
+	auto varssss = Type::Get<Intern>().Create();
+	Intern intern;
+	intern.InternValue0 = 5363.f;
+	intern.InternValue1 = 53634.0;
+
 	for (auto& prop : Type::Get<Intern>().GetProperties())
 	{
 		//Variant var = prop.GetValue(tmp3);
-		Variant var = prop.GetValue(tmp3);
+		Variant var = prop.GetValue(var3);
 
 		if (var.IsType<double>())
 			printf("%s is a double : %f\n", prop.GetName(), var.GetValue<double>());

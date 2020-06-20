@@ -70,7 +70,7 @@ public:
 	* @param object
 	*/
 	template<typename T>
-	Variant(T*& object) noexcept;
+	Variant(T* object) noexcept;
 
 	/**
 	* Returns whether or not the stored a value is valid
@@ -221,13 +221,13 @@ public:
 	* @param object
 	*/
 	template<typename T>
-	Variant GetValue(T*& object) const;
+	Variant GetValue(T* object) const;
 
 	/**
 	* Returns value of the property from an object of the type that contains it
 	* @param object
 	*/
-	Variant GetValue(Variant& object) const;
+	Variant GetValue(const Variant& object) const;
 
 private:
 
@@ -437,7 +437,7 @@ public:
 	* @param object
 	*/
 	template<typename T, typename U>
-	static T Cast(U*& object) noexcept;
+	static T Cast(U* object) noexcept;
 
 	/**
 	* Returns a variant of this type
@@ -455,7 +455,7 @@ public:
 	* @param object
 	*/
 	template<typename T>
-	static Type& Get(T*& object) noexcept;
+	static Type& Get(T* object) noexcept;
 
 	/**
 	* Returns base types of this type

@@ -113,7 +113,7 @@ Type& Property::GetType() const noexcept
 	return *m_PropertyType;
 }
 
-Variant Property::GetValue(Variant& object) const
+Variant Property::GetValue(const Variant& object) const
 {
 	Reflectpp::Assert(*object.m_Type == *m_Type, "Property::GetValue(Variant& object) : wrong object type, %s is in %s\n", m_Name, m_Type->GetName());
 

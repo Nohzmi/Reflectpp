@@ -62,13 +62,13 @@ namespace Reflectpp
 	static size_t TypeID() noexcept;
 
 	template<typename T>
-	static size_t TypeID(T*& object) noexcept;
+	static size_t TypeID(T* object) noexcept;
 
 	template<typename T>
 	static const char* TypeName() noexcept;
 
 	template<typename T>
-	static const char* TypeName(T*& object) noexcept;
+	static const char* TypeName(T* object) noexcept;
 
 #pragma warning(push)
 #pragma warning(disable: 4251)
@@ -101,7 +101,7 @@ namespace Reflectpp
 		Type* AddType() noexcept;
 
 		template<typename T, typename U, typename V = typename std::remove_pointer_t<T>>
-		std::remove_pointer_t<T>* Cast(U*& object) noexcept;
+		std::remove_pointer_t<T>* Cast(U* object) noexcept;
 
 		static Registry& Instance() noexcept;
 
@@ -112,7 +112,7 @@ namespace Reflectpp
 		Type* GetType() noexcept;
 
 		template<typename T>
-		Type* GetType(T*& object) noexcept;
+		Type* GetType(T* object) noexcept;
 
 		template<typename T>
 		TypeInfo* GetTypeInfo() noexcept;
@@ -168,7 +168,7 @@ namespace Reflectpp
 	}
 
 	template<typename T>
-	size_t TypeID(T*& object) noexcept
+	size_t TypeID(T* object) noexcept
 	{
 		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
 			return typeid(T).hash_code();
@@ -186,7 +186,7 @@ namespace Reflectpp
 	}
 
 	template<typename T>
-	const char* TypeName(T*& object) noexcept
+	const char* TypeName(T* object) noexcept
 	{
 		if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
 			return typeid(T).name();
@@ -279,7 +279,7 @@ namespace Reflectpp
 	}
 
 	template<typename T, typename U, typename V>
-	inline std::remove_pointer_t<T>* Registry::Cast(U*& object) noexcept
+	inline std::remove_pointer_t<T>* Registry::Cast(U* object) noexcept
 	{
 		if constexpr (!std::is_pointer_v<T>)
 		{
@@ -297,7 +297,7 @@ namespace Reflectpp
 			return nullptr;
 		}
 		else
-			return Cast(GetType<V>(), GetType(object)) ? static_cast<T>(object) : nullptr;
+			return Cast(GetType<V>(), GetType(object)) ? reinterpret_cast<T>(object) : nullptr;
 	}
 
 	template<typename T>
@@ -360,7 +360,7 @@ namespace Reflectpp
 	}
 
 	template<typename T>
-	inline Type* Registry::GetType(T*& object) noexcept
+	inline Type* Registry::GetType(T* object) noexcept
 	{
 		if constexpr (std::is_null_pointer_v<T> || std::is_void_v<T> || std::is_volatile_v<T>)
 		{
@@ -403,7 +403,7 @@ namespace Reflectpp
 }
 
 template<typename T>
-inline Variant::Variant(T*& object) noexcept :
+inline Variant::Variant(T* object) noexcept :
 	m_Data{ object },
 	m_IsOwner{ false },
 	m_Type{ &Type::Get(object) }
@@ -441,7 +441,7 @@ inline Factory& Factory::Get() noexcept
 }
 
 template<typename T>
-inline Variant Property::GetValue(T*& object) const
+inline Variant Property::GetValue(T* object) const
 {
 	Reflectpp::Assert(Type::Get(object) == *m_Type, "Property::GetValue(%s*& object) : wrong object type, %s is in %s\n", Reflectpp::TypeName(object), m_Name, m_Type->GetName());
 
@@ -453,7 +453,7 @@ inline Variant Property::GetValue(T*& object) const
 		return Variant(data, isOwner, m_PropertyType);
 	}
 	else
-		return Variant(static_cast<char*>(static_cast<void*>(object)) + m_Offset, false, m_PropertyType);
+		return Variant(reinterpret_cast<char*>(object) + m_Offset, false, m_PropertyType);
 }
 
 template<typename T> template<typename U>
@@ -553,7 +553,7 @@ inline TypeInfo& TypeInfo::Get() noexcept
 }
 
 template<typename T, typename U>
-inline T Type::Cast(U*& object) noexcept
+inline T Type::Cast(U* object) noexcept
 {
 	return Reflectpp::Registry::Instance().Cast<T>(object);
 }
@@ -565,7 +565,7 @@ inline Type& Type::Get() noexcept
 }
 
 template<typename T>
-inline Type& Type::Get(T*& object) noexcept
+inline Type& Type::Get(T* object) noexcept
 {
 	return *Reflectpp::Registry::Instance().GetType(object);
 }

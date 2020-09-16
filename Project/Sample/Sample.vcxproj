@@ -160,15 +160,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Base.cpp" />
-    <ClCompile Include="source\Derived.cpp" />
-    <ClCompile Include="source\Intern.cpp" />
-    <ClCompile Include="source\main.cpp" />
+    <ClInclude Include="include\base.h" />
+    <ClInclude Include="include\derived.h" />
+    <ClInclude Include="include\intern.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Base.h" />
-    <ClInclude Include="include\Derived.h" />
-    <ClInclude Include="include\Intern.h" />
+    <ClCompile Include="source\base.cpp" />
+    <ClCompile Include="source\derived.cpp" />
+    <ClCompile Include="source\intern.cpp" />
+    <ClCompile Include="source\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

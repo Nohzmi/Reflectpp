@@ -9,28 +9,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\base.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\derived.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\intern.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\derived.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\intern.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
     <ClCompile Include="source\main.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\Base.cpp">
+    <ClCompile Include="source\base.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\Derived.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Intern.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\Base.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Derived.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Intern.h">
-      <Filter>include</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

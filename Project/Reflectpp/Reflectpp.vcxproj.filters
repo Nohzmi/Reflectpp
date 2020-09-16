@@ -7,23 +7,68 @@
     <Filter Include="source">
       <UniqueIdentifier>{90e60a68-6d0d-44b9-b462-af54b2ab7784}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\details">
+      <UniqueIdentifier>{cff008f8-ed8c-413c-80a1-19cb97a5b253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\details">
+      <UniqueIdentifier>{1c468833-fec4-46b9-80d6-92eb776edf6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Type.h">
+    <ClInclude Include="include\register.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Register.h">
+    <ClInclude Include="include\type.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Registry.h">
+    <ClInclude Include="include\details\registry.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\property.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\variant.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\factory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\platform.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\range.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\registration.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\type_info.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\utilities.h">
+      <Filter>include\details</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Type.cpp">
+    <ClCompile Include="source\type.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\Registry.cpp">
+    <ClCompile Include="source\details\registry.cpp">
+      <Filter>source\details</Filter>
+    </ClCompile>
+    <ClCompile Include="source\variant.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\factory.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\property.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\registration.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\type_info.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

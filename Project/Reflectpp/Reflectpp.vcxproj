@@ -18,6 +18,28 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\details\platform.h" />
+    <ClInclude Include="include\details\registry.h" />
+    <ClInclude Include="include\details\utilities.h" />
+    <ClInclude Include="include\factory.h" />
+    <ClInclude Include="include\property.h" />
+    <ClInclude Include="include\range.h" />
+    <ClInclude Include="include\register.h" />
+    <ClInclude Include="include\registration.h" />
+    <ClInclude Include="include\type.h" />
+    <ClInclude Include="include\type_info.h" />
+    <ClInclude Include="include\variant.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\details\registry.cpp" />
+    <ClCompile Include="source\factory.cpp" />
+    <ClCompile Include="source\property.cpp" />
+    <ClCompile Include="source\registration.cpp" />
+    <ClCompile Include="source\type.cpp" />
+    <ClCompile Include="source\type_info.cpp" />
+    <ClCompile Include="source\variant.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -154,15 +176,6 @@
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="include\Registry.h" />
-    <ClInclude Include="include\Register.h" />
-    <ClInclude Include="include\Type.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="source\Registry.cpp" />
-    <ClCompile Include="source\Type.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

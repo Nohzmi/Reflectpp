@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 /**
-* @file Register.h
+* @file register.h
 * @author Nohzmi
 * @version 1.0
 */

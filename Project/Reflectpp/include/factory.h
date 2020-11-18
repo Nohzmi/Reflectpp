@@ -14,60 +14,68 @@
 * @{
 */
 
-namespace reflectpp { class registry; }
-
-/**
-* Generic factory class used in reflection \n
-* Independent of the reflection
-*/
-class REFLECTPP_API factory final
+namespace reflectpp
 {
-	friend reflectpp::registry;
-
-	using ConstructorT = void* (*)();
-	using CopyT = void* (*)(void*);
-	using DestructorT = void (*)(void*);
-
-public:
-
-	factory() = delete;
-	~factory() = default;
-	factory(const factory&) = default;
-	factory(factory&&) noexcept = default;
-	factory& operator=(const factory&) = default;
-	factory& operator=(factory&&) noexcept = default;
+	namespace details
+	{
+		class registry;
+	}
 
 	/**
-	* Returns a pointer on created object
+	* Generic factory class used in reflection \n
+	* Independent of the reflection
 	*/
-	void* construct() const noexcept;
+	class REFLECTPP_API factory final
+	{
+		friend details::registry;
 
-	/**
-	* Returns a pointer on copied object
-	* @param object
-	*/
-	void* copy(void* object) const noexcept;
+		using ConstructorT = void* (*)();
+		using CopyT = void* (*)(void*);
+		using DestructorT = void (*)(void*);
 
-	/**
-	* Destroys given object
-	* @param object
-	*/
-	void destroy(void* object) const noexcept;
+	public:
 
-	/**
-	* Get factory of the requested type
-	*/
-	template<typename T>
-	static factory& get() noexcept;
+		factory() = delete;
+		~factory() = default;
+		factory(const factory&) = default;
+		factory(factory&&) noexcept = default;
+		factory& operator=(const factory&) = default;
+		factory& operator=(factory&&) noexcept = default;
 
-private:
+		/**
+		* Returns a pointer on created object
+		*/
+		void* construct() const noexcept;
 
-	factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
+		/**
+		* Returns a pointer on copied object
+		* @param object
+		*/
+		void* copy(void* object) const noexcept;
 
-	ConstructorT m_constructor;
-	CopyT m_copy;
-	DestructorT m_destructor;
-};
+		/**
+		* Destroys given object
+		* @param object
+		*/
+		void destroy(void* object) const noexcept;
+
+		/**
+		* Get factory of the requested type
+		*/
+		template<typename T>
+		static factory& get() noexcept;
+
+	private:
+
+		factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
+
+		ConstructorT m_constructor;
+		CopyT m_copy;
+		DestructorT m_destructor;
+	};
+}
+
+#include "details/inline/factory.inl"
 
 /**
 * @}

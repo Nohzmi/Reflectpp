@@ -1,13 +1,13 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 /**
-* @file Intern.h
+* @file intern.h
 * @author Nohzmi
 * @version 1.0
 */
 
 #pragma once
-#include <Register.h>
+#include <register.h>
 
 class Intern
 {

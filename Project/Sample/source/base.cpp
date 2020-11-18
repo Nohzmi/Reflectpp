@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
-#include "Base.h"
-#include <Type.h>
+#include "base.h"
+#include <registration.h>
 
 float Base::GetValue() const
 {
@@ -25,7 +25,7 @@ void Base::SetValue1(const double& value)
 
 REGISTRATION
 {
-	Registration::class_<Base>()
+	reflectpp::registration::class_<Base>()
 	.property("BaseValue0", &Base::GetValue, &Base::SetValue)
 	.property("BaseValue1", &Base::GetValue1, &Base::SetValue1);
 }

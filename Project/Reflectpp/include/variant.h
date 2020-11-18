@@ -94,6 +94,8 @@ namespace reflectpp
 	};
 }
 
+#include "details/inline/variant.inl"
+
 /**
 * @}
 */

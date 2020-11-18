@@ -14,60 +14,68 @@
 * @{
 */
 
-namespace reflectpp { class registry; }
-
-/**
-* Equivalent to std::type_info \n
-* Independent of the reflection
-*/
-class REFLECTPP_API type_info final
+namespace reflectpp
 {
-	friend reflectpp::registry;
-
-public:
-
-	type_info() = delete;
-	~type_info() = default;
-	type_info(const type_info&) = default;
-	type_info(type_info&&) noexcept = default;
-	type_info& operator=(const type_info&) = default;
-	type_info& operator=(type_info&&) noexcept = default;
+	namespace details
+	{
+		class registry;
+	}
 
 	/**
-	* Returns whether or not two types are the same
-	* @param rhs
+	* Equivalent to std::type_info \n
+	* Independent of the reflection
 	*/
-	bool operator==(const type_info& rhs) const noexcept;
+	class REFLECTPP_API type_info final
+	{
+		friend details::registry;
 
-	/**
-	* Returns whether or not two types are the same
-	* @param rhs
-	*/
-	bool operator!=(const type_info& rhs) const noexcept;
+	public:
 
-	/**
-	* Get type info of the requested type
-	*/
-	template<typename T>
-	static type_info& get() noexcept;
+		type_info() = delete;
+		~type_info() = default;
+		type_info(const type_info&) = default;
+		type_info(type_info&&) noexcept = default;
+		type_info& operator=(const type_info&) = default;
+		type_info& operator=(type_info&&) noexcept = default;
 
-	/**
-	* Returns id of this type info
-	*/
-	size_t get_id() const noexcept;
+		/**
+		* Returns whether or not two types are the same
+		* @param rhs
+		*/
+		bool operator==(const type_info& rhs) const noexcept;
 
-	/**
-	* Returns name of this type info
-	*/
-	const char* get_name() const noexcept;
+		/**
+		* Returns whether or not two types are the same
+		* @param rhs
+		*/
+		bool operator!=(const type_info& rhs) const noexcept;
 
-private:
+		/**
+		* Get type info of the requested type
+		*/
+		template<typename T>
+		static type_info& get() noexcept;
 
-	type_info(size_t id, const char* name) noexcept;
+		/**
+		* Returns id of this type info
+		*/
+		size_t get_id() const noexcept;
 
-	size_t m_id;
-	const char* m_name;
-};
+		/**
+		* Returns name of this type info
+		*/
+		const char* get_name() const noexcept;
+
+	private:
+
+		type_info(size_t id, const char* name) noexcept;
+
+		size_t m_id;
+		const char* m_name;
+	};
+}
+
+#include "details/inline/type_info.inl"
 
 /**
 * @}

@@ -1,14 +1,14 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 /**
-* @file Derived.h
+* @file derived.h
 * @author Nohzmi
 * @version 1.0
 */
 
 #pragma once
-#include <Register.h>
-#include "Base.h"
+#include <register.h>
+#include "base.h"
 
 class Derived : public Base
 {

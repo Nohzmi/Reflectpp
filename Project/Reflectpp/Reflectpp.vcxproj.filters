@@ -13,6 +13,9 @@
     <Filter Include="source\details">
       <UniqueIdentifier>{1c468833-fec4-46b9-80d6-92eb776edf6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\details\inline">
+      <UniqueIdentifier>{cb8b1d7a-5d6e-4954-b340-77cf32b93732}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\register.h">
@@ -33,9 +36,6 @@
     <ClInclude Include="include\factory.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\platform.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\range.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -46,6 +46,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\details\utilities.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\platform.h">
       <Filter>include\details</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,5 +74,34 @@
     <ClCompile Include="source\type_info.cpp">
       <Filter>source</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\details\inline\utilities.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\registry.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\factory.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\property.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\range.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\registration.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\type_info.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\variant.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\type.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
   </ItemGroup>
 </Project>

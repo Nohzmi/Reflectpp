@@ -2,7 +2,10 @@
 
 #include "registration.h"
 
-registration::registration(type* type) noexcept :
-	m_type{ type }
+namespace reflectpp
 {
+	registration::registration(type* type) noexcept :
+		m_type{ type }
+	{
+	}
 }

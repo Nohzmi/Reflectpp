@@ -1,183 +1,187 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
-#include "Registry.h"
+#include "details/registry.h"
 
-#include <functional>
-#include <string>
-#include "Type.h"
+#include "factory.h"
+#include "property.h"
+#include "type.h"
+#include "type_info.h"
 
-namespace Reflectpp
+namespace reflectpp
 {
-	Registry Registry::m_Value;
-
-	Registry& Registry::Instance() noexcept
+	namespace details
 	{
-		return m_Value;
-	}
+		registry registry::m_instance;
 
-	Registry::Registry() = default;
-	Registry::~Registry() = default;
-
-	Type* Registry::AddBase(Type* type, Type* base) noexcept
-	{
-		for (auto& it : type->GetBaseTypes().m_Vector)
-			if (it->GetID() == base->GetID())
-				return nullptr;
-
-		if (type->GetBaseTypes().empty())
-			type->m_HierarchyID = base->m_HierarchyID;
-
-		if (!type->GetBaseTypes().empty())
+		registry& registry::get_instance() noexcept
 		{
-			auto updateHierarchy = [](Type* type, size_t hierarchyID, auto& lambda)
-			{
-				if (type->m_HierarchyID == hierarchyID)
-					return;
-
-				type->m_HierarchyID = hierarchyID;
-
-				for (auto& it : type->GetBaseTypes().m_Vector)
-					lambda(it, hierarchyID, lambda);
-
-				for (auto& it : type->GetDerivedTypes().m_Vector)
-					lambda(it, hierarchyID, lambda);
-			};
-
-			updateHierarchy(base, type->m_HierarchyID, updateHierarchy);
+			return m_instance;
 		}
 
-		base->m_DerivedTypes.m_Vector.emplace_back(type);
-		type->m_BaseTypes.m_Vector.emplace_back(base);
-		type->m_Properties.m_Vector.insert(type->m_Properties.m_Vector.cbegin(),
-			base->m_Properties.m_Vector.cbegin(), base->m_Properties.m_Vector.cbegin());
+		registry::registry() = default;
+		registry::~registry() = default;
 
-		return base;
-	}
-
-	Factory* Registry::AddFactory(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept
-	{
-		for (auto& it : m_Factories)
-			if (it.first == id)
-				return nullptr;
-
-		Factory* factory{ new Factory(constructor, copy, destructor) };
-		m_Factories.emplace(id, factory);
-
-		return factory;
-	}
-
-	Property* Registry::AddProperty(Type* type, const char* name, size_t offset, Type* propertyType) noexcept
-	{
-		std::hash<std::string> hasher;
-		size_t id{ hasher(name) };
-
-		for (auto& prop : type->GetProperties().m_Vector)
-			if (prop->GetID() == id)
-				return nullptr;
-
-		Property* prop{ new Property(nullptr, id, name, offset, propertyType, nullptr, type) };
-		m_Properties.emplace_back(prop);
-
-		type->m_Properties.m_Vector.emplace_back(prop);
-
-		return prop;
-	}
-
-	Property* Registry::AddProperty(Type* type, const char* name, GetterT getter, SetterT setter, Type* propertyType) noexcept
-	{
-		std::hash<std::string> hasher;
-		size_t id{ hasher(name) };
-
-		for (auto& prop : type->GetProperties().m_Vector)
-			if (prop->GetID() == id)
-				return nullptr;
-
-		Property* prop{ new Property(getter, id, name, 0, propertyType, setter, type) };
-		m_Properties.emplace_back(prop);
-
-		type->m_Properties.m_Vector.emplace_back(prop);
-
-		return prop;
-	}
-
-	Type* Registry::AddType(Factory* factory, size_t size, TypeInfo* typeinfo) noexcept
-	{
-		for (auto& type : m_Types)
-			if (type->GetID() == typeinfo->GetID())
-				return nullptr;
-
-		Type* type{ new Type(factory, size, typeinfo) };
-		m_Types.emplace_back(type);
-
-		return type;
-	}
-
-	TypeInfo* Registry::AddTypeInfo(size_t id, const char* name) noexcept
-	{
-		for (auto& typeinfo : m_TypeInfos)
-			if (typeinfo->GetID() == id)
-				return nullptr;
-
-		TypeInfo* typeinfo{ new TypeInfo(id, name) };
-		m_TypeInfos.emplace_back(typeinfo);
-
-		return typeinfo;
-	}
-
-	bool Registry::Cast(Type* type, Type* otype) const noexcept
-	{
-		if (type->m_HierarchyID != otype->m_HierarchyID)
-			return false;
-
-		auto isBaseOf = [](Type* type, size_t id, auto& lambda) -> bool
+		type* registry::add_base(type* _type, type* base) noexcept
 		{
-			if (type->GetID() == id)
-				return true;
+			for (auto& it : _type->get_base_classes().m_vector)
+				if (it->get_id() == base->get_id())
+					return nullptr;
 
-			bool res{ false };
+			if (_type->get_base_classes().empty())
+				_type->m_hierarchy_id = base->m_hierarchy_id;
 
-			for (auto& it : type->GetBaseTypes().m_Vector)
-				res |= lambda(it, id, lambda);
+			if (!_type->get_base_classes().empty())
+			{
+				auto updateHierarchy = [](type* type, ::size_t hierarchyID, auto& lambda)
+				{
+					if (type->m_hierarchy_id == hierarchyID)
+						return;
 
-			return res;
-		};
+					type->m_hierarchy_id = hierarchyID;
 
-		return isBaseOf(otype, type->GetID(), isBaseOf);
-	}
+					for (auto& it : type->get_base_classes().m_vector)
+						lambda(it, hierarchyID, lambda);
 
-	Factory* Registry::GetFactory(size_t id) const noexcept
-	{
-		for (auto& it : m_Factories)
-			if (it.first == id)
-				return it.second.get();
+					for (auto& it : type->get_derived_classes().m_vector)
+						lambda(it, hierarchyID, lambda);
+				};
 
-		return nullptr;
-	}
+				updateHierarchy(base, _type->m_hierarchy_id, updateHierarchy);
+			}
 
-	Type* Registry::GetType(size_t id) const noexcept
-	{
-		for (auto& type : m_Types)
-			if (type->GetID() == id)
-				return type.get();
+			base->m_derived_types.m_vector.emplace_back(_type);
+			_type->m_base_types.m_vector.emplace_back(base);
+			_type->m_properties.m_vector.insert(_type->m_properties.m_vector.cbegin(),
+				base->m_properties.m_vector.cbegin(), base->m_properties.m_vector.cbegin());
 
-		return nullptr;
-	}
+			return base;
+		}
 
-	TypeInfo* Registry::GetTypeInfo(size_t id) const noexcept
-	{
-		for (auto& typeinfo : m_TypeInfos)
-			if (typeinfo->GetID() == id)
-				return typeinfo.get();
+		factory* registry::add_factory(::size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept
+		{
+			for (auto& it : m_factories)
+				if (it.first == id)
+					return nullptr;
 
-		return nullptr;
-	}
+			factory* _factory{ new factory(constructor, copy, destructor) };
+			m_factories.emplace(id, _factory);
 
-	Property* Registry::GetProperty(size_t id) const noexcept
-	{
-		for (auto& prop : m_Properties)
-			if (prop->GetID() == id)
-				return prop.get();
+			return _factory;
+		}
 
-		return nullptr;
+		property* registry::add_property(type* _type, const char* name, ::size_t offset, type* propertytype) noexcept
+		{
+			std::hash<std::string> hasher;
+			::size_t id{ hasher(name) };
+
+			for (auto& prop : _type->get_properties().m_vector)
+				if (prop->get_id() == id)
+					return nullptr;
+
+			property* prop{ new property(nullptr, id, name, offset, propertytype, nullptr, _type) };
+			m_properties.emplace_back(prop);
+
+			_type->m_properties.m_vector.emplace_back(prop);
+
+			return prop;
+		}
+
+		property* registry::add_property(type* _type, const char* name, GetterT getter, SetterT setter, type* propertytype) noexcept
+		{
+			std::hash<std::string> hasher;
+			size_t id{ hasher(name) };
+
+			for (auto& prop : _type->get_properties().m_vector)
+				if (prop->get_id() == id)
+					return nullptr;
+
+			property* prop{ new property(getter, id, name, 0, propertytype, setter, _type) };
+			m_properties.emplace_back(prop);
+
+			_type->m_properties.m_vector.emplace_back(prop);
+
+			return prop;
+		}
+
+		type* registry::add_type(factory* _factory, size_t size, type_info* typeinfo) noexcept
+		{
+			for (auto& type : m_types)
+				if (type->get_id() == typeinfo->get_id())
+					return nullptr;
+
+			type* _type{ new type(_factory, size, typeinfo) };
+			m_types.emplace_back(_type);
+
+			return _type;
+		}
+
+		type_info* registry::add_type_info(size_t id, const char* name) noexcept
+		{
+			for (auto& typeinfo : m_type_infos)
+				if (typeinfo->get_id() == id)
+					return nullptr;
+
+			type_info* typeinfo{ new type_info(id, name) };
+			m_type_infos.emplace_back(typeinfo);
+
+			return typeinfo;
+		}
+
+		bool registry::cast(type* _type, type* otype) const noexcept
+		{
+			if (_type->m_hierarchy_id != otype->m_hierarchy_id)
+				return false;
+
+			auto isBaseOf = [](type* _type, size_t id, auto& lambda) -> bool
+			{
+				if (_type->get_id() == id)
+					return true;
+
+				bool res{ false };
+
+				for (auto& it : _type->get_base_classes().m_vector)
+					res |= lambda(it, id, lambda);
+
+				return res;
+			};
+
+			return isBaseOf(otype, _type->get_id(), isBaseOf);
+		}
+
+		factory* registry::get_factory(size_t id) const noexcept
+		{
+			for (auto& it : m_factories)
+				if (it.first == id)
+					return it.second.get();
+
+			return nullptr;
+		}
+
+		type* registry::get_type(size_t id) const noexcept
+		{
+			for (auto& type : m_types)
+				if (type->get_id() == id)
+					return type.get();
+
+			return nullptr;
+		}
+
+		type_info* registry::get_type_info(size_t id) const noexcept
+		{
+			for (auto& typeinfo : m_type_infos)
+				if (typeinfo->get_id() == id)
+					return typeinfo.get();
+
+			return nullptr;
+		}
+
+		property* registry::get_property(size_t id) const noexcept
+		{
+			for (auto& prop : m_properties)
+				if (prop->get_id() == id)
+					return prop.get();
+
+			return nullptr;
+		}
 	}
 }

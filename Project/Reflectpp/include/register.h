@@ -13,23 +13,23 @@
 #define REFLECT(T)												\
 public:															\
 friend void register_function() noexcept;						\
-virtual size_t GetTypeID() const noexcept						\
+virtual size_t get_type_id() const noexcept						\
 {																\
 	static const std::hash<std::string> hasher;					\
-	static const size_t typeID{ hasher(std::string(#T)) };		\
-	return typeID;												\
+	static const size_t type_id{ hasher(std::string(#T)) };		\
+	return type_id;												\
 }																\
-virtual const char* GetTypeName() const noexcept				\
+virtual const char* get_type_name() const noexcept				\
 {																\
 	return #T;													\
 }																\
-static size_t TypeID() noexcept									\
+static size_t type_id() noexcept								\
 {																\
 	static const std::hash<std::string> hasher;					\
-	static const size_t typeID{ hasher(std::string(#T)) };		\
-	return typeID;												\
+	static const size_t type_id{ hasher(std::string(#T)) };		\
+	return type_id;												\
 }																\
-static const char* TypeName() noexcept							\
+static const char* type_name() noexcept							\
 {																\
 	return #T;													\
 }																\

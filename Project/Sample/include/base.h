@@ -1,13 +1,13 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 /**
-* @file Base.h
+* @file base.h
 * @author Nohzmi
 * @version 1.0
 */
 
 #pragma once
-#include <Register.h>
+#include <register.h>
 
 class Base
 {

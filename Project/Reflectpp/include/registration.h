@@ -29,62 +29,70 @@ namespace										\
 static const register_class register_obj;		\
 void register_function() noexcept
 
-
-namespace reflectpp { class registry; }
-class type;
-
-/**
-* Allow to register a type in reflection \n
-* and his base types and properties too
-*/
-class REFLECTPP_API registration final
+namespace reflectpp
 {
-	friend reflectpp::registry;
+	namespace details
+	{
+		class registry;
+	}
 
-public:
-
-	registration() = delete;
-	~registration() = default;
-	registration(const registration&) = default;
-	registration(registration&&) noexcept = default;
-	registration& operator=(const registration&) = default;
-	registration& operator=(registration&&) noexcept = default;
+	class type;
 
 	/**
-	* Register the base class of the current type
+	* Allow to register a type in reflection \n
+	* and his base types and properties too
 	*/
-	template<typename T>
-	registration base() noexcept;
+	class REFLECTPP_API registration final
+	{
+		friend details::registry;
 
-	/**
-	* Register a type in reflection
-	*/
-	template<typename T>
-	static registration class_() noexcept;
+	public:
 
-	/**
-	* Register a property of the current type
-	* @param name
-	* @param addr
-	*/
-	template<typename T, typename PropertyT>
-	registration property(const char* name, PropertyT T::* addr) noexcept;
+		registration() = delete;
+		~registration() = default;
+		registration(const registration&) = default;
+		registration(registration&&) noexcept = default;
+		registration& operator=(const registration&) = default;
+		registration& operator=(registration&&) noexcept = default;
 
-	/**
-	* Register a property of the current type
-	* @param name
-	* @param getter
-	* @param setter
-	*/
-	template<typename T, typename PropertyT>
-	registration property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) noexcept;
+		/**
+		* Register the base class of the current type
+		*/
+		template<typename T>
+		registration base() noexcept;
 
-private:
+		/**
+		* Register a type in reflection
+		*/
+		template<typename T>
+		static registration class_() noexcept;
 
-	registration(type* type) noexcept;
+		/**
+		* Register a property of the current type
+		* @param name
+		* @param addr
+		*/
+		template<typename T, typename PropertyT>
+		registration property(const char* name, PropertyT T::* addr) noexcept;
 
-	type* m_type;
-};
+		/**
+		* Register a property of the current type
+		* @param name
+		* @param getter
+		* @param setter
+		*/
+		template<typename T, typename PropertyT>
+		registration property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) noexcept;
+
+	private:
+
+		registration(type* type) noexcept;
+
+		type* m_type;
+	};
+}
+
+#include "details/inline/registration.inl"
 
 /**
 * @}

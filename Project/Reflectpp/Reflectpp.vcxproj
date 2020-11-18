@@ -40,6 +40,17 @@
     <ClCompile Include="source\type_info.cpp" />
     <ClCompile Include="source\variant.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="include\details\inline\factory.inl" />
+    <None Include="include\details\inline\property.inl" />
+    <None Include="include\details\inline\range.inl" />
+    <None Include="include\details\inline\registration.inl" />
+    <None Include="include\details\inline\registry.inl" />
+    <None Include="include\details\inline\type.inl" />
+    <None Include="include\details\inline\type_info.inl" />
+    <None Include="include\details\inline\utilities.inl" />
+    <None Include="include\details\inline\variant.inl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

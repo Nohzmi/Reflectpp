@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "details/platform.h"
+#include "details/registry.h"
 
 /**
 * @addtogroup Reflectpp
@@ -31,11 +31,6 @@ void register_function() noexcept
 
 namespace reflectpp
 {
-	namespace details
-	{
-		class registry;
-	}
-
 	class type;
 
 	/**

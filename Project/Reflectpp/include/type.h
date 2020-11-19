@@ -7,6 +7,7 @@
 */
 
 #pragma once
+#include "details/registry.h"
 #include "range.h"
 #include "variant.h"
 
@@ -16,11 +17,6 @@
 */
 namespace reflectpp
 {
-	namespace details
-	{
-		class registry;
-	}
-
 	class factory;
 	class property;
 	class type_info;

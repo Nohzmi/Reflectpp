@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "details/platform.h"
+#include "details/registry.h"
 
 /**
 * @addtogroup Reflectpp

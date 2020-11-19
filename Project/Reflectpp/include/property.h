@@ -7,9 +7,7 @@
 */
 
 #pragma once
-#include <functional>
-
-#include "details/platform.h"
+#include "details/registry.h"
 #include "variant.h"
 
 /**

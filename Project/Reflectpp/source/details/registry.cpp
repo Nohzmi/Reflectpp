@@ -13,11 +13,6 @@ namespace reflectpp
 	{
 		registry registry::m_instance;
 
-		registry& registry::get_instance() noexcept
-		{
-			return m_instance;
-		}
-
 		registry::registry() = default;
 		registry::~registry() = default;
 
@@ -32,7 +27,7 @@ namespace reflectpp
 
 			if (!_type->get_base_classes().empty())
 			{
-				auto updateHierarchy = [](type* type, ::size_t hierarchyID, auto& lambda)
+				auto updateHierarchy = [](type* type, size_t hierarchyID, auto& lambda)
 				{
 					if (type->m_hierarchy_id == hierarchyID)
 						return;
@@ -57,7 +52,7 @@ namespace reflectpp
 			return base;
 		}
 
-		factory* registry::add_factory(::size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept
+		factory* registry::add_factory(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept
 		{
 			for (auto& it : m_factories)
 				if (it.first == id)
@@ -69,16 +64,15 @@ namespace reflectpp
 			return _factory;
 		}
 
-		property* registry::add_property(type* _type, const char* name, ::size_t offset, type* propertytype) noexcept
+		property* registry::add_property(type* _type, const char* name, size_t offset, type* property_type) noexcept
 		{
-			std::hash<std::string> hasher;
-			::size_t id{ hasher(name) };
+			size_t id{ details::hash(name) };
 
 			for (auto& prop : _type->get_properties().m_vector)
 				if (prop->get_id() == id)
 					return nullptr;
 
-			property* prop{ new property(nullptr, id, name, offset, propertytype, nullptr, _type) };
+			property* prop{ new property(nullptr, id, name, offset, property_type, nullptr, _type) };
 			m_properties.emplace_back(prop);
 
 			_type->m_properties.m_vector.emplace_back(prop);
@@ -86,16 +80,15 @@ namespace reflectpp
 			return prop;
 		}
 
-		property* registry::add_property(type* _type, const char* name, GetterT getter, SetterT setter, type* propertytype) noexcept
+		property* registry::add_property(type* _type, const char* name, GetterT getter, SetterT setter, type* property_type) noexcept
 		{
-			std::hash<std::string> hasher;
-			size_t id{ hasher(name) };
+			size_t id{ details::hash(name)};
 
 			for (auto& prop : _type->get_properties().m_vector)
 				if (prop->get_id() == id)
 					return nullptr;
 
-			property* prop{ new property(getter, id, name, 0, propertytype, setter, _type) };
+			property* prop{ new property(getter, id, name, 0, property_type, setter, _type) };
 			m_properties.emplace_back(prop);
 
 			_type->m_properties.m_vector.emplace_back(prop);
@@ -148,6 +141,11 @@ namespace reflectpp
 			return isBaseOf(otype, _type->get_id(), isBaseOf);
 		}
 
+		registry& registry::get_instance() noexcept
+		{
+			return m_instance;
+		}
+
 		factory* registry::get_factory(size_t id) const noexcept
 		{
 			for (auto& it : m_factories)
@@ -166,6 +164,11 @@ namespace reflectpp
 			return nullptr;
 		}
 
+		size_t registry::get_type_id(type* _type) const noexcept
+		{
+			return _type->get_id();
+		}
+
 		type_info* registry::get_type_info(size_t id) const noexcept
 		{
 			for (auto& typeinfo : m_type_infos)
@@ -173,6 +176,11 @@ namespace reflectpp
 					return typeinfo.get();
 
 			return nullptr;
+		}
+
+		const char* registry::get_type_name(type* _type) const noexcept
+		{
+			return _type->get_name();
 		}
 
 		property* registry::get_property(size_t id) const noexcept

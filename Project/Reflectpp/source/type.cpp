@@ -51,14 +51,13 @@ namespace reflectpp
 
 	property& type::get_property(const char* name) const noexcept
 	{
-		std::hash<std::string> hasher;
-		size_t id{ hasher(name) };
+		size_t id{ details::hash(name) };
 
 		for (auto& prop : m_properties)
 			if (prop.get_id() == id)
 				return prop;
 
-		details::_assert(false, "type::get_property(const char* name) : %s isn't registered\n", name);
+		REFLECTPP_ASSERT(false, "type::get_property(const char* name) : %s isn't registered\n", name);
 		return *m_properties.begin();
 	}
 

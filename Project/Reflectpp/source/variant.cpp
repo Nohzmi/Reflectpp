@@ -1,7 +1,9 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 #include "variant.h"
+
 #include "type.h"
+#include "factory.h"
 
 namespace reflectpp
 {
@@ -22,7 +24,7 @@ namespace reflectpp
 	}
 
 	variant::variant(const variant& copy) :
-		m_data{ copy.m_type->get_factory().Copy(copy.m_data) },
+		m_data{ copy.m_type->get_factory().copy(copy.m_data) },
 		m_is_owner{ true },
 		m_type{ copy.m_type }
 	{
@@ -54,7 +56,7 @@ namespace reflectpp
 
 	type& variant::get_type() const noexcept
 	{
-		//Reflectpp::Assert(m_Type != nullptr, "Variant::GetType() : invalid variant\n");
+		REFLECTPP_ASSERT(m_type != nullptr, "variant::get_type() : invalid variant\n");
 		return *m_type;
 	}
 

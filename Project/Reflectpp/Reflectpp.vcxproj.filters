@@ -51,6 +51,15 @@
     <ClInclude Include="include\details\platform.h">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\details\assert.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\hasher.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\structs.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -101,6 +110,12 @@
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\type.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\assert.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\hasher.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

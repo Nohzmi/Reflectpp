@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "details/platform.h"
+#include "details/registry.h"
 
 /**
 * @addtogroup Reflectpp
@@ -16,11 +16,6 @@
 
 namespace reflectpp
 {
-	namespace details
-	{
-		class registry;
-	}
-
 	/**
 	* Generic factory class used in reflection \n
 	* Independent of the reflection

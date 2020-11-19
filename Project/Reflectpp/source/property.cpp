@@ -2,7 +2,6 @@
 
 #include "property.h"
 
-#include "details/utilities.h"
 #include "type.h"
 
 namespace reflectpp
@@ -29,7 +28,7 @@ namespace reflectpp
 
 	variant property::get_value(const variant& object) const
 	{
-		details::_assert(*object.m_type == *m_type, "property::getValue(Variant& object) : wrong object type, %s is in %s\n", m_name, m_type->get_name());
+		REFLECTPP_ASSERT(*object.m_type == *m_type, "property::get_value(variant& object) : wrong object type, %s is in %s\n", m_name, m_type->get_name());
 
 		if (m_getter != nullptr)
 		{

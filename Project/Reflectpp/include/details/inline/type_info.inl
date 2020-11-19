@@ -1,7 +1,5 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
-#include "details/registry.h"
-
 namespace reflectpp
 {
 	template<typename T>

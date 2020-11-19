@@ -1,14 +1,11 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
-#include "details/utilities.h"
-#include "type.h"
-
 namespace reflectpp
 {
 	template<typename T>
 	inline variant property::get_value(T* object) const
 	{
-		details::_assert(type::Get(object) == *m_type, "property::get_value(%s*& object) : wrong object type, %s is in %s\n", details::type_name(object), m_name, m_type->get_name());
+		REFLECTPP_ASSERT(details::registry::get_instance().get_type(object) == m_type, "property::get_value(%s*& object) : wrong object type, %s is in %s\n", details::type_name(object), m_name, details::registry::get_instance().get_type_name(m_type));
 
 		if (m_getter != nullptr)
 		{

@@ -89,6 +89,9 @@
     <ClCompile Include="source\serializer.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\dllmain.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\details\inline\utilities.inl">

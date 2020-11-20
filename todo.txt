@@ -1,4 +1,2 @@
-register rename function to downcase
-changer les assert et verif le nom des fonctions
 sortir le cast ?
-std::string dans type.cpp -> utils
+comparer avec rttr

@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\details\registry.cpp" />
+    <ClCompile Include="source\dllmain.cpp" />
     <ClCompile Include="source\factory.cpp" />
     <ClCompile Include="source\property.cpp" />
     <ClCompile Include="source\registration.cpp" />

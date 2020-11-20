@@ -5,7 +5,7 @@
 #include <type_info.h>
 #include <variant.h>
 #include <property.h>
-#include <vld.h>
+#include <vld/vld.h>
 
 #include "base.h"
 #include "derived.h"

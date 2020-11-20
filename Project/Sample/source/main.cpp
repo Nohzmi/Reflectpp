@@ -5,6 +5,7 @@
 #include <type_info.h>
 #include <variant.h>
 #include <property.h>
+#include <serializer.h>
 #include <vld/vld.h>
 
 #include "base.h"
@@ -90,15 +91,15 @@ int main()
 			printf("%s is a float : %f\n", prop.get_name(), var.get_value<float>());
 	}
 
+	// Serialization test
+	serializer seri("test");
+	seri.save(tmp0);
+	//seri.load(tmp0);
+
 	delete tmp0;
 	delete tmp1;
 	delete tmp2;
 	delete tmp3;
-
-	// Serialization test
-	//Test object;
-	//Serializer save("test");
-	//save.Save(object);
 
 	// Exit point
 	printf("\nExit Success!\n\n");

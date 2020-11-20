@@ -60,6 +60,9 @@
     <ClInclude Include="include\details\structs.h">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\serializer.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -81,6 +84,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\type_info.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\serializer.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,6 +122,9 @@
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\hasher.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\serializer.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

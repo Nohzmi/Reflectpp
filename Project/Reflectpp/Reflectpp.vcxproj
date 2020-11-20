@@ -30,6 +30,7 @@
     <ClInclude Include="include\range.h" />
     <ClInclude Include="include\register.h" />
     <ClInclude Include="include\registration.h" />
+    <ClInclude Include="include\serializer.h" />
     <ClInclude Include="include\type.h" />
     <ClInclude Include="include\type_info.h" />
     <ClInclude Include="include\variant.h" />
@@ -39,6 +40,7 @@
     <ClCompile Include="source\factory.cpp" />
     <ClCompile Include="source\property.cpp" />
     <ClCompile Include="source\registration.cpp" />
+    <ClCompile Include="source\serializer.cpp" />
     <ClCompile Include="source\type.cpp" />
     <ClCompile Include="source\type_info.cpp" />
     <ClCompile Include="source\variant.cpp" />
@@ -51,6 +53,7 @@
     <None Include="include\details\inline\range.inl" />
     <None Include="include\details\inline\registration.inl" />
     <None Include="include\details\inline\registry.inl" />
+    <None Include="include\details\inline\serializer.inl" />
     <None Include="include\details\inline\type.inl" />
     <None Include="include\details\inline\type_info.inl" />
     <None Include="include\details\inline\utilities.inl" />
@@ -112,21 +115,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

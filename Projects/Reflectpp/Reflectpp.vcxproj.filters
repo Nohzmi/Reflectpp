@@ -57,13 +57,16 @@
     <ClInclude Include="include\details\hasher.h">
       <Filter>include\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\structs.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\serializer.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\macro.h">
+    <ClInclude Include="include\details\macros.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\instance.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\type_traits.h">
       <Filter>include\details</Filter>
     </ClInclude>
   </ItemGroup>
@@ -91,6 +94,12 @@
     </ClCompile>
     <ClCompile Include="source\serializer.cpp">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\instance.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\details\utilities.cpp">
+      <Filter>source\details</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +137,9 @@
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\serializer.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\instance.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

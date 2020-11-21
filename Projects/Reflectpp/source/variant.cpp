@@ -39,7 +39,7 @@ namespace reflectpp
 		return *this;
 	}
 
-	variant::operator bool() const
+	variant::operator bool() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid();
 	}

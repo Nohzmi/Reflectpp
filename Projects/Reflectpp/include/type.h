@@ -7,7 +7,6 @@
 */
 
 #pragma once
-#include "details/registry.h"
 #include "range.h"
 #include "variant.h"
 

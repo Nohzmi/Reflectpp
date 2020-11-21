@@ -21,12 +21,13 @@
   <ItemGroup>
     <ClInclude Include="include\details\assert.h" />
     <ClInclude Include="include\details\hasher.h" />
-    <ClInclude Include="include\details\macro.h" />
+    <ClInclude Include="include\details\macros.h" />
     <ClInclude Include="include\details\platform.h" />
     <ClInclude Include="include\details\registry.h" />
-    <ClInclude Include="include\details\structs.h" />
+    <ClInclude Include="include\details\type_traits.h" />
     <ClInclude Include="include\details\utilities.h" />
     <ClInclude Include="include\factory.h" />
+    <ClInclude Include="include\instance.h" />
     <ClInclude Include="include\property.h" />
     <ClInclude Include="include\range.h" />
     <ClInclude Include="include\register.h" />
@@ -38,7 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\details\registry.cpp" />
+    <ClCompile Include="source\details\utilities.cpp" />
     <ClCompile Include="source\factory.cpp" />
+    <ClCompile Include="source\instance.cpp" />
     <ClCompile Include="source\property.cpp" />
     <ClCompile Include="source\registration.cpp" />
     <ClCompile Include="source\serializer.cpp" />
@@ -50,6 +53,7 @@
     <None Include="include\details\inline\assert.inl" />
     <None Include="include\details\inline\factory.inl" />
     <None Include="include\details\inline\hasher.inl" />
+    <None Include="include\details\inline\instance.inl" />
     <None Include="include\details\inline\property.inl" />
     <None Include="include\details\inline\range.inl" />
     <None Include="include\details\inline\registration.inl" />

@@ -12,7 +12,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "details/assert.h"
 #include "details/hasher.h"
 #include "details/platform.h"
 #include "details/utilities.h"

@@ -9,7 +9,6 @@
 #pragma once
 #include <nlohmann/json.hpp>
 
-#include "details/registry.h"
 #include "variant.h"
 
 /**

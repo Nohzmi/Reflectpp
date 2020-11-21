@@ -14,19 +14,19 @@
 * @{
 */
 
-#define REGISTRATION							\
+#define REGISTRATION									\
 static void register_function() REFLECTPP_NOEXCEPT;		\
-namespace										\
-{												\
-    struct register_class final					\
-    {											\
-        register_class()						\
-        {										\
-            register_function();				\
-        }										\
-    };											\
-}												\
-static const register_class register_obj;		\
+namespace												\
+{														\
+    struct register_class final							\
+    {													\
+        register_class()								\
+        {												\
+            register_function();						\
+        }												\
+    };													\
+}														\
+static const register_class register_obj;				\
 void register_function() REFLECTPP_NOEXCEPT
 
 namespace reflectpp

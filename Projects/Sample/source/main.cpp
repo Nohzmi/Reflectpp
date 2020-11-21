@@ -1,5 +1,6 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
+#include <iostream>
 #include <type.h>
 #include <factory.h>
 #include <type_info.h>
@@ -18,6 +19,37 @@ int main()
 {
 	// Entry point
 	printf("\nHello World!\n\n");
+
+	//std::cout << details::type_name(type::get<Derived>()) << std::endl;
+	//std::cout << details::type_name(&type::get<Derived>()) << std::endl;
+
+	int val = 5;
+	int* ptr = &val;
+	int* ptrnnull = nullptr;
+	int** ptr2 = &ptr;
+	
+	/*std::cout << details::type_name(5) << std::endl;
+	std::cout << details::type_name(val) << std::endl;
+	std::cout << details::type_name(ptr) << std::endl;
+	std::cout << details::type_name(*ptr) << std::endl;
+	std::cout << details::type_name(&val) << std::endl;
+	std::cout << details::type_name(ptrnnull) << std::endl;*/
+
+	Base* base = new Base();
+	Base* basenull = nullptr;
+	std::cout << details::type_name(base) << std::endl;
+	std::cout << details::type_name(basenull) << std::endl;
+	delete base;
+
+	/*std::cout << details::registry::get_instance().get_type(5)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(val)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(ptr)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(*ptr)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(&val)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(ptrnnull)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(ptr2)->get_name() << std::endl;*/
+
+	return 0;
 
 	// Reflection test
 	auto& test = type::get<Derived>();
@@ -40,6 +72,8 @@ int main()
 	auto& test5 = type::get(tmp0);
 	auto& test6 = type::get(tmp1);
 	auto& test7 = type::get(&tmp4);
+	//auto& test95 = type::get(tmp4);
+	//auto& test231 = type::get(5);
 
 	auto test8 = type::cast<Base*>(&tmp4);
 	auto test9 = type::cast<Derived*>(tmp0);
@@ -85,7 +119,7 @@ int main()
 	for (auto& prop : type::get<Base>().get_properties())
 	{
 		//Variant var = prop.GetValue(tmp3);
-		variant var = prop.get_value(tmp0);
+		variant var = prop.get_value(*tmp0);
 
 		if (var.is_type<double>())
 			printf("%s is a double : %f\n", prop.get_name(), var.get_value<double>());

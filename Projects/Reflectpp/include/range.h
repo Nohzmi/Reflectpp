@@ -9,6 +9,8 @@
 #pragma once
 #include <vector>
 
+#include "details/macros.h"
+
 /**
 * @addtogroup Reflectpp
 * @{

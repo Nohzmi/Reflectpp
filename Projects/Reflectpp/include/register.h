@@ -11,22 +11,22 @@
 
 #define REFLECT(T)													\
 public:																\
-friend void register_function() REFLECTPP_NOEXCEPT;							\
-virtual size_t get_type_id() const REFLECTPP_NOEXCEPT							\
+friend void register_function() REFLECTPP_NOEXCEPT;					\
+virtual size_t get_type_id() const REFLECTPP_NOEXCEPT				\
 {																	\
 	static const size_t type_id{ reflectpp::details::hash(#T) };	\
 	return type_id;													\
 }																	\
-virtual const char* get_type_name() const REFLECTPP_NOEXCEPT					\
+virtual const char* get_type_name() const REFLECTPP_NOEXCEPT		\
 {																	\
 	return #T;														\
 }																	\
-static size_t type_id() REFLECTPP_NOEXCEPT									\
+static size_t type_id() REFLECTPP_NOEXCEPT							\
 {																	\
 	static const size_t type_id{ reflectpp::details::hash(#T) };	\
 	return type_id;													\
 }																	\
-static const char* type_name() REFLECTPP_NOEXCEPT								\
+static const char* type_name() REFLECTPP_NOEXCEPT					\
 {																	\
 	return #T;														\
 }																	\

@@ -29,41 +29,41 @@ namespace reflectpp
 		type_info() = delete;
 		~type_info() = default;
 		type_info(const type_info&) = default;
-		type_info(type_info&&) noexcept = default;
+		type_info(type_info&&) REFLECTPP_NOEXCEPT = default;
 		type_info& operator=(const type_info&) = default;
-		type_info& operator=(type_info&&) noexcept = default;
+		type_info& operator=(type_info&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
 		* Returns whether or not two types are the same
 		* @param rhs
 		*/
-		bool operator==(const type_info& rhs) const noexcept;
+		bool operator==(const type_info& rhs) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not two types are the same
 		* @param rhs
 		*/
-		bool operator!=(const type_info& rhs) const noexcept;
+		bool operator!=(const type_info& rhs) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Get type info of the requested type
 		*/
 		template<typename T>
-		static type_info& get() noexcept;
+		static type_info& get() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns id of this type info
 		*/
-		size_t get_id() const noexcept;
+		size_t get_id() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns name of this type info
 		*/
-		const char* get_name() const noexcept;
+		const char* get_name() const REFLECTPP_NOEXCEPT;
 
 	private:
 
-		type_info(size_t id, const char* name) noexcept;
+		type_info(size_t id, const char* name) REFLECTPP_NOEXCEPT;
 
 		size_t m_id;
 		const char* m_name;

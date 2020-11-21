@@ -33,9 +33,9 @@ namespace reflectpp
 		serializer() = delete;
 		~serializer() = default;
 		serializer(const serializer&) = default;
-		serializer(serializer&&) noexcept = default;
+		serializer(serializer&&) REFLECTPP_NOEXCEPT = default;
 		serializer& operator=(const serializer&) = default;
-		serializer& operator=(serializer&&) noexcept = default;
+		serializer& operator=(serializer&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
 		* Create a variant from a object
@@ -48,21 +48,21 @@ namespace reflectpp
 		* @param object
 		*/
 		template<typename T>
-		void save(const T& object) const noexcept;
+		void save(const T& object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Deserialize an object
 		* @param object
 		*/
 		template<typename T>
-		void load(T& object) const noexcept;
+		void load(T& object) const REFLECTPP_NOEXCEPT;
 
 	private:
 
-		void save(const variant& var) const noexcept;
-		void save_type(const variant& var, nlohmann::json& j) const noexcept;
-		void load(variant& var) const noexcept;
-		void load_type(variant& var, const nlohmann::json& j) const noexcept;
+		void save(const variant& var) const REFLECTPP_NOEXCEPT;
+		void save_type(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+		void load(variant& var) const REFLECTPP_NOEXCEPT;
+		void load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT;
 
 		std::string m_path;
 	};

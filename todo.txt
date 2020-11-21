@@ -6,3 +6,6 @@ serialisation -> real sample with vld
 fn type_name/id(type* _type) in utilities
 
 typeinfo en type_info ? revoir les nom pour éviter les redit avec les nom de classes
+setter non utilisé
+maybe essayé les getter/setter de type différents
+éviter les T* mais verif et recheck ça dans les assert

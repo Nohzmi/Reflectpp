@@ -3,13 +3,13 @@
 namespace reflectpp
 {
 	template<typename T>
-	inline void reflectpp::serializer::save(const T& object) const noexcept
+	REFLECTPP_INLINE void reflectpp::serializer::save(const T& object) const REFLECTPP_NOEXCEPT
 	{
 		save(variant(object));
 	}
 
 	template<typename T>
-	inline void reflectpp::serializer::load(T& object) const noexcept
+	REFLECTPP_INLINE void reflectpp::serializer::load(T& object) const REFLECTPP_NOEXCEPT
 	{
 		auto var = variant(object);
 		load(var);

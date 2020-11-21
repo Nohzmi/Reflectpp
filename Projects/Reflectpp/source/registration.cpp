@@ -4,7 +4,7 @@
 
 namespace reflectpp
 {
-	registration::registration(type* type) noexcept :
+	registration::registration(type* type) REFLECTPP_NOEXCEPT :
 		m_type{ type }
 	{
 	}

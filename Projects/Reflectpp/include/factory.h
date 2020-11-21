@@ -33,36 +33,36 @@ namespace reflectpp
 		factory() = delete;
 		~factory() = default;
 		factory(const factory&) = default;
-		factory(factory&&) noexcept = default;
+		factory(factory&&) REFLECTPP_NOEXCEPT = default;
 		factory& operator=(const factory&) = default;
-		factory& operator=(factory&&) noexcept = default;
+		factory& operator=(factory&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
 		* Returns a pointer on created object
 		*/
-		void* construct() const noexcept;
+		void* construct() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns a pointer on copied object
 		* @param object
 		*/
-		void* copy(void* object) const noexcept;
+		void* copy(void* object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Destroys given object
 		* @param object
 		*/
-		void destroy(void* object) const noexcept;
+		void destroy(void* object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Get factory of the requested type
 		*/
 		template<typename T>
-		static factory& get() noexcept;
+		static factory& get() REFLECTPP_NOEXCEPT;
 
 	private:
 
-		factory(ConstructorT constructor, CopyT copy, DestructorT destructor) noexcept;
+		factory(ConstructorT constructor, CopyT copy, DestructorT destructor) REFLECTPP_NOEXCEPT;
 
 		ConstructorT m_constructor;
 		CopyT m_copy;

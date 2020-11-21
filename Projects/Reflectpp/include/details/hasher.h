@@ -10,11 +10,13 @@
 #include <functional>
 #include <string>
 
+#include "details/macros.h"
+
 namespace reflectpp
 {
 	namespace details
 	{
-		size_t hash(const char* str) noexcept;
+		size_t hash(const char* str) REFLECTPP_NOEXCEPT;
 	}
 }
 

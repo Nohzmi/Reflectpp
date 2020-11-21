@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		inline type* registry::add_base(type* _type) noexcept
+		REFLECTPP_INLINE type* registry::add_base(type* _type) REFLECTPP_NOEXCEPT
 		{
 			if constexpr (std::is_arithmetic_v<T> || !is_valid<T>::value)
 			{
@@ -22,7 +22,7 @@ namespace reflectpp
 		}
 
 		template<typename T, typename propertyT, typename U>
-		inline property* registry::add_property(type* _type, const char* name, propertyT T::* addr) noexcept
+		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT T::* addr) REFLECTPP_NOEXCEPT
 		{
 			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", type_name<U>(), type_name<T>(), name, get_type_name(_type));
 
@@ -33,7 +33,7 @@ namespace reflectpp
 		}
 
 		template<typename T, typename propertyT, typename U>
-		inline property* registry::add_property(type* _type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) noexcept
+		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) REFLECTPP_NOEXCEPT
 		{
 			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", type_name<U>(), type_name<T>(), name, get_type_name(_type));
 
@@ -68,7 +68,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		inline type* registry::add_type() noexcept
+		REFLECTPP_INLINE type* registry::add_type() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (std::is_arithmetic_v<T> || !is_valid<T>::value)
 			{
@@ -92,7 +92,7 @@ namespace reflectpp
 		}
 
 		template<typename T, typename U, typename V>
-		inline std::remove_pointer_t<T>* registry::cast(U* object) noexcept
+		REFLECTPP_INLINE std::remove_pointer_t<T>* registry::cast(U* object) REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!std::is_pointer_v<T>)
 			{
@@ -114,7 +114,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		inline factory* registry::get_factory() noexcept
+		REFLECTPP_INLINE factory* registry::get_factory() REFLECTPP_NOEXCEPT
 		{
 			factory* factory{ get_factory(type_id<T>()) };
 
@@ -147,7 +147,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		inline type* registry::get_type() noexcept
+		REFLECTPP_INLINE type* registry::get_type() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_valid<T>::value)
 			{
@@ -173,7 +173,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		inline type* registry::get_type(T* object) noexcept
+		REFLECTPP_INLINE type* registry::get_type(T* object) REFLECTPP_NOEXCEPT
 		{
 			if constexpr (std::is_null_pointer_v<T> || std::is_void_v<T> || std::is_volatile_v<T>)
 			{
@@ -203,7 +203,7 @@ namespace reflectpp
 			}
 		}
 		template<typename T>
-		inline type* registry::get_type_with_initialization() noexcept
+		REFLECTPP_INLINE type* registry::get_type_with_initialization() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_valid<T>::value)
 			{
@@ -222,7 +222,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		inline type_info* registry::get_type_info() noexcept
+		REFLECTPP_INLINE type_info* registry::get_type_info() REFLECTPP_NOEXCEPT
 		{
 			type_info* type_info{ get_type_info(type_id<T>()) };
 

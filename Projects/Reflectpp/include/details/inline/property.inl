@@ -1,9 +1,10 @@
+#include "..\..\property.h"
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 namespace reflectpp
 {
 	template<typename T>
-	inline variant property::get_value(T* object) const
+	REFLECTPP_INLINE variant property::get_value(T* object) const
 	{
 		REFLECTPP_ASSERT(details::registry::get_instance().get_type(object) == m_type, "property::get_value(%s*& object) : wrong object type, %s is in %s\n", details::type_name(object), m_name, details::registry::get_instance().get_type_name(m_type));
 

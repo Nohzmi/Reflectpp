@@ -44,7 +44,7 @@ namespace reflectpp
 		return is_valid();
 	}
 
-	void variant::clear() noexcept
+	void variant::clear() REFLECTPP_NOEXCEPT
 	{
 		if (m_is_owner && is_valid())
 			m_type->get_factory().destroy(m_data);
@@ -54,18 +54,18 @@ namespace reflectpp
 		m_type = nullptr;
 	}
 
-	type& variant::get_type() const noexcept
+	type& variant::get_type() const REFLECTPP_NOEXCEPT
 	{
 		REFLECTPP_ASSERT(m_type != nullptr, "variant::get_type() : invalid variant\n");
 		return *m_type;
 	}
 
-	bool variant::is_valid() const noexcept
+	bool variant::is_valid() const REFLECTPP_NOEXCEPT
 	{
 		return m_data != nullptr;
 	}
 
-	variant::variant(void* data, bool is_owner, type* type) noexcept :
+	variant::variant(void* data, bool is_owner, type* type) REFLECTPP_NOEXCEPT :
 		m_data{ data },
 		m_is_owner{ is_owner },
 		m_type{ type }

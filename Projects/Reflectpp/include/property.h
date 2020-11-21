@@ -17,11 +17,6 @@
 
 namespace reflectpp
 {
-	namespace details
-	{
-		class registry;
-	}
-
 	class type;
 
 #pragma warning(push)
@@ -42,29 +37,29 @@ namespace reflectpp
 		property() = delete;
 		~property() = default;
 		property(const property&) = delete;
-		property(property&&) noexcept = default;
+		property(property&&) REFLECTPP_NOEXCEPT = default;
 		property& operator=(const property&) = delete;
-		property& operator=(property&&) noexcept = default;
+		property& operator=(property&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
 		* Returns id of this property
 		*/
-		size_t get_id() const noexcept;
+		size_t get_id() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns name of this property
 		*/
-		const char* get_name() const noexcept;
+		const char* get_name() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns offset of this property
 		*/
-		size_t get_offset() const noexcept;
+		size_t get_offset() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns type of this property
 		*/
-		type& get_type() const noexcept;
+		type& get_type() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns value of the property from an object of the type that contains it
@@ -81,7 +76,7 @@ namespace reflectpp
 
 	private:
 
-		property(GetterT getter, size_t id, const char* name, size_t offset, type* property_type, SetterT setter, type* type) noexcept;
+		property(GetterT getter, size_t id, const char* name, size_t offset, type* property_type, SetterT setter, type* type) REFLECTPP_NOEXCEPT;
 
 		GetterT m_getter;
 		size_t m_id;

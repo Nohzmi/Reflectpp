@@ -63,6 +63,9 @@
     <ClInclude Include="include\serializer.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\details\macro.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">

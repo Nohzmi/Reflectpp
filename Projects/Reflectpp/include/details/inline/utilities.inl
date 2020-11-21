@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		inline size_t type_id() noexcept
+		REFLECTPP_INLINE size_t type_id() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
 				return typeid(T).hash_code();
@@ -14,7 +14,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		inline size_t type_id(T* object) noexcept
+		REFLECTPP_INLINE size_t type_id(T* object) REFLECTPP_NOEXCEPT
 		{
 			if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
 				return typeid(T).hash_code();
@@ -23,7 +23,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		inline const char* type_name() noexcept
+		REFLECTPP_INLINE const char* type_name() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
 				return typeid(T).name();
@@ -32,7 +32,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		inline const char* type_name(T* object) noexcept
+		REFLECTPP_INLINE const char* type_name(T* object) REFLECTPP_NOEXCEPT
 		{
 			if constexpr (std::is_arithmetic_v<T> || !use_macro<T>::value)
 				return typeid(T).name();

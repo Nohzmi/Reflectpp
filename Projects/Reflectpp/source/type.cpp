@@ -9,12 +9,12 @@
 namespace reflectpp
 {
 
-	bool type::operator==(const type& rhs) const noexcept
+	bool type::operator==(const type& rhs) const REFLECTPP_NOEXCEPT
 	{
 		return m_type_info == rhs.m_type_info;
 	}
 
-	bool type::operator!=(const type& rhs) const noexcept
+	bool type::operator!=(const type& rhs) const REFLECTPP_NOEXCEPT
 	{
 		return m_type_info != rhs.m_type_info;
 	}
@@ -24,32 +24,32 @@ namespace reflectpp
 		return variant(get_factory().construct(), true, const_cast<type*>(this));
 	}
 
-	range<type>& type::get_base_classes() const noexcept
+	range<type>& type::get_base_classes() const REFLECTPP_NOEXCEPT
 	{
 		return *const_cast<range<type>*>(&m_base_types);
 	}
 
-	range<type>& type::get_derived_classes() const noexcept
+	range<type>& type::get_derived_classes() const REFLECTPP_NOEXCEPT
 	{
 		return *const_cast<range<type>*>(&m_derived_types);
 	}
 
-	factory& type::get_factory() const noexcept
+	factory& type::get_factory() const REFLECTPP_NOEXCEPT
 	{
 		return *m_factory;
 	}
 
-	size_t type::get_id() const noexcept
+	size_t type::get_id() const REFLECTPP_NOEXCEPT
 	{
 		return m_type_info->get_id();
 	}
 
-	const char* type::get_name() const noexcept
+	const char* type::get_name() const REFLECTPP_NOEXCEPT
 	{
 		return m_type_info->get_name();
 	}
 
-	property& type::get_property(const char* name) const noexcept
+	property& type::get_property(const char* name) const REFLECTPP_NOEXCEPT
 	{
 		size_t id{ details::hash(name) };
 
@@ -61,22 +61,22 @@ namespace reflectpp
 		return *m_properties.begin();
 	}
 
-	range<property>& type::get_properties() const noexcept
+	range<property>& type::get_properties() const REFLECTPP_NOEXCEPT
 	{
 		return *const_cast<range<property>*>(&m_properties);
 	}
 
-	size_t type::get_sizeof() const noexcept
+	size_t type::get_sizeof() const REFLECTPP_NOEXCEPT
 	{
 		return m_size;
 	}
 
-	type_info& type::get_type_info() const noexcept
+	type_info& type::get_type_info() const REFLECTPP_NOEXCEPT
 	{
 		return *m_type_info;
 	}
 
-	type::type(factory* factory, size_t size, type_info* type_info) noexcept :
+	type::type(factory* factory, size_t size, type_info* type_info) REFLECTPP_NOEXCEPT :
 		m_factory{ factory },
 		m_hierarchy_id{ type_info->get_id() },
 		m_size{ size },

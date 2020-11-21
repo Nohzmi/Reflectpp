@@ -10,22 +10,23 @@
 #include <typeinfo>
 
 #include "details/structs.h"
+#include "details/macros.h"
 
 namespace reflectpp
 {
 	namespace details
 	{
 		template<typename T>
-		size_t type_id() noexcept;
+		size_t type_id() REFLECTPP_NOEXCEPT;
 
 		template<typename T>
-		size_t type_id(T* object) noexcept;
+		size_t type_id(T* object) REFLECTPP_NOEXCEPT;
 
 		template<typename T>
-		const char* type_name() noexcept;
+		const char* type_name() REFLECTPP_NOEXCEPT;
 
 		template<typename T>
-		const char* type_name(T* object) noexcept;
+		const char* type_name(T* object) REFLECTPP_NOEXCEPT;
 	}
 }
 

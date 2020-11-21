@@ -3,19 +3,19 @@
 namespace reflectpp
 {
 	template<typename T, typename U>
-	inline T type::cast(U* object) noexcept
+	REFLECTPP_INLINE T type::cast(U* object) REFLECTPP_NOEXCEPT
 	{
 		return details::registry::get_instance().cast<T>(object);
 	}
 
 	template<typename T>
-	inline type& type::get() noexcept
+	REFLECTPP_INLINE type& type::get() REFLECTPP_NOEXCEPT
 	{
 		return *details::registry::get_instance().get_type<T>();
 	}
 
 	template<typename T>
-	inline type& type::get(T* object) noexcept
+	REFLECTPP_INLINE type& type::get(T* object) REFLECTPP_NOEXCEPT
 	{
 		return *details::registry::get_instance().get_type(object);
 	}

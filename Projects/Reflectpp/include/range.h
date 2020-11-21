@@ -37,9 +37,9 @@ namespace reflectpp
 
 			~iterator() = default;
 			iterator(const iterator&) = default;
-			iterator(iterator&&) noexcept = default;
+			iterator(iterator&&) REFLECTPP_NOEXCEPT = default;
 			iterator& operator=(const iterator&) = default;
-			iterator& operator=(iterator&&) noexcept = default;
+			iterator& operator=(iterator&&) REFLECTPP_NOEXCEPT = default;
 
 			bool operator==(const iterator<T>& rhs) const;
 			bool operator!=(const iterator<T>& rhs) const;
@@ -57,15 +57,15 @@ namespace reflectpp
 		range() = default;
 		~range() = default;
 		range(const range&) = delete;
-		range(range&&) noexcept = default;
+		range(range&&) REFLECTPP_NOEXCEPT = default;
 		range& operator=(const range&) = delete;
-		range& operator=(range&&) noexcept = default;
+		range& operator=(range&&) REFLECTPP_NOEXCEPT = default;
 
-		T& operator[] (size_t n) const noexcept;
-		iterator<T> begin() const noexcept;
-		bool empty() const noexcept;
-		iterator<T> end() const noexcept;
-		size_t size() const noexcept;
+		T& operator[] (size_t n) const REFLECTPP_NOEXCEPT;
+		iterator<T> begin() const REFLECTPP_NOEXCEPT;
+		bool empty() const REFLECTPP_NOEXCEPT;
+		iterator<T> end() const REFLECTPP_NOEXCEPT;
+		size_t size() const REFLECTPP_NOEXCEPT;
 
 	private:
 

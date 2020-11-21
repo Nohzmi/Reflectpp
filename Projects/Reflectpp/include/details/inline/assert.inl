@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<class ...Args>
-		inline void _assert(bool expr, const char* format, Args ...args) noexcept
+		REFLECTPP_INLINE void _assert(bool expr, const char* format, Args ...args) REFLECTPP_NOEXCEPT
 		{
 			if (!expr)
 			{

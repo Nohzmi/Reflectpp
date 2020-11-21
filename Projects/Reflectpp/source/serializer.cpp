@@ -18,7 +18,7 @@ namespace reflectpp
 		m_path = std::string(path) + ".json";
 	}
 
-	void serializer::save(const variant& var) const noexcept
+	void serializer::save(const variant& var) const REFLECTPP_NOEXCEPT
 	{
 		json j;
 		save_type(var, j);
@@ -27,7 +27,7 @@ namespace reflectpp
 		out << std::setw(4) << j;
 	}
 
-	void serializer::save_type(const variant& var, json& j) const noexcept
+	void serializer::save_type(const variant& var, json& j) const REFLECTPP_NOEXCEPT
 	{
 		for (property& prop : var.get_type().get_properties())
 		{
@@ -49,7 +49,7 @@ namespace reflectpp
 		}
 	}
 
-	void serializer::load(variant& var) const noexcept
+	void serializer::load(variant& var) const REFLECTPP_NOEXCEPT
 	{
 		json j;
 
@@ -65,7 +65,7 @@ namespace reflectpp
 		std::cout << j.dump(4) << std::endl;///////
 	}
 
-	void serializer::load_type(variant& var, const nlohmann::json& j) const noexcept
+	void serializer::load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT
 	{
 		for (property& prop : var.get_type().get_properties())
 		{

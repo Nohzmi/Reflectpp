@@ -3,7 +3,7 @@
 namespace reflectpp
 {
 	template<typename T>
-	inline type_info& type_info::get() noexcept
+	REFLECTPP_INLINE type_info& type_info::get() REFLECTPP_NOEXCEPT
 	{
 		return *details::registry::get_instance().get_type_info<T>();
 	}

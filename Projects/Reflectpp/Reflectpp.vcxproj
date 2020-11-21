@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\details\assert.h" />
     <ClInclude Include="include\details\hasher.h" />
+    <ClInclude Include="include\details\macro.h" />
     <ClInclude Include="include\details\platform.h" />
     <ClInclude Include="include\details\registry.h" />
     <ClInclude Include="include\details\structs.h" />

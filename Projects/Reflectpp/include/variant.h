@@ -32,9 +32,9 @@ namespace reflectpp
 		variant();
 		~variant();
 		variant(const variant&);
-		variant(variant&&) noexcept = default;
+		variant(variant&&) REFLECTPP_NOEXCEPT = default;
 		variant& operator=(const variant&);
-		variant& operator=(variant&&) noexcept = default;
+		variant& operator=(variant&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
 		* Create a variant from a object \n
@@ -42,7 +42,7 @@ namespace reflectpp
 		* @param object
 		*/
 		template<typename T>
-		variant(T* object) noexcept;
+		variant(T* object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored a value is valid
@@ -52,41 +52,41 @@ namespace reflectpp
 		/**
 		* Clear the stored value of this variant
 		*/
-		void clear() noexcept;
+		void clear() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value
 		*/
-		type& get_type() const noexcept;
+		type& get_type() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the value as requested type \n
 		* Use IsType() to check if the type is valid
 		*/
 		template<typename T>
-		T& get_value() noexcept;
+		T& get_value() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the value as requested type \n
 		* Use IsType() to check if the type is valid
 		*/
 		template<typename T>
-		const T& get_value() const noexcept;
+		const T& get_value() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored value is the same type as requested type
 		*/
 		template<typename T>
-		bool is_type() const noexcept;
+		bool is_type() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		bool is_valid() const noexcept;
+		bool is_valid() const REFLECTPP_NOEXCEPT;
 
 	private:
 
-		variant(void* data, bool is_owner, type* type) noexcept;
+		variant(void* data, bool is_owner, type* type) REFLECTPP_NOEXCEPT;
 
 		void* m_data;
 		bool m_is_owner;

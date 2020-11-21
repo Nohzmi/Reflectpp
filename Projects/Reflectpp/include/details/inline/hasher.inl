@@ -4,7 +4,7 @@ namespace reflectpp
 {
 	namespace details
 	{
-		inline size_t hash(const char* str) noexcept
+		REFLECTPP_INLINE size_t hash(const char* str) REFLECTPP_NOEXCEPT
 		{
 			std::hash<std::string> hasher;
 			return hasher(std::string(str));

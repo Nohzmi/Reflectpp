@@ -97,7 +97,32 @@ int main()
 	serializer seri("test");
 	//seri.save(tmp0);
 	Base* tmpload = new Base();
+	variant var22 = variant(tmpload);
+	for (auto& prop : var22.get_type().get_properties())
+	{
+		variant pvar{ prop.get_value(var22) };
+
+		if (pvar.is_type<float>())
+		{
+			pvar.get_value<float>() = 12.f;
+
+			auto temp = pvar.get_value<float>();
+			auto& temp2 = pvar.get_value<float>();
+
+			temp = 15.f;
+			temp2 = 16.f;
+
+			Base& base = var22.get_value<Base>();
+			Base& base563 = var22.get_value<Base>();
+		}
+		else if (pvar.is_type<double>())
+		{
+			pvar.get_value<double>() = 13.0;
+		}
+	}
+
 	seri.load(tmpload);
+
 	delete tmpload;
 
 	delete tmp0;

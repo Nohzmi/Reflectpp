@@ -15,7 +15,7 @@
 */
 
 #define REGISTRATION							\
-static void register_function() noexcept;		\
+static void register_function() REFLECTPP_NOEXCEPT;		\
 namespace										\
 {												\
     struct register_class final					\
@@ -27,7 +27,7 @@ namespace										\
     };											\
 }												\
 static const register_class register_obj;		\
-void register_function() noexcept
+void register_function() REFLECTPP_NOEXCEPT
 
 namespace reflectpp
 {
@@ -46,21 +46,21 @@ namespace reflectpp
 		registration() = delete;
 		~registration() = default;
 		registration(const registration&) = default;
-		registration(registration&&) noexcept = default;
+		registration(registration&&) REFLECTPP_NOEXCEPT = default;
 		registration& operator=(const registration&) = default;
-		registration& operator=(registration&&) noexcept = default;
+		registration& operator=(registration&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
 		* Register the base class of the current type
 		*/
 		template<typename T>
-		registration base() noexcept;
+		registration base() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Register a type in reflection
 		*/
 		template<typename T>
-		static registration class_() noexcept;
+		static registration class_() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Register a property of the current type
@@ -68,7 +68,7 @@ namespace reflectpp
 		* @param addr
 		*/
 		template<typename T, typename PropertyT>
-		registration property(const char* name, PropertyT T::* addr) noexcept;
+		registration property(const char* name, PropertyT T::* addr) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Register a property of the current type
@@ -77,11 +77,11 @@ namespace reflectpp
 		* @param setter
 		*/
 		template<typename T, typename PropertyT>
-		registration property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) noexcept;
+		registration property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) REFLECTPP_NOEXCEPT;
 
 	private:
 
-		registration(type* type) noexcept;
+		registration(type* type) REFLECTPP_NOEXCEPT;
 
 		type* m_type;
 	};

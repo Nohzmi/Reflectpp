@@ -10,6 +10,8 @@
 #include <cassert>
 #include <cstdio>
 
+#include "details/macros.h"
+
 #ifdef _DEBUG
 	#define REFLECTPP_ASSERT(exp, format, ...) reflectpp::details::_assert(exp, format, __VA_ARGS__)
 #else
@@ -21,7 +23,7 @@ namespace reflectpp
 	namespace details
 	{
 		template <class ...Args>
-		void _assert(bool expr, const char* format, Args... args) noexcept;
+		void _assert(bool expr, const char* format, Args... args) REFLECTPP_NOEXCEPT;
 	}
 }
 

@@ -36,28 +36,28 @@ namespace reflectpp
 		type() = delete;
 		~type() = default;
 		type(const type&) = delete;
-		type(type&&) noexcept = default;
+		type(type&&) REFLECTPP_NOEXCEPT = default;
 		type& operator=(const type&) = delete;
-		type& operator=(type&&) noexcept = default;
+		type& operator=(type&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
 		* Returns whether or not two types are the same
 		* @param rhs
 		*/
-		bool operator==(const type& rhs) const noexcept;
+		bool operator==(const type& rhs) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not two types are the same
 		* @param rhs
 		*/
-		bool operator!=(const type& rhs) const noexcept;
+		bool operator!=(const type& rhs) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Allows to cast between class hierarchies up, down and side
 		* @param object
 		*/
 		template<typename T, typename U>
-		static T cast(U* object) noexcept;
+		static T cast(U* object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns a variant of this type
@@ -68,64 +68,64 @@ namespace reflectpp
 		* Returns requested type representation
 		*/
 		template<typename T>
-		static type& get() noexcept;
+		static type& get() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns requested type representation
 		* @param object
 		*/
 		template<typename T>
-		static type& get(T* object) noexcept;
+		static type& get(T* object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns base types of this type
 		*/
-		range<type>& get_base_classes() const noexcept;
+		range<type>& get_base_classes() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns derived types of this type
 		*/
-		range<type>& get_derived_classes() const noexcept;
+		range<type>& get_derived_classes() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns factory of this type
 		*/
-		factory& get_factory() const noexcept;
+		factory& get_factory() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns id of this type
 		*/
-		size_t get_id() const noexcept;
+		size_t get_id() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns name of this type
 		*/
-		const char* get_name() const noexcept;
+		const char* get_name() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns property by name of this type
 		* @param name
 		*/
-		property& get_property(const char* name) const noexcept;
+		property& get_property(const char* name) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns all property of this type
 		*/
-		range<property>& get_properties() const noexcept;
+		range<property>& get_properties() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns size of this type
 		*/
-		size_t get_sizeof() const noexcept;
+		size_t get_sizeof() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns type info of this type
 		*/
-		type_info& get_type_info() const noexcept;
+		type_info& get_type_info() const REFLECTPP_NOEXCEPT;
 
 	private:
 
-		type(factory* factory, size_t size, type_info* type_info) noexcept;
+		type(factory* factory, size_t size, type_info* type_info) REFLECTPP_NOEXCEPT;
 
 		range<type> m_base_types;
 		range<type> m_derived_types;

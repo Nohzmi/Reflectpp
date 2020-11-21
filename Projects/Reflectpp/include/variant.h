@@ -47,7 +47,7 @@ namespace reflectpp
 		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		operator bool() const;
+		operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Clear the stored value of this variant

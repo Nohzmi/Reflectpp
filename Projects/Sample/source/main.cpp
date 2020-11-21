@@ -15,6 +15,11 @@
 
 using namespace reflectpp;
 
+enum class Testjh
+{
+	E_TEMP = 0
+};
+
 int main()
 {
 	// Entry point
@@ -22,6 +27,9 @@ int main()
 
 	//std::cout << details::type_name(type::get<Derived>()) << std::endl;
 	//std::cout << details::type_name(&type::get<Derived>()) << std::endl;
+
+	//auto testdsfsw = factory::get<volatile Base>();
+	//auto kjdhflks = testdsfsw.construct();
 
 	int val = 5;
 	int* ptr = &val;
@@ -119,7 +127,7 @@ int main()
 	for (auto& prop : type::get<Base>().get_properties())
 	{
 		//Variant var = prop.GetValue(tmp3);
-		variant var = prop.get_value(*tmp0);
+		variant var = prop.get_value(tmp0);
 
 		if (var.is_type<double>())
 			printf("%s is a double : %f\n", prop.get_name(), var.get_value<double>());

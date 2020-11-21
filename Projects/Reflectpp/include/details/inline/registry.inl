@@ -14,8 +14,8 @@ namespace reflectpp
 			}
 			else
 			{
-				type* base{ add_base(_type, get_type_with_initialization<T>()) };
-				REFLECTPP_ASSERT(base != nullptr, "registration::base<%s>() : base type already registered\n", get_type_name(base));
+				type* base{ add_base_impl(_type, get_type_with_initialization<T>()) };
+				REFLECTPP_ASSERT(base != nullptr, "registration::base<%s>() : base type already registered\n", type_name(base));
 
 				return base;
 			}
@@ -24,9 +24,9 @@ namespace reflectpp
 		template<typename T, typename propertyT, typename U>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT T::* addr) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", type_name<U>(), type_name<T>(), name, get_type_name(_type));
+			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", type_name<U>(), type_name<T>(), name, type_name(_type));
 
-			property* prop { add_property(_type, name, (size_t)(char*)&((T*)nullptr->*addr), get_type_with_initialization<U>()) };
+			property* prop { add_property_impl(_type, name, (size_t)(char*)&((T*)nullptr->*addr), get_type_with_initialization<U>()) };
 			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered\n", type_name<U>(), type_name<T>(), name);
 
 			return prop;
@@ -35,7 +35,7 @@ namespace reflectpp
 		template<typename T, typename propertyT, typename U>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", type_name<U>(), type_name<T>(), name, get_type_name(_type));
+			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", type_name<U>(), type_name<T>(), name, type_name(_type));
 
 			auto get = [getter](void* object, bool& is_owner) -> void*
 			{
@@ -61,7 +61,7 @@ namespace reflectpp
 				(static_cast<T*>(object)->*setter)(*static_cast<U*>(value));
 			};
 
-			property* prop { add_property(_type, name, get, set, get_type_with_initialization<U>()) };
+			property* prop { add_property_impl(_type, name, get, set, get_type_with_initialization<U>()) };
 			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered\n", type_name<U>(), type_name<T>(), name);
 
 			return prop;
@@ -82,10 +82,10 @@ namespace reflectpp
 			}
 			else
 			{
-				type* type{ get_type(type_id<T>()) };
+				type* type{ get_type_impl(type_id<T>()) };
 
 				if (type == nullptr)
-					return add_type(get_factory<T>(), sizeof(T), get_type_info<T>());
+					return add_type_impl(get_factory<T>(), sizeof(T), get_type_info<T>());
 
 				return type;
 			}
@@ -110,13 +110,13 @@ namespace reflectpp
 				return nullptr;
 			}
 			else
-				return cast(get_type<V>(), get_type(object)) ? reinterpret_cast<T>(object) : nullptr;
+				return cast_impl(get_type<V>(), get_type(object)) ? reinterpret_cast<T>(object) : nullptr;
 		}
 
 		template<typename T>
 		REFLECTPP_INLINE factory* registry::get_factory() REFLECTPP_NOEXCEPT
 		{
-			factory* factory{ get_factory(type_id<T>()) };
+			factory* factory{ get_factory_impl(type_id<T>()) };
 
 			if (factory != nullptr)
 				return factory;
@@ -143,7 +143,7 @@ namespace reflectpp
 					delete static_cast<T*>(object);
 			};
 
-			return add_factory(type_id<T>(), constructor, copy, destructor);
+			return add_factory_impl(type_id<T>(), constructor, copy, destructor);
 		}
 
 		template<typename T>
@@ -156,16 +156,16 @@ namespace reflectpp
 			}
 			else if constexpr (std::is_arithmetic_v<T>)
 			{
-				type* type{ get_type(type_id<T>()) };
+				type* type{ get_type_impl(type_id<T>()) };
 
 				if (type == nullptr)
-					return add_type(get_factory<T>(), sizeof(T), get_type_info<T>());
+					return add_type_impl(get_factory<T>(), sizeof(T), get_type_info<T>());
 
 				return type;
 			}
 			else
 			{
-				type* type{ get_type(type_id<T>()) };
+				type* type{ get_type_impl(type_id<T>()) };
 				REFLECTPP_ASSERT(type != nullptr, "type::get<%s>() : unregistered type\n", type_name<T>());
 
 				return type;
@@ -189,17 +189,17 @@ namespace reflectpp
 			{
 				REFLECTPP_ASSERT(object != nullptr, "type::get(%s*& object) : object nullptr\n", type_name<T>());
 
-				type* type{ get_type(type_id<T>()) };
+				type* type{ get_type_impl(type_id<T>()) };
 
 				if (type == nullptr)
-					return add_type(get_factory<T>(), sizeof(T), get_type_info<T>());
+					return add_type_impl(get_factory<T>(), sizeof(T), get_type_info<T>());
 
 				return type;
 			}
 			else
 			{
 				REFLECTPP_ASSERT(object != nullptr, "type::get(%s*& object) : object nullptr\n", type_name<T>());
-				return get_type(type_id(object));
+				return get_type_impl(type_id(object));
 			}
 		}
 		template<typename T>
@@ -212,10 +212,10 @@ namespace reflectpp
 			}
 			else
 			{
-				type* type{ get_type(type_id<T>()) };
+				type* type{ get_type_impl(type_id<T>()) };
 
 				if (type == nullptr)
-					return add_type(get_factory<T>(), sizeof(T), get_type_info<T>());
+					return add_type_impl(get_factory<T>(), sizeof(T), get_type_info<T>());
 
 				return type;
 			}
@@ -224,7 +224,7 @@ namespace reflectpp
 		template<typename T>
 		REFLECTPP_INLINE type_info* registry::get_type_info() REFLECTPP_NOEXCEPT
 		{
-			type_info* type_info{ get_type_info(type_id<T>()) };
+			type_info* type_info{ get_type_info_impl(type_id<T>()) };
 
 			if (type_info != nullptr)
 				return type_info;

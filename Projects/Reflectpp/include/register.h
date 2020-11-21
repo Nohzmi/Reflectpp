@@ -8,8 +8,12 @@
 
 #pragma once
 #include "details/hasher.h"
+#include "details/type_traits.h"
 
 #define REFLECT(T)													\
+private:															\
+friend reflectpp::details::use_macro;								\
+void registered() REFLECTPP_NOEXCEPT;								\
 public:																\
 friend void register_function() REFLECTPP_NOEXCEPT;					\
 virtual size_t get_type_id() const REFLECTPP_NOEXCEPT				\

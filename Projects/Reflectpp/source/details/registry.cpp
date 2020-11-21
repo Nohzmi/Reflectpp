@@ -16,7 +16,7 @@ namespace reflectpp
 		registry::registry() = default;
 		registry::~registry() = default;
 
-		type* registry::add_base(type* _type, type* base) REFLECTPP_NOEXCEPT
+		type* registry::add_base_impl(type* _type, type* base) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : _type->get_base_classes().m_vector)
 				if (it->get_id() == base->get_id())
@@ -52,7 +52,7 @@ namespace reflectpp
 			return base;
 		}
 
-		factory* registry::add_factory(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) REFLECTPP_NOEXCEPT
+		factory* registry::add_factory_impl(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_factories)
 				if (it.first == id)
@@ -64,7 +64,7 @@ namespace reflectpp
 			return _factory;
 		}
 
-		property* registry::add_property(type* _type, const char* name, size_t offset, type* property_type) REFLECTPP_NOEXCEPT
+		property* registry::add_property_impl(type* _type, const char* name, size_t offset, type* property_type) REFLECTPP_NOEXCEPT
 		{
 			size_t id{ details::hash(name) };
 
@@ -80,7 +80,7 @@ namespace reflectpp
 			return prop;
 		}
 
-		property* registry::add_property(type* _type, const char* name, GetterT getter, SetterT setter, type* property_type) REFLECTPP_NOEXCEPT
+		property* registry::add_property_impl(type* _type, const char* name, GetterT getter, SetterT setter, type* property_type) REFLECTPP_NOEXCEPT
 		{
 			size_t id{ details::hash(name)};
 
@@ -96,7 +96,7 @@ namespace reflectpp
 			return prop;
 		}
 
-		type* registry::add_type(factory* _factory, size_t size, type_info* typeinfo) REFLECTPP_NOEXCEPT
+		type* registry::add_type_impl(factory* _factory, size_t size, type_info* typeinfo) REFLECTPP_NOEXCEPT
 		{
 			for (auto& type : m_types)
 				if (type->get_id() == typeinfo->get_id())
@@ -120,7 +120,7 @@ namespace reflectpp
 			return typeinfo;
 		}
 
-		bool registry::cast(type* _type, type* otype) const REFLECTPP_NOEXCEPT
+		bool registry::cast_impl(type* _type, type* otype) const REFLECTPP_NOEXCEPT
 		{
 			if (_type->m_hierarchy_id != otype->m_hierarchy_id)
 				return false;
@@ -146,7 +146,7 @@ namespace reflectpp
 			return m_instance;
 		}
 
-		factory* registry::get_factory(size_t id) const REFLECTPP_NOEXCEPT
+		factory* registry::get_factory_impl(size_t id) const REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_factories)
 				if (it.first == id)
@@ -155,7 +155,7 @@ namespace reflectpp
 			return nullptr;
 		}
 
-		type* registry::get_type(size_t id) const REFLECTPP_NOEXCEPT
+		type* registry::get_type_impl(size_t id) const REFLECTPP_NOEXCEPT
 		{
 			for (auto& type : m_types)
 				if (type->get_id() == id)
@@ -164,12 +164,7 @@ namespace reflectpp
 			return nullptr;
 		}
 
-		size_t registry::get_type_id(type* _type) const REFLECTPP_NOEXCEPT
-		{
-			return _type->get_id();
-		}
-
-		type_info* registry::get_type_info(size_t id) const REFLECTPP_NOEXCEPT
+		type_info* registry::get_type_info_impl(size_t id) const REFLECTPP_NOEXCEPT
 		{
 			for (auto& typeinfo : m_type_infos)
 				if (typeinfo->get_id() == id)
@@ -178,12 +173,7 @@ namespace reflectpp
 			return nullptr;
 		}
 
-		const char* registry::get_type_name(type* _type) const REFLECTPP_NOEXCEPT
-		{
-			return _type->get_name();
-		}
-
-		property* registry::get_property(size_t id) const REFLECTPP_NOEXCEPT
+		property* registry::get_property_impl(size_t id) const REFLECTPP_NOEXCEPT
 		{
 			for (auto& prop : m_properties)
 				if (prop->get_id() == id)

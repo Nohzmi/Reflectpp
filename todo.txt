@@ -15,3 +15,4 @@ verif la doc quand tout fini et comparer avec celle de rttr
 
 
 cas ou je ne peux avoir que un poiteur ou une ref
+move les ":" des asserts

@@ -72,6 +72,13 @@ namespace reflectpp
 			!std::is_volatile_v<T>>
 		{};
 
+		template<typename T>
+		struct is_valid_factory : std::bool_constant<
+			std::is_same_v<T, decay<T>> &&
+			!std::is_null_pointer_v<T> &&
+			!std::is_void_v<T>>
+		{};
+
 		template <typename T>
 		class use_macro
 		{
@@ -81,7 +88,7 @@ namespace reflectpp
 			typedef char false_type[2];
 
 			template <typename C>
-			static true_type& test(decltype(&C::type_id));
+			static true_type& test(decltype(&C::registered));
 
 			template <typename C>
 			static false_type& test(...);

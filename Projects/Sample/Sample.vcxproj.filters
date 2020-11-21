@@ -18,6 +18,9 @@
     <ClInclude Include="include\intern.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\ztest.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\derived.cpp">
@@ -30,6 +33,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\base.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ztest.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,6 +7,8 @@
 */
 
 #pragma once
+#include <nlohmann/json.hpp>
+
 #include "details/registry.h"
 #include "variant.h"
 
@@ -46,7 +48,7 @@ namespace reflectpp
 		* @param object
 		*/
 		template<typename T>
-		void save(const T& object) noexcept;
+		void save(const T& object) const noexcept;
 
 		/**
 		* Deserialize an object
@@ -57,8 +59,10 @@ namespace reflectpp
 
 	private:
 
-		void save(const variant& var) noexcept;
+		void save(const variant& var) const noexcept;
+		void save_type(const variant& var, nlohmann::json& j) const noexcept;
 		void load(variant& var) const noexcept;
+		void load_type(variant& var, const nlohmann::json& j) const noexcept;
 
 		std::string m_path;
 	};

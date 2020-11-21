@@ -8,9 +8,9 @@
 #include <serializer.h>
 #include <vld/vld.h>
 
+#include "intern.h"
 #include "base.h"
 #include "derived.h"
-#include "intern.h"
 
 using namespace reflectpp;
 
@@ -61,6 +61,8 @@ int main()
 
 	tmp0->SetValue(5.f);
 	tmp0->SetValue1(6.0);
+	//tmp0->value.zvalue0 = -1;
+	//tmp0->value.zvalue1 = 15;
 	tmp3->InternValue0 = 12.f;
 	tmp3->InternValue1 = 13.0;
 
@@ -93,8 +95,10 @@ int main()
 
 	// Serialization test
 	serializer seri("test");
-	seri.save(tmp0);
-	//seri.load(tmp0);
+	//seri.save(tmp0);
+	Base* tmpload = new Base();
+	seri.load(tmpload);
+	delete tmpload;
 
 	delete tmp0;
 	delete tmp1;

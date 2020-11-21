@@ -1,4 +1,3 @@
-#include "..\registry.h"
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 namespace reflectpp
@@ -15,7 +14,7 @@ namespace reflectpp
 			}
 			else
 			{
-				type* base{ add_base(_type, get_type<T>()) };
+				type* base{ add_base(_type, get_type_with_initialization<T>()) };
 				REFLECTPP_ASSERT(base != nullptr, "registration::base<%s>() : base type already registered\n", get_type_name(base));
 
 				return base;
@@ -27,7 +26,7 @@ namespace reflectpp
 		{
 			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", type_name<U>(), type_name<T>(), name, get_type_name(_type));
 
-			property* prop { add_property(_type, name, (size_t)(char*)&((T*)nullptr->*addr), get_type<U>()) };
+			property* prop { add_property(_type, name, (size_t)(char*)&((T*)nullptr->*addr), get_type_with_initialization<U>()) };
 			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered\n", type_name<U>(), type_name<T>(), name);
 
 			return prop;
@@ -62,7 +61,7 @@ namespace reflectpp
 				(static_cast<T*>(object)->*setter)(*static_cast<U*>(value));
 			};
 
-			property* prop { add_property(_type, name, get, set, get_type<U>()) };
+			property* prop { add_property(_type, name, get, set, get_type_with_initialization<U>()) };
 			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered\n", type_name<U>(), type_name<T>(), name);
 
 			return prop;
@@ -83,8 +82,10 @@ namespace reflectpp
 			}
 			else
 			{
-				type* type{ add_type(get_factory<T>(), sizeof(T), get_type_info<T>()) };
-				REFLECTPP_ASSERT(type != nullptr, "registration::class_<%s>() : type already registered\n", type_name<T>());
+				type* type{ get_type(type_id<T>()) };
+
+				if (type == nullptr)
+					return add_type(get_factory<T>(), sizeof(T), get_type_info<T>());
 
 				return type;
 			}
@@ -199,6 +200,24 @@ namespace reflectpp
 			{
 				REFLECTPP_ASSERT(object != nullptr, "type::get(%s*& object) : object nullptr\n", type_name<T>());
 				return get_type(type_id(object));
+			}
+		}
+		template<typename T>
+		inline type* registry::get_type_with_initialization() noexcept
+		{
+			if constexpr (!is_valid<T>::value)
+			{
+				REFLECTPP_ASSERT(false, "type::get<%s>() : invalid type\n", type_name<T>());
+				return nullptr;
+			}
+			else
+			{
+				type* type{ get_type(type_id<T>()) };
+
+				if (type == nullptr)
+					return add_type(get_factory<T>(), sizeof(T), get_type_info<T>());
+
+				return type;
 			}
 		}
 

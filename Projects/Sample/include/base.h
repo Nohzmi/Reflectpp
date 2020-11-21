@@ -8,6 +8,7 @@
 
 #pragma once
 #include <register.h>
+#include "ztest.h"
 
 class Base
 {
@@ -21,8 +22,15 @@ public:
 	const double& GetValue1() const;
 	void SetValue1(const double& value);
 
+	const ZTest& GetValue2() const;
+	void SetValue2(const ZTest& value);
+
 private:
 
 	float BaseValue0;
 	double BaseValue1;
+
+public:
+
+	ZTest value;
 };

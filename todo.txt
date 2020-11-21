@@ -1,2 +1,8 @@
 sortir le cast ?
 comparer avec rttr
+ordre indéterminé de registration non pris en compte
+
+serialisation -> real sample with vld
+fn type_name/id(type* _type) in utilities
+
+typeinfo en type_info ? revoir les nom pour éviter les redit avec les nom de classes

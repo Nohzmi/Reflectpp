@@ -99,6 +99,9 @@ namespace reflectpp
 
 			type* get_type(size_t id) const noexcept;
 
+			template<typename T>
+			type* get_type_with_initialization() noexcept;
+
 			size_t get_type_id(type* _type) const noexcept;
 
 			template<typename T>

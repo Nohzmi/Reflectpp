@@ -23,9 +23,21 @@ void Base::SetValue1(const double& value)
 	BaseValue1 = value;
 }
 
+const ZTest& Base::GetValue2() const
+{
+	return value;
+}
+
+void Base::SetValue2(const ZTest& _value)
+{
+	value = _value;
+}
+
 REGISTRATION
 {
 	reflectpp::registration::class_<Base>()
 	.property("BaseValue0", &Base::GetValue, &Base::SetValue)
-	.property("BaseValue1", &Base::GetValue1, &Base::SetValue1);
+	.property("BaseValue1", &Base::GetValue1, &Base::SetValue1)
+	//property("value", &Base::value);
+	.property("value", &Base::GetValue2, &Base::SetValue2);
 }

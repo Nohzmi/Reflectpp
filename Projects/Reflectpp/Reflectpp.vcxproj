@@ -18,35 +18,76 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\details\assert.h" />
+    <ClInclude Include="include\details\hasher.h" />
+    <ClInclude Include="include\details\platform.h" />
+    <ClInclude Include="include\details\registry.h" />
+    <ClInclude Include="include\details\structs.h" />
+    <ClInclude Include="include\details\utilities.h" />
+    <ClInclude Include="include\factory.h" />
+    <ClInclude Include="include\property.h" />
+    <ClInclude Include="include\range.h" />
+    <ClInclude Include="include\register.h" />
+    <ClInclude Include="include\registration.h" />
+    <ClInclude Include="include\serializer.h" />
+    <ClInclude Include="include\type.h" />
+    <ClInclude Include="include\type_info.h" />
+    <ClInclude Include="include\variant.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\details\registry.cpp" />
+    <ClCompile Include="source\factory.cpp" />
+    <ClCompile Include="source\property.cpp" />
+    <ClCompile Include="source\registration.cpp" />
+    <ClCompile Include="source\serializer.cpp" />
+    <ClCompile Include="source\type.cpp" />
+    <ClCompile Include="source\type_info.cpp" />
+    <ClCompile Include="source\variant.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\details\inline\assert.inl" />
+    <None Include="include\details\inline\factory.inl" />
+    <None Include="include\details\inline\hasher.inl" />
+    <None Include="include\details\inline\property.inl" />
+    <None Include="include\details\inline\range.inl" />
+    <None Include="include\details\inline\registration.inl" />
+    <None Include="include\details\inline\registry.inl" />
+    <None Include="include\details\inline\serializer.inl" />
+    <None Include="include\details\inline\type.inl" />
+    <None Include="include\details\inline\type_info.inl" />
+    <None Include="include\details\inline\utilities.inl" />
+    <None Include="include\details\inline\variant.inl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{5d99be20-d1de-4944-91bb-041593a409b0}</ProjectGuid>
-    <RootNamespace>Sample</RootNamespace>
+    <ProjectGuid>{f8be6887-c349-4dbf-b2d9-cd0c677204a3}</ProjectGuid>
+    <RootNamespace>Reflectpp</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -74,42 +115,38 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\Dependencies\Include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\Dependencies\Libraries\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\Dependencies\Include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\Dependencies\Libraries\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\Dependencies\Include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\Dependencies\Libraries\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\Dependencies\Include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)..\Dependencies\Libraries\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>REFLECTPP_DLL;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Reflectpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)..\Dependencies\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -118,26 +155,26 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>REFLECTPP_DLL;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Reflectpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)..\Dependencies\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>REFLECTPP_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Reflectpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)..\Dependencies\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,34 +187,18 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>REFLECTPP_DLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Reflectpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)..\Dependencies\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Reflectpp\Reflectpp.vcxproj">
-      <Project>{f8be6887-c349-4dbf-b2d9-cd0c677204a3}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\base.h" />
-    <ClInclude Include="include\derived.h" />
-    <ClInclude Include="include\intern.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="source\base.cpp" />
-    <ClCompile Include="source\derived.cpp" />
-    <ClCompile Include="source\intern.cpp" />
-    <ClCompile Include="source\main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

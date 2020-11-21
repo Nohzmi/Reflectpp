@@ -3,7 +3,7 @@
 namespace reflectpp
 {
 	template<typename T>
-	inline void reflectpp::serializer::save(const T& object) noexcept
+	inline void reflectpp::serializer::save(const T& object) const noexcept
 	{
 		save(variant(object));
 	}

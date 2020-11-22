@@ -25,10 +25,18 @@ public:
 	const ZTest& GetValue2() const;
 	void SetValue2(const ZTest& value);
 
+	const double* GetValue3() const;
+	void SetValue3(const double* value);
+
+	volatile double* GetValue4() const;
+	void SetValue4(volatile double* value);
+
 private:
 
 	float BaseValue0;
 	double BaseValue1;
+	double BaseValue3;
+	double BaseValue4;
 
 public:
 

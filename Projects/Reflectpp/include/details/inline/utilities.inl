@@ -7,7 +7,7 @@ namespace reflectpp
 		template<typename T>
 		REFLECTPP_INLINE size_t type_id() REFLECTPP_NOEXCEPT
 		{
-			if constexpr (is_arithmetic<T>::value || !use_macro<T>::value)
+			if constexpr (is_arithmetic<T>::value || !is_registered<T>::value)
 			{
 				return typeid(decay<T>).hash_code();
 			}
@@ -36,7 +36,7 @@ namespace reflectpp
 					return utilities::type_id(std::forward<T>(object));
 				}
 			}
-			else if constexpr (is_arithmetic<T>::value || !use_macro<T>::value)
+			else if constexpr (is_arithmetic<T>::value || !is_registered<T>::value)
 			{
 				return typeid(decay<T>).hash_code();
 			}
@@ -61,7 +61,7 @@ namespace reflectpp
 		template<typename T>
 		REFLECTPP_INLINE const char* type_name() REFLECTPP_NOEXCEPT
 		{
-			if constexpr (is_arithmetic<T>::value || !use_macro<T>::value)
+			if constexpr (is_arithmetic<T>::value || !is_registered<T>::value)
 			{
 				return typeid(decay<T>).name();
 			}
@@ -90,7 +90,7 @@ namespace reflectpp
 					return utilities::type_name(&std::forward<T>(object));
 				}
 			}
-			else if constexpr (is_arithmetic<T>::value || !use_macro<T>::value)
+			else if constexpr (is_arithmetic<T>::value || !is_registered<T>::value)
 			{
 				return typeid(decay<T>).name();
 			}

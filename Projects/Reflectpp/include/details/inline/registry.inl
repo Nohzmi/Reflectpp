@@ -5,17 +5,17 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		REFLECTPP_INLINE type* registry::add_base(type* _type) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE type* registry::add_base(type* _type) REFLECTPP_NOEXCEPT //
 		{
-			if constexpr (std::is_arithmetic_v<T> || !is_valid<T>::value)
+			if constexpr (!is_valid<T>::value || std::is_arithmetic_v<T>)
 			{
-				REFLECTPP_ASSERT(false, "registration::base<%s>() : invalid type", type_name<T>());
+				REFLECTPP_ASSERT(false, "invalid type");
 				return nullptr;
 			}
 			else
 			{
 				type* base{ add_base_impl(_type, get_type_impl<T>()) };
-				REFLECTPP_ASSERT(base != nullptr, "registration::base<%s>() : base type already registered", type_name(base));
+				REFLECTPP_ASSERT(base != nullptr, "base type already registered");
 
 				return base;
 			}
@@ -24,10 +24,10 @@ namespace reflectpp
 		template<typename T, typename propertyT, typename U>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT T::* addr) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s", type_name<U>(), type_name<T>(), name, type_name(_type));
+			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
 
 			property* prop { add_property_impl(_type, name, (size_t)(char*)&((T*)nullptr->*addr), get_type_impl<U>()) };
-			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered", type_name<U>(), type_name<T>(), name);
+			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
 
 			return prop;
 		}
@@ -35,7 +35,7 @@ namespace reflectpp
 		template<typename T, typename propertyT, typename U>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s", type_name<U>(), type_name<T>(), name, type_name(_type));
+			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
 
 			auto get = [getter](void* object, bool& is_owner) -> void*
 			{
@@ -62,17 +62,17 @@ namespace reflectpp
 			};
 
 			property* prop { add_property_impl(_type, name, get, set, get_type_impl<U>()) };
-			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered", type_name<U>(), type_name<T>(), name);
+			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
 
 			return prop;
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE type* registry::add_type() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE type* registry::add_type() REFLECTPP_NOEXCEPT //
 		{
-			if constexpr (std::is_arithmetic_v<T> || !is_valid<T>::value)
+			if constexpr (!is_valid<T>::value || std::is_arithmetic_v<T>)
 			{
-				REFLECTPP_ASSERT(false, "registration::class_<%s>() : invalid type", type_name<T>());
+				REFLECTPP_ASSERT(false, "invalid type");
 				return nullptr;
 			}
 			else if constexpr (!is_registered<T>::value)
@@ -82,12 +82,6 @@ namespace reflectpp
 			}
 			else
 			{
-				/*type* type{ get_type_impl(type_id<T>()) };
-
-				if (type == nullptr)
-					return add_type_impl(get_factory<T>(), sizeof(T), get_type_info<T>());
-
-				return type;*/
 				return get_type_impl<T>();
 			}
 		}
@@ -115,9 +109,9 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE factory* registry::get_factory() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE factory* registry::get_factory() REFLECTPP_NOEXCEPT //
 		{
-			if constexpr (!is_valid_factory<T>::value)
+			if constexpr (!is_valid<T>::value)
 			{
 				REFLECTPP_ASSERT(false, "invalid type");
 				return nullptr;

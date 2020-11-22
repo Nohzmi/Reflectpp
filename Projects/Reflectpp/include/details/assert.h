@@ -15,7 +15,7 @@
 #ifdef _DEBUG
 	#define REFLECTPP_ASSERT(exp, format, ...) reflectpp::details::_assert(exp, format, __VA_ARGS__)
 #else
-	#define REFLECTPP_ASSERT(exp, format, ...)
+	#define REFLECTPP_ASSERT(exp, format, ...)__M_Assert(#Expr, Expr, __FILE__, __LINE__, Msg)
 #endif
 
 namespace reflectpp
@@ -23,7 +23,7 @@ namespace reflectpp
 	namespace details
 	{
 		template <class ...Args>
-		void _assert(bool expr, const char* format, Args... args) REFLECTPP_NOEXCEPT;
+		void _assert(bool expr, const char* file, int line, const char* format, Args... args) REFLECTPP_NOEXCEPT;
 	}
 }
 

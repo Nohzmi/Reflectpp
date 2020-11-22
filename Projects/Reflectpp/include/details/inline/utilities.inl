@@ -22,7 +22,7 @@ namespace reflectpp
 		{
 			if constexpr (is_pointer_of_pointer<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "unsupported type\n");
+				REFLECTPP_ASSERT(false, "invalid type\n");
 				return 0;
 			}
 			else if constexpr (is_same<T, type>::value)
@@ -76,7 +76,7 @@ namespace reflectpp
 		{
 			if constexpr (is_pointer_of_pointer<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "unsupported type\n");
+				REFLECTPP_ASSERT(false, "invalid type\n");
 				return "";
 			}
 			else if constexpr (is_same<T, type>::value)

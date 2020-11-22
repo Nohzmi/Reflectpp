@@ -61,7 +61,7 @@ namespace reflectpp
 			std::remove_pointer_t<T>* cast(U* object) REFLECTPP_NOEXCEPT;
 
 			template<typename T>
-			factory* get_factory() REFLECTPP_NOEXCEPT;
+			factory* get_factory() REFLECTPP_NOEXCEPT; ///
 
 			template<typename T>
 			type* get_type() REFLECTPP_NOEXCEPT;

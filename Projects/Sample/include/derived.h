@@ -12,7 +12,7 @@
 
 class Derived : public Base
 {
-	//REFLECT(Derived)
+	REFLECT(Derived)
 
 public:
 

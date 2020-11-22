@@ -49,9 +49,13 @@ namespace reflectpp
 
 		template<typename T>
 		struct is_valid_factory : std::bool_constant<
-			std::is_same_v<T, decay<T>> &&
+			!std::is_array_v<T> &&
+			!std::is_const_v<T> &&
 			!std::is_null_pointer_v<T> &&
-			!std::is_void_v<T>>
+			!std::is_pointer_v<T> &&
+			!std::is_reference_v<T> &&
+			!std::is_void_v<T> &&
+			!std::is_volatile_v<T>>
 		{};
 
 		template <typename T>

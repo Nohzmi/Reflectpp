@@ -117,34 +117,42 @@ namespace reflectpp
 		template<typename T>
 		REFLECTPP_INLINE factory* registry::get_factory() REFLECTPP_NOEXCEPT
 		{
-			factory* factory{ get_factory_impl(type_id<T>()) };
-
-			if (factory != nullptr)
-				return factory;
-
-			auto constructor = []() -> void*
+			if constexpr (!is_valid_factory<T>::value)
 			{
-				if constexpr (std::is_constructible_v<T>)
-					return new T();
-				else
-					return nullptr;
-			};
-
-			auto copy = [](void* object) -> void*
+				REFLECTPP_ASSERT(false, "invalid type\n");
+				return nullptr;
+			}
+			else
 			{
-				if constexpr (std::is_copy_constructible_v<T>)
-					return new T(*static_cast<T*>(object));
-				else
-					return nullptr;
-			};
+				factory* factory{ get_factory_impl(type_id<T>()) };
 
-			auto destructor = [](void* object)
-			{
-				if constexpr (std::is_destructible_v<T>)
-					delete static_cast<T*>(object);
-			};
+				if (factory != nullptr)
+					return factory;
 
-			return add_factory_impl(type_id<T>(), constructor, copy, destructor);
+				auto constructor = []() -> void*
+				{
+					if constexpr (std::is_constructible_v<T>)
+						return new T();
+					else
+						return nullptr;
+				};
+
+				auto copy = [](void* object) -> void*
+				{
+					if constexpr (std::is_copy_constructible_v<T>)
+						return new T(*static_cast<T*>(object));
+					else
+						return nullptr;
+				};
+
+				auto destructor = [](void* object)
+				{
+					if constexpr (std::is_destructible_v<T>)
+						delete static_cast<T*>(object);
+				};
+
+				return add_factory_impl(type_id<T>(), constructor, copy, destructor);
+			}
 		}
 
 		template<typename T>

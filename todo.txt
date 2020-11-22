@@ -13,14 +13,15 @@ verif la doc quand tout fini et comparer avec celle de rttr
 fix le use_macro pour les classes dérivés
 
 
-
+simplifier tous les asserts
 cas ou je ne peux avoir que un poiteur ou une ref
+verif les macros globales
+
+faire en sorte que les assert ne crash pas en release ?
 
 
-factory
 instance
 property
-range
 register
 registration
 serializer

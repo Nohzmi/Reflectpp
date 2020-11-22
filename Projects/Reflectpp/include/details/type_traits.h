@@ -22,26 +22,6 @@ namespace reflectpp
 		{};
 
 		template<typename T>
-		struct is_constructible : std::integral_constant<bool,
-			std::is_constructible_v<decay<T>>>
-		{};
-
-		template<typename T>
-		struct is_copy_constructible : std::integral_constant<bool,
-			std::is_copy_constructible_v<decay<T>>>
-		{};
-
-		template<typename T>
-		struct is_destructible : std::integral_constant<bool,
-			std::is_destructible_v<decay<T>>>
-		{};
-
-		template<typename T>
-		struct is_null_pointer: std::integral_constant<bool,
-			std::is_null_pointer_v<decay<T>>>
-		{};
-
-		template<typename T>
 		struct is_pointer : std::integral_constant<bool,
 			std::is_pointer_v<std::decay_t<T>>>
 		{};
@@ -49,11 +29,6 @@ namespace reflectpp
 		template<typename T>
 		struct is_pointer_of_pointer : std::integral_constant<bool,
 			std::is_pointer_v<decay<T>>>
-		{};
-
-		template<typename T>
-		struct is_reference : std::integral_constant<bool,
-			std::is_reference_v<decay<T>>>
 		{};
 
 		template<typename T, typename U>

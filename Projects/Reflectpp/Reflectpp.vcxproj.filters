@@ -63,11 +63,11 @@
     <ClInclude Include="include\details\macros.h">
       <Filter>include\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\instance.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\details\type_traits.h">
       <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\instance.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

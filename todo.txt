@@ -10,9 +10,24 @@ setter non utilisé
 
 
 verif la doc quand tout fini et comparer avec celle de rttr
-
+fix le use_macro pour les classes dérivés
 
 
 
 cas ou je ne peux avoir que un poiteur ou une ref
-move les ":" des asserts
+
+
+factory
+instance
+property
+range
+register
+registration
+serializer
+type
+type_info
+variant
+
+
+registry
+type_traits

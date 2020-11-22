@@ -70,14 +70,14 @@ namespace reflectpp
 			type* get_type(T* object) REFLECTPP_NOEXCEPT;
 
 			template<typename T>
-			type* get_type_with_initialization() REFLECTPP_NOEXCEPT;
-
-			template<typename T>
 			type_info* get_type_info() REFLECTPP_NOEXCEPT;
 
 			static registry& get_instance() REFLECTPP_NOEXCEPT;
 
 		private:
+
+			template<typename T>
+			type* get_type_impl() REFLECTPP_NOEXCEPT;
 
 			type* add_base_impl(type* _type, type* base) REFLECTPP_NOEXCEPT;
 			factory* add_factory_impl(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) REFLECTPP_NOEXCEPT;

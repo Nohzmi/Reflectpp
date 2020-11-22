@@ -13,7 +13,7 @@
 #define REFLECT(T)														\
 private:																\
 																		\
-	friend reflectpp::details::is_registered<T>;							\
+	friend reflectpp::details::is_registered<T>;						\
 	friend void register_function() REFLECTPP_NOEXCEPT;					\
 																		\
 	void registered() REFLECTPP_NOEXCEPT;								\

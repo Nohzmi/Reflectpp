@@ -21,10 +21,8 @@ faire en sorte que les assert ne crash pas en release ? transformer asser partie
 
 instance
 property
-registration
 serializer
-type
-type_info
+type (en cours)
 variant
 
 
@@ -35,3 +33,7 @@ utilities (genre voir pour les decay type)
 
 
 les add property test plein de truc dans le test final pour voir
+
+
+verif les asserts
+reste cast et get_type(T&&) de registry YES

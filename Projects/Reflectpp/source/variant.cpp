@@ -56,7 +56,7 @@ namespace reflectpp
 
 	type& variant::get_type() const REFLECTPP_NOEXCEPT
 	{
-		REFLECTPP_ASSERT(m_type != nullptr, "variant::get_type(): invalid variant\n");
+		REFLECTPP_ASSERT(m_type != nullptr, "invalid variant");
 		return *m_type;
 	}
 

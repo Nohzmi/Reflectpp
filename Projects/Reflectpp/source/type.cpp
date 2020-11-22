@@ -57,7 +57,7 @@ namespace reflectpp
 			if (prop.get_id() == id)
 				return prop;
 
-		REFLECTPP_ASSERT(false, "type::get_property(const char* name): %s isn't registered\n", name);
+		REFLECTPP_ASSERT(false, "%s isn't registered", name);
 		return *m_properties.begin();
 	}
 

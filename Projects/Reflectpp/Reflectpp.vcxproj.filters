@@ -98,9 +98,6 @@
     <ClCompile Include="source\instance.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\details\utilities.cpp">
-      <Filter>source\details</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\details\inline\utilities.inl">

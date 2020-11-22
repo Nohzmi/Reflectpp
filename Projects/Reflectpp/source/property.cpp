@@ -28,7 +28,8 @@ namespace reflectpp
 
 	variant property::get_value(const variant& object) const
 	{
-		REFLECTPP_ASSERT(*object.m_type == *m_type, "property::get_value(variant& object): wrong object type, %s is in %s\n", m_name, m_type->get_name());
+		REFLECTPP_ASSERT(*object.m_type == *m_type, "wrong object type");
+		//REFLECTPP_ASSERT(*object.m_type == *m_type, "wrong object type, %s is in %s\n", m_name, m_type->get_name());
 
 		if (m_getter != nullptr)
 		{

@@ -57,7 +57,7 @@ namespace reflectpp
 			template<typename T>
 			type* add_type() REFLECTPP_NOEXCEPT;
 
-			template<typename T, typename U, typename V = typename std::remove_pointer_t<T>>
+			template<typename T, typename U>
 			std::remove_pointer_t<T>* cast(U* object) REFLECTPP_NOEXCEPT;
 
 			template<typename T>
@@ -67,7 +67,7 @@ namespace reflectpp
 			type* get_type() REFLECTPP_NOEXCEPT;
 
 			template<typename T>
-			type* get_type(T* object) REFLECTPP_NOEXCEPT;
+			type* get_type(T&& object) REFLECTPP_NOEXCEPT;
 
 			template<typename T>
 			type_info* get_type_info() REFLECTPP_NOEXCEPT;

@@ -20,16 +20,9 @@ enum class Testjh
 	E_TEMP = 0
 };
 
-int main()
-{
-	// Entry point
-	printf("\nHello World!\n\n");
 
-	//auto factory_temp = factory::get<Base>();
-	return 0;
-}
 
-/*
+
 int main()
 {
 	// Entry point
@@ -41,34 +34,44 @@ int main()
 	//auto testdsfsw = factory::get<volatile Base>();
 	//auto kjdhflks = testdsfsw.construct();
 
-	int val = 5;
+	/*int val = 5;
 	int* ptr = &val;
 	int* ptrnnull = nullptr;
 	int** ptr2 = &ptr;
-	
-	//std::cout << details::type_name(5) << std::endl;
-	//std::cout << details::type_name(val) << std::endl;
-	//std::cout << details::type_name(ptr) << std::endl;
-	//std::cout << details::type_name(*ptr) << std::endl;
-	//std::cout << details::type_name(&val) << std::endl;
-	//std::cout << details::type_name(ptrnnull) << std::endl;
 
 	Base* base = new Base();
 	Base* basenull = nullptr;
-	std::cout << details::type_name(base) << std::endl;
-	std::cout << details::type_name(basenull) << std::endl;
 	delete base;
 
-	//std::cout << details::registry::get_instance().get_type(5)->get_name() << std::endl;
-	//std::cout << details::registry::get_instance().get_type(val)->get_name() << std::endl;
-	//std::cout << details::registry::get_instance().get_type(ptr)->get_name() << std::endl;
-	//std::cout << details::registry::get_instance().get_type(*ptr)->get_name() << std::endl;
-	//std::cout << details::registry::get_instance().get_type(&val)->get_name() << std::endl;
-	//std::cout << details::registry::get_instance().get_type(ptrnnull)->get_name() << std::endl;
-	//std::cout << details::registry::get_instance().get_type(ptr2)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(5)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(val)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(ptr)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(*ptr)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(&val)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(ptrnnull)->get_name() << std::endl;
+	std::cout << details::registry::get_instance().get_type(ptr2)->get_name() << std::endl;*/
+
+	/*int val = 5;
+	int* ptr = &val;
+	int* ptrnnull = nullptr;
+	int** ptr2 = &ptr;*/
+
+	Base val = Base();
+	Base* ptr = &val;
+	Base* ptrnnull = nullptr;
+	Base** ptr2 = &ptr;
+
+	std::cout << type::get(Base()).get_name() << std::endl;
+	std::cout << type::get(val).get_name() << std::endl;
+	std::cout << type::get(ptr).get_name() << std::endl;
+	std::cout << type::get(*ptr).get_name() << std::endl;
+	std::cout << type::get(&val).get_name() << std::endl;
+	std::cout << type::get(ptrnnull).get_name() << std::endl;
+	std::cout << type::get(ptr2).get_name() << std::endl;
+
 
 	return 0;
-
+	/*
 	// Reflection test
 	auto& test = type::get<Derived>();
 	auto& test0 = type::get<Derived>();
@@ -185,6 +188,5 @@ int main()
 	// Exit point
 	printf("\nExit Success!\n\n");
 
-	return EXIT_SUCCESS;
+	return EXIT_SUCCESS;*/
 }
-*/

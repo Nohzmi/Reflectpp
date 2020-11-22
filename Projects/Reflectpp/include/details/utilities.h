@@ -24,19 +24,7 @@ namespace reflectpp
 		size_t type_id() REFLECTPP_NOEXCEPT;
 
 		template<typename T>
-		size_t type_id(T&& object) REFLECTPP_NOEXCEPT;
-
-		template<typename T>
 		const char* type_name() REFLECTPP_NOEXCEPT;
-
-		template<typename T>
-		const char* type_name(T&& object) REFLECTPP_NOEXCEPT;
-
-		namespace utilities
-		{
-			REFLECTPP_API size_t type_id(const type* type) REFLECTPP_NOEXCEPT;
-			REFLECTPP_API const char* type_name(const type* type) REFLECTPP_NOEXCEPT;
-		}
 	}
 }
 

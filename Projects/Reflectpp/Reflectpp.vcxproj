@@ -39,7 +39,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\details\registry.cpp" />
-    <ClCompile Include="source\details\utilities.cpp" />
     <ClCompile Include="source\factory.cpp" />
     <ClCompile Include="source\instance.cpp" />
     <ClCompile Include="source\property.cpp" />

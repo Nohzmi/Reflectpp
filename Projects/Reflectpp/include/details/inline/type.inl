@@ -15,8 +15,8 @@ namespace reflectpp
 	}
 
 	template<typename T>
-	REFLECTPP_INLINE type& type::get(T* object) REFLECTPP_NOEXCEPT
+	REFLECTPP_INLINE type& type::get(T&& object) REFLECTPP_NOEXCEPT
 	{
-		return *details::registry::get_instance().get_type(object);
+		return *details::registry::get_instance().get_type(std::forward<T>(object));
 	}
 }

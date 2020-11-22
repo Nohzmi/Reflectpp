@@ -13,8 +13,8 @@ namespace reflectpp
 	template<typename T>
 	REFLECTPP_INLINE T& variant::get_value() REFLECTPP_NOEXCEPT
 	{
-		REFLECTPP_ASSERT(is_valid(), "variant::get_value<%s>(): invalid variant\n", details::type_name<T>());
-		REFLECTPP_ASSERT(details::registry::get_instance().get_type<T>() == m_type, "variant::get_value<%s>(): wrong type, stored value is a %s\n", details::type_name<T>(), details::type_name(m_type));
+		REFLECTPP_ASSERT(is_valid(), "invalid variant");
+		REFLECTPP_ASSERT(details::registry::get_instance().get_type<T>() == m_type, "wrong type");
 
 		return *static_cast<T*>(m_data);
 	}
@@ -22,8 +22,8 @@ namespace reflectpp
 	template<typename T>
 	REFLECTPP_INLINE const T& variant::get_value() const REFLECTPP_NOEXCEPT
 	{
-		REFLECTPP_ASSERT(is_valid(), "variant::get_value<%s>(): invalid variant\n", details::type_name<T>());
-		REFLECTPP_ASSERT(details::registry::get_instance().get_type<T>() == m_type, "variant::get_value<%s>(): wrong type, stored value is a %s\n", details::type_name<T>(), details::registry::get_instance().get_type_name(m_type));
+		REFLECTPP_ASSERT(is_valid(), "invalid variant");
+		REFLECTPP_ASSERT(details::registry::get_instance().get_type<T>() == m_type, "wrong type");
 
 		return *static_cast<T*>(m_data);
 	}

@@ -74,7 +74,7 @@ namespace reflectpp
 		* @param object
 		*/
 		template<typename T>
-		static type& get(T* object) REFLECTPP_NOEXCEPT;
+		static type& get(T&& object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns base types of this type

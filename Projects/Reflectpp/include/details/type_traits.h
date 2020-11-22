@@ -17,26 +17,6 @@ namespace reflectpp
 		using decay = std::remove_pointer_t<std::decay_t<T>>;
 
 		template<typename T>
-		struct is_arithmetic : std::integral_constant<bool,//
-			std::is_arithmetic_v<decay<T>>>
-		{};
-
-		template<typename T>
-		struct is_pointer : std::integral_constant<bool,//
-			std::is_pointer_v<std::decay_t<T>>>
-		{};
-
-		template<typename T>
-		struct is_pointer_of_pointer : std::integral_constant<bool,//
-			std::is_pointer_v<decay<T>>>
-		{};
-
-		template<typename T, typename U>
-		struct is_same : std::integral_constant<bool,//
-			std::is_same_v<decay<T>, decay<U>>>
-		{};
-
-		template<typename T>
 		struct is_valid_param : std::bool_constant<
 			!std::is_array_v<T> &&
 			!std::is_null_pointer_v<T> &&

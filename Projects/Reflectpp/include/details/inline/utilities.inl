@@ -7,7 +7,7 @@ namespace reflectpp
 		template<typename T>
 		REFLECTPP_INLINE size_t type_id() REFLECTPP_NOEXCEPT
 		{
-			if constexpr (is_arithmetic<T>::value || !is_registered<T>::value)
+			if constexpr (std::is_arithmetic_v<T> || !is_registered<T>::value)
 			{
 				return typeid(decay<T>).hash_code();
 			}
@@ -20,7 +20,7 @@ namespace reflectpp
 		template<typename T>
 		REFLECTPP_INLINE const char* type_name() REFLECTPP_NOEXCEPT
 		{
-			if constexpr (is_arithmetic<T>::value || !is_registered<T>::value)
+			if constexpr (std::is_arithmetic_v<T> || !is_registered<T>::value)
 			{
 				return typeid(decay<T>).name();
 			}

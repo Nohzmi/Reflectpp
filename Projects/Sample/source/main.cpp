@@ -56,7 +56,7 @@ int main()
 	int* ptrnnull = nullptr;
 	int** ptr2 = &ptr;*/
 
-	Base val = Base();
+	/*Base val = Base();
 	Base* ptr = &val;
 	Base* ptrnnull = nullptr;
 	Base** ptr2 = &ptr;
@@ -67,11 +67,11 @@ int main()
 	std::cout << type::get(*ptr).get_name() << std::endl;
 	std::cout << type::get(&val).get_name() << std::endl;
 	std::cout << type::get(ptrnnull).get_name() << std::endl;
-	std::cout << type::get(ptr2).get_name() << std::endl;
+	std::cout << type::get(ptr2).get_name() << std::endl;*/
 
 
-	return 0;
-	/*
+	//return 0;
+	
 	// Reflection test
 	auto& test = type::get<Derived>();
 	auto& test0 = type::get<Derived>();
@@ -147,7 +147,7 @@ int main()
 		else if (var.is_type<float>())
 			printf("%s is a float : %f\n", prop.get_name(), var.get_value<float>());
 	}
-
+	/*
 	// Serialization test
 	serializer seri("test");
 	//seri.save(tmp0);
@@ -178,7 +178,7 @@ int main()
 
 	seri.load(tmpload);
 
-	delete tmpload;
+	delete tmpload;*/
 
 	delete tmp0;
 	delete tmp1;
@@ -188,5 +188,5 @@ int main()
 	// Exit point
 	printf("\nExit Success!\n\n");
 
-	return EXIT_SUCCESS;*/
+	return EXIT_SUCCESS;
 }

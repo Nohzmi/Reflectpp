@@ -22,13 +22,11 @@ faire en sorte que les assert ne crash pas en release ? transformer asser partie
 instance
 property
 serializer
-type (en cours)
 variant
 
 
 registry
 type_traits
-utilities (genre voir pour les decay type)
 
 
 

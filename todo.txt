@@ -1,37 +1,19 @@
 sortir le cast ?
 comparer avec rttr
-
 serialisation -> real sample with vld
 
 typeinfo en type_info ? revoir les nom pour éviter les redit avec les nom de classes
 setter non utilisé
-
-éviter les T* mais verif (ok) et recheck ça dans les assert
-
-
 verif la doc quand tout fini et comparer avec celle de rttr
-
-
-simplifier tous les asserts
-cas ou je ne peux avoir que un poiteur ou une ref
 verif les macros globales
-
 faire en sorte que les assert ne crash pas en release ? transformer asser partiellement en log
+les add property test plein de truc dans le test final pour voir
 
-
+"à revoir":
 instance
 property
 serializer
 variant
 
-
 registry
 type_traits
-
-
-
-les add property test plein de truc dans le test final pour voir
-
-
-verif les asserts
-reste cast et get_type(T&&) de registry YES

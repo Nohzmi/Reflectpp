@@ -59,7 +59,7 @@ namespace reflectpp
 		{};
 
 		template <typename T>
-		class use_macro
+		class is_registered
 		{
 		private:
 

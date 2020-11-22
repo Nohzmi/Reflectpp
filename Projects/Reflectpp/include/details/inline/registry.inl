@@ -9,13 +9,13 @@ namespace reflectpp
 		{
 			if constexpr (std::is_arithmetic_v<T> || !is_valid<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "registration::base<%s>() : invalid type\n", type_name<T>());
+				REFLECTPP_ASSERT(false, "registration::base<%s>() : invalid type", type_name<T>());
 				return nullptr;
 			}
 			else
 			{
 				type* base{ add_base_impl(_type, get_type_impl<T>()) };
-				REFLECTPP_ASSERT(base != nullptr, "registration::base<%s>() : base type already registered\n", type_name(base));
+				REFLECTPP_ASSERT(base != nullptr, "registration::base<%s>() : base type already registered", type_name(base));
 
 				return base;
 			}
@@ -24,10 +24,10 @@ namespace reflectpp
 		template<typename T, typename propertyT, typename U>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT T::* addr) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", type_name<U>(), type_name<T>(), name, type_name(_type));
+			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s", type_name<U>(), type_name<T>(), name, type_name(_type));
 
 			property* prop { add_property_impl(_type, name, (size_t)(char*)&((T*)nullptr->*addr), get_type_impl<U>()) };
-			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered\n", type_name<U>(), type_name<T>(), name);
+			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered", type_name<U>(), type_name<T>(), name);
 
 			return prop;
 		}
@@ -35,7 +35,7 @@ namespace reflectpp
 		template<typename T, typename propertyT, typename U>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s\n", type_name<U>(), type_name<T>(), name, type_name(_type));
+			REFLECTPP_ASSERT(get_type<T>() == _type, "registration::property(const char* name, %s %s::* addr) : %s isn't in %s", type_name<U>(), type_name<T>(), name, type_name(_type));
 
 			auto get = [getter](void* object, bool& is_owner) -> void*
 			{
@@ -62,7 +62,7 @@ namespace reflectpp
 			};
 
 			property* prop { add_property_impl(_type, name, get, set, get_type_impl<U>()) };
-			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered\n", type_name<U>(), type_name<T>(), name);
+			REFLECTPP_ASSERT(prop != nullptr, "registration::property(const char* name, %s %s::* addr) : %s already registered", type_name<U>(), type_name<T>(), name);
 
 			return prop;
 		}
@@ -72,12 +72,12 @@ namespace reflectpp
 		{
 			if constexpr (std::is_arithmetic_v<T> || !is_valid<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "registration::class_<%s>() : invalid type\n", type_name<T>());
+				REFLECTPP_ASSERT(false, "registration::class_<%s>() : invalid type", type_name<T>());
 				return nullptr;
 			}
-			else if constexpr (!use_macro<T>::value)
+			else if constexpr (!is_registered<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "registration::class_<%s>() : REFLECT(T) macro isn't used\n", type_name<T>());
+				REFLECTPP_ASSERT(false, "REFLECT() macro isn't used");
 				return nullptr;
 			}
 			else
@@ -97,17 +97,17 @@ namespace reflectpp
 		{
 			if constexpr (!std::is_pointer_v<T>)
 			{
-				REFLECTPP_ASSERT(false, "type::cast<%s>(%s*& object) : not a pointer\n", type_name<T>(), type_name(object));
+				REFLECTPP_ASSERT(false, "type::cast<%s>(%s*& object) : not a pointer", type_name<T>(), type_name(object));
 				return nullptr;
 			}
 			else if constexpr (std::is_const_v<V> || std::is_pointer_v<V> || std::is_void_v<V> || std::is_volatile_v<V>)
 			{
-				REFLECTPP_ASSERT(false, "type::cast<%s>(%s*& object) : invalid type\n", type_name<T>(), type_name(object));
+				REFLECTPP_ASSERT(false, "type::cast<%s>(%s*& object) : invalid type", type_name<T>(), type_name(object));
 				return nullptr;
 			}
 			else if constexpr (std::is_const_v<U> || std::is_void_v<U> || std::is_volatile_v<U>)
 			{
-				REFLECTPP_ASSERT(false, "type::cast<%s>(%s*& object) : invalid object type\n", type_name<T>(), type_name(object));
+				REFLECTPP_ASSERT(false, "type::cast<%s>(%s*& object) : invalid object type", type_name<T>(), type_name(object));
 				return nullptr;
 			}
 			else
@@ -119,7 +119,7 @@ namespace reflectpp
 		{
 			if constexpr (!is_valid_factory<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "invalid type\n");
+				REFLECTPP_ASSERT(false, "invalid type");
 				return nullptr;
 			}
 			else
@@ -160,7 +160,7 @@ namespace reflectpp
 		{
 			if constexpr (!is_valid<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "type::get<%s>() : invalid type\n", type_name<T>());
+				REFLECTPP_ASSERT(false, "type::get<%s>() : invalid type", type_name<T>());
 				return nullptr;
 			}
 			else if constexpr (std::is_arithmetic_v<T>)
@@ -176,7 +176,7 @@ namespace reflectpp
 			else
 			{
 				type* type{ get_type_impl(type_id<T>()) };
-				REFLECTPP_ASSERT(type != nullptr, "type::get<%s>() : unregistered type\n", type_name<T>());
+				REFLECTPP_ASSERT(type != nullptr, "type::get<%s>() : unregistered type", type_name<T>());
 
 				return type;
 			}
@@ -187,17 +187,17 @@ namespace reflectpp
 		{
 			if constexpr (std::is_null_pointer_v<T> || std::is_void_v<T> || std::is_volatile_v<T>)
 			{
-				REFLECTPP_ASSERT(false, "type::get(%s*& object) : invalid type\n", type_name<T>());
+				REFLECTPP_ASSERT(false, "type::get(%s*& object) : invalid type", type_name<T>());
 				return nullptr;
 			}
-			else if constexpr (!std::is_arithmetic_v<T> && !use_macro<T>::value)
+			else if constexpr (!std::is_arithmetic_v<T> && !is_registered<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "type::get(%s*& object) : unregistered type\n", type_name(object));
+				REFLECTPP_ASSERT(false, "type::get(%s*& object) : unregistered type", type_name(object));
 				return nullptr;
 			}
 			else if constexpr (std::is_arithmetic_v<T>)
 			{
-				REFLECTPP_ASSERT(object != nullptr, "type::get(%s*& object) : object nullptr\n", type_name<T>());
+				REFLECTPP_ASSERT(object != nullptr, "type::get(%s*& object) : object nullptr", type_name<T>());
 
 				/*type* type{ get_type_impl(type_id<T>()) };
 
@@ -209,7 +209,7 @@ namespace reflectpp
 			}
 			else
 			{
-				REFLECTPP_ASSERT(object != nullptr, "type::get(%s*& object) : object nullptr\n", type_name<T>());
+				REFLECTPP_ASSERT(object != nullptr, "type::get(%s*& object) : object nullptr", type_name<T>());
 				return get_type_impl(type_id(object));
 			}
 		}

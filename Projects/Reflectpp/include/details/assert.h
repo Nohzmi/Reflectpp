@@ -13,9 +13,9 @@
 #include "details/macros.h"
 
 #ifdef _DEBUG
-	#define REFLECTPP_ASSERT(exp, format, ...) reflectpp::details::_assert(exp, format, __VA_ARGS__)
+	#define REFLECTPP_ASSERT(exp, format, ...) reflectpp::details::_assert(exp, __FILE__, __LINE__, format, __VA_ARGS__)
 #else
-	#define REFLECTPP_ASSERT(exp, format, ...)__M_Assert(#Expr, Expr, __FILE__, __LINE__, Msg)
+	#define REFLECTPP_ASSERT(exp, format, ...)
 #endif
 
 namespace reflectpp

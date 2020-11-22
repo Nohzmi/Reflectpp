@@ -9,13 +9,13 @@ namespace reflectpp
 		{
 			if (!expr)
 			{
+				fprintf(stderr, "\033[31m");
 				fprintf(stderr, "Assertion failed: ");
 				fprintf(stderr, format, args...);
-				fprintf(stderr, " [%s:%d]\n", file, line);
-				assert(false);
+				fprintf(stderr, " [%s:%d]", file, line);
+				fprintf(stderr, "\033[0m\n");
+				abort();
 			}
 		}
 	}
 }
-
-//Assertion failed: false, file D:\Poste de Travail\Reflectpp\Projects\Reflectpp\include\details\inline\assert.inl, line 14

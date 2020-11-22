@@ -11,7 +11,7 @@
 
 class ZTest
 {
-	//REFLECT(ZTest)
+	REFLECT(ZTest)
 
 public:
 

@@ -26,7 +26,7 @@ namespace reflectpp
 		return *m_property_type;
 	}
 
-	variant property::get_value(const variant& object) const
+	variant property::get_value(const variant& object) const REFLECTPP_NOEXCEPT
 	{
 		REFLECTPP_ASSERT(object.m_type == m_type, "wrong object type");
 

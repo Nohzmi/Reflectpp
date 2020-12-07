@@ -43,10 +43,10 @@ namespace reflectpp
 			iterator& operator=(const iterator&) = default;
 			iterator& operator=(iterator&&) REFLECTPP_NOEXCEPT = default;
 
-			bool operator==(const iterator<T>& rhs) const;
-			bool operator!=(const iterator<T>& rhs) const;
-			iterator<T>& operator++();
-			T& operator*() const;
+			bool operator==(const iterator<T>& rhs) const REFLECTPP_NOEXCEPT;
+			bool operator!=(const iterator<T>& rhs) const REFLECTPP_NOEXCEPT;
+			iterator<T>& operator++() REFLECTPP_NOEXCEPT;
+			T& operator*() const REFLECTPP_NOEXCEPT;
 
 		private:
 

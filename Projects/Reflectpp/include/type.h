@@ -61,7 +61,7 @@ namespace reflectpp
 		/**
 		* Returns a variant of this type
 		*/
-		variant create() const;
+		variant create() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns requested type representation

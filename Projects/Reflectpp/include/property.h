@@ -66,13 +66,13 @@ namespace reflectpp
 		* @param object
 		*/
 		template<typename T>
-		variant get_value(T* object) const;
+		variant get_value(T* object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns value of the property from an object of the type that contains it
 		* @param object
 		*/
-		variant get_value(const variant& object) const;
+		variant get_value(const variant& object) const REFLECTPP_NOEXCEPT;
 
 	private:
 
@@ -89,7 +89,6 @@ namespace reflectpp
 
 #pragma warning (pop)
 }
-
 
 #include "details/inline/property.inl"
 

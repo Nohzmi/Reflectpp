@@ -19,7 +19,7 @@ namespace reflectpp
 		return m_type_info != rhs.m_type_info;
 	}
 
-	variant type::create() const
+	variant type::create() const REFLECTPP_NOEXCEPT
 	{
 		return variant(get_factory().construct(), true, const_cast<type*>(this));
 	}

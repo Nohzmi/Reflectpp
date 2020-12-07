@@ -3,26 +3,26 @@
 namespace reflectpp
 {
 	template<typename T> template<typename U>
-	REFLECTPP_INLINE bool range<T>::iterator<U>::operator==(const iterator<U>& rhs) const
+	REFLECTPP_INLINE bool range<T>::iterator<U>::operator==(const iterator<U>& rhs) const REFLECTPP_NOEXCEPT
 	{
 		return (m_index == rhs.m_index) && (m_range == rhs.m_range);
 	}
 
 	template<typename T> template<typename U>
-	REFLECTPP_INLINE bool range<T>::iterator<U>::operator!=(const iterator<U>& rhs) const
+	REFLECTPP_INLINE bool range<T>::iterator<U>::operator!=(const iterator<U>& rhs) const REFLECTPP_NOEXCEPT
 	{
 		return (m_index != rhs.m_index) || (m_range != rhs.m_range);
 	}
 
 	template<typename T> template<typename U>
-	REFLECTPP_INLINE range<T>::iterator<U>& range<T>::iterator<U>::operator++()
+	REFLECTPP_INLINE range<T>::iterator<U>& range<T>::iterator<U>::operator++() REFLECTPP_NOEXCEPT
 	{
 		++m_index;
 		return *this;
 	}
 
 	template<typename T> template<typename U>
-	REFLECTPP_INLINE U& range<T>::iterator<U>::operator*() const
+	REFLECTPP_INLINE U& range<T>::iterator<U>::operator*() const REFLECTPP_NOEXCEPT
 	{
 		return (*m_range)[m_index];
 	}

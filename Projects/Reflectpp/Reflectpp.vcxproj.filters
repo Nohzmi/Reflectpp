@@ -69,6 +69,9 @@
     <ClInclude Include="include\instance.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\argument.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -96,6 +99,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\instance.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\argument.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -137,6 +143,9 @@
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\instance.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\argument.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

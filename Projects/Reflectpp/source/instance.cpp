@@ -28,11 +28,12 @@ namespace reflectpp
 
 	type& instance::get_type() const REFLECTPP_NOEXCEPT
 	{
+		REFLECTPP_ASSERT(is_valid(), "invalid instance");
 		return m_var->get_type();
 	}
 
 	bool instance::is_valid() const REFLECTPP_NOEXCEPT
 	{
-		return m_var->is_valid();
+		return m_var != nullptr && m_var->is_valid();
 	}
 }

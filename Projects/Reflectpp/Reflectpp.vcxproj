@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\argument.h" />
     <ClInclude Include="include\details\assert.h" />
     <ClInclude Include="include\details\hasher.h" />
     <ClInclude Include="include\details\macros.h" />
@@ -38,6 +39,7 @@
     <ClInclude Include="include\variant.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\argument.cpp" />
     <ClCompile Include="source\details\registry.cpp" />
     <ClCompile Include="source\factory.cpp" />
     <ClCompile Include="source\instance.cpp" />
@@ -49,6 +51,7 @@
     <ClCompile Include="source\variant.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\details\inline\argument.inl" />
     <None Include="include\details\inline\assert.inl" />
     <None Include="include\details\inline\factory.inl" />
     <None Include="include\details\inline\hasher.inl" />

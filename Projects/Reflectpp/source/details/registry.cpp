@@ -13,23 +13,7 @@ namespace reflectpp
 	{
 		registry registry::m_instance;
 
-		registry::registry()
-		{
-			auto constructor = []() -> void* { return nullptr; };
-			auto copy = [](void*) -> void* { return nullptr; };
-			auto destructor = [](void*) {};
-
-			factory* _factory{ new factory(constructor, copy, destructor) };
-			type_info* _type_info{ new type_info(0, "") };
-			type* _type{ new type(_factory, 0, _type_info) };
-			property* prop { new property(nullptr, 0, "", 0, _type, nullptr, _type) };
-
-			m_factories.emplace(0, _factory);
-			m_properties.emplace_back(prop);
-			m_type_infos.emplace_back(_type_info);
-			m_types.emplace_back(_type);
-		}
-
+		registry::registry() = default;
 		registry::~registry() = default;
 
 		type* registry::add_base_impl(type* _type, type* base) REFLECTPP_NOEXCEPT

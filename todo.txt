@@ -2,19 +2,9 @@ sortir le cast ?
 comparer avec rttr
 serialisation -> real sample with vld
 
-typeinfo en type_info ? revoir les nom pour éviter les redit avec les nom de classes
+
+
+
 verif la doc quand tout fini et comparer avec celle de rttr
 
-"à revoir":
-property (en cours pas commencé)
 serializer
-registry
-
-
-
-
-
-
-
-add property in registry.inl surement à revoir mais plus tard
-enlever le wont crash

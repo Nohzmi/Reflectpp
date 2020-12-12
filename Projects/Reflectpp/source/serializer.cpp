@@ -90,7 +90,9 @@ namespace reflectpp
 					pvar.get_value<double>() = pj.get<double>();
 			}
 			else
+			{
 				load_type(pvar, pj);
+			}
 		}
 	}
 }

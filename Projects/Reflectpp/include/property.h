@@ -9,6 +9,7 @@
 #pragma once
 #include "details/registry.h"
 #include "variant.h"
+#include "instance.h"
 
 /**
 * @addtogroup Reflectpp
@@ -65,14 +66,7 @@ namespace reflectpp
 		* Returns value of the property from an object of the type that contains it
 		* @param object
 		*/
-		template<typename T>
-		variant get_value(T* object) const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns value of the property from an object of the type that contains it
-		* @param object
-		*/
-		variant get_value(const variant& object) const REFLECTPP_NOEXCEPT;
+		variant get_value(const instance& object) const REFLECTPP_NOEXCEPT;
 
 	private:
 
@@ -89,8 +83,6 @@ namespace reflectpp
 
 #pragma warning (pop)
 }
-
-#include "details/inline/property.inl"
 
 /**
 * @}

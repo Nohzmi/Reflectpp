@@ -10,12 +10,17 @@ namespace reflectpp
 			if constexpr (!is_valid_type<T>::value || std::is_arithmetic_v<T>)
 			{
 				REFLECTPP_ASSERT(false, "invalid type");
-				return nullptr;
+				return get_type_impl(0);
 			}
 			else
 			{
 				type* base{ add_base_impl(_type, get_type_impl<T>()) };
-				REFLECTPP_ASSERT(base != nullptr, "base type already registered");
+
+				if (base == nullptr)
+				{
+					REFLECTPP_ASSERT(false, "base type already registered");
+					return get_type_impl(0);
+				}
 
 				return base;
 			}
@@ -24,10 +29,19 @@ namespace reflectpp
 		template<typename T, typename propertyT, typename U>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT T::* addr) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
+			if (get_type<T>() != _type)
+			{
+				REFLECTPP_ASSERT(false, "%s isn't in type", name);
+				return get_property_impl(0);
+			}
 
 			property* prop { add_property_impl(_type, name, (size_t)(char*)&((T*)nullptr->*addr), get_type_impl<U>()) };
-			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
+
+			if (prop == nullptr)
+			{
+				REFLECTPP_ASSERT(false, "%s already registered", name);
+				return get_property_impl(0);
+			}
 
 			return prop;
 		}
@@ -35,7 +49,11 @@ namespace reflectpp
 		template<typename T, typename propertyT, typename U>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
+			if (get_type<T>() != _type)
+			{
+				REFLECTPP_ASSERT(false, "%s isn't in type", name);
+				return get_property_impl(0);
+			}
 
 			auto get = [getter](void* object, bool& is_owner) -> void*
 			{
@@ -62,7 +80,12 @@ namespace reflectpp
 			};
 
 			property* prop { add_property_impl(_type, name, get, set, get_type_impl<U>()) };
-			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
+
+			if (prop == nullptr)
+			{
+				REFLECTPP_ASSERT(false, "%s already registered", name);
+				return get_property_impl(0);
+			}
 
 			return prop;
 		}
@@ -73,12 +96,12 @@ namespace reflectpp
 			if constexpr (!is_valid_type<T>::value || std::is_arithmetic_v<T>)
 			{
 				REFLECTPP_ASSERT(false, "invalid type");
-				return nullptr;
+				return get_type_impl(0);
 			}
 			else if constexpr (!is_registered<T>::value)
 			{
 				REFLECTPP_ASSERT(false, "REFLECT() macro isn't used");
-				return nullptr;
+				return get_type_impl(0);
 			}
 			else
 			{
@@ -117,7 +140,7 @@ namespace reflectpp
 			if constexpr (!is_valid_type<T>::value)
 			{
 				REFLECTPP_ASSERT(false, "invalid type");
-				return nullptr;
+				return get_factory_impl(0);
 			}
 			else
 			{
@@ -158,7 +181,7 @@ namespace reflectpp
 			if constexpr (!is_valid_type<T>::value)
 			{
 				REFLECTPP_ASSERT(false, "invalid type");
-				return nullptr;
+				return get_type_impl(0);
 			}
 			else if constexpr (std::is_arithmetic_v<T>)
 			{
@@ -166,10 +189,15 @@ namespace reflectpp
 			}
 			else
 			{
-				type* type{ get_type_impl(type_id<T>()) };
-				REFLECTPP_ASSERT(type != nullptr, "unregistered type");
+				type* _type{ get_type_impl(type_id<T>()) };
 
-				return type;
+				if (_type == nullptr)
+				{
+					REFLECTPP_ASSERT(false, "unregistered type");
+					return get_type_impl(0);
+				}
+
+				return _type;
 			}
 		}
 
@@ -179,7 +207,7 @@ namespace reflectpp
 			if constexpr (!is_valid_param<T>::value)
 			{
 				REFLECTPP_ASSERT(false, "invalid param");
-				return nullptr;
+				return get_type_impl(0);
 			}
 			else if constexpr (std::is_arithmetic_v<decay<T>>)
 			{
@@ -188,7 +216,7 @@ namespace reflectpp
 			else if constexpr (!is_registered<decay<T>>::value)
 			{
 				REFLECTPP_ASSERT(false, "unregistered type");
-				return nullptr;
+				return get_type_impl(0);
 			}
 			else
 			{
@@ -212,7 +240,7 @@ namespace reflectpp
 			if constexpr (!is_valid_type<T>::value)
 			{
 				REFLECTPP_ASSERT(false, "invalid type");
-				return nullptr;
+				return get_type_info(0);
 			}
 			else
 			{

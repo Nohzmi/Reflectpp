@@ -13,7 +13,23 @@ namespace reflectpp
 	{
 		registry registry::m_instance;
 
-		registry::registry() = default;
+		registry::registry()
+		{
+			auto constructor = []() -> void* { return nullptr; };
+			auto copy = [](void*) -> void* { return nullptr; };
+			auto destructor = [](void*) {};
+
+			factory* _factory{ new factory(constructor, copy, destructor) };
+			type_info* _type_info{ new type_info(0, "") };
+			type* _type{ new type(_factory, 0, _type_info) };
+			property* prop { new property(nullptr, 0, "", 0, _type, nullptr, _type) };
+
+			m_factories.emplace(0, _factory);
+			m_properties.emplace_back(prop);
+			m_type_infos.emplace_back(_type_info);
+			m_types.emplace_back(_type);
+		}
+
 		registry::~registry() = default;
 
 		type* registry::add_base_impl(type* _type, type* base) REFLECTPP_NOEXCEPT
@@ -96,13 +112,13 @@ namespace reflectpp
 			return prop;
 		}
 
-		type* registry::add_type_impl(factory* _factory, size_t size, type_info* typeinfo) REFLECTPP_NOEXCEPT
+		type* registry::add_type_impl(factory* _factory, size_t size, type_info* _type_info) REFLECTPP_NOEXCEPT
 		{
 			for (auto& type : m_types)
-				if (type->get_id() == typeinfo->get_id())
+				if (type->get_id() == _type_info->get_id())
 					return nullptr;
 
-			type* _type{ new type(_factory, size, typeinfo) };
+			type* _type{ new type(_factory, size, _type_info) };
 			m_types.emplace_back(_type);
 
 			return _type;
@@ -110,14 +126,14 @@ namespace reflectpp
 
 		type_info* registry::add_type_info(size_t id, const char* name) REFLECTPP_NOEXCEPT
 		{
-			for (auto& typeinfo : m_type_infos)
-				if (typeinfo->get_id() == id)
+			for (auto& type_info : m_type_infos)
+				if (type_info->get_id() == id)
 					return nullptr;
 
-			type_info* typeinfo{ new type_info(id, name) };
-			m_type_infos.emplace_back(typeinfo);
+			type_info* _type_info{ new type_info(id, name) };
+			m_type_infos.emplace_back(_type_info);
 
-			return typeinfo;
+			return _type_info;
 		}
 
 		bool registry::cast_impl(type* _type, type* otype) const REFLECTPP_NOEXCEPT
@@ -166,9 +182,9 @@ namespace reflectpp
 
 		type_info* registry::get_type_info_impl(size_t id) const REFLECTPP_NOEXCEPT
 		{
-			for (auto& typeinfo : m_type_infos)
-				if (typeinfo->get_id() == id)
-					return typeinfo.get();
+			for (auto& type_info : m_type_infos)
+				if (type_info->get_id() == id)
+					return type_info.get();
 
 			return nullptr;
 		}

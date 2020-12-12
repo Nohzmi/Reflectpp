@@ -3,17 +3,19 @@ comparer avec rttr
 serialisation -> real sample with vld
 
 typeinfo en type_info ? revoir les nom pour éviter les redit avec les nom de classes
-setter non utilisé
 verif la doc quand tout fini et comparer avec celle de rttr
-
-faire en sorte que les assert ne crash pas en release ? transformer asser partiellement en log
-les add property test plein de truc dans le test final pour voir
 
 "à revoir":
 instance
 property (en cours pas commencé)
 serializer
 variant
-
 registry
-type_traits
+
+
+
+
+
+
+
+add property in registry.inl surement à revoir mais plus tard

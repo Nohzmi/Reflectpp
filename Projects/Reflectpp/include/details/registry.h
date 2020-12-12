@@ -83,7 +83,7 @@ namespace reflectpp
 			factory* add_factory_impl(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) REFLECTPP_NOEXCEPT;
 			property* add_property_impl(type* _type, const char* name, size_t offset, type* property_type) REFLECTPP_NOEXCEPT;
 			property* add_property_impl(type* _type, const char* name, GetterT getter, SetterT setter, type* property_type) REFLECTPP_NOEXCEPT;
-			type* add_type_impl(factory* factory, size_t size, type_info* type_info) REFLECTPP_NOEXCEPT;
+			type* add_type_impl(factory* _factory, size_t size, type_info* type_info) REFLECTPP_NOEXCEPT;
 			type_info* add_type_info(size_t id, const char* name) REFLECTPP_NOEXCEPT;
 			bool cast_impl(type* t, type* otype) const REFLECTPP_NOEXCEPT;
 			factory* get_factory_impl(size_t id) const REFLECTPP_NOEXCEPT;

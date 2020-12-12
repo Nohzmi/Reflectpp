@@ -46,7 +46,7 @@ namespace reflectpp
 		* Create an instance from an object
 		* @param object
 		*/
-		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, T> && !std::is_pointer_v<T>>>
+		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<instance, details::decay<T>>>>
 		instance(T& object) REFLECTPP_NOEXCEPT;
 
 		/**
@@ -71,18 +71,6 @@ namespace reflectpp
 }
 
 #include "details/inline/instance.inl"
-
-
-/*RTTR_INLINE instance() RTTR_NOEXCEPT;
-60
-64     
-76     template < typename T, typename Tp = decay_instance_t<T>>
-77     RTTR_INLINE instance(T & data) RTTR_NOEXCEPT;
-78
-85     template < typename Target_Type>
-86     RTTR_INLINE Target_Type * try_convert() const RTTR_NOEXCEPT;
-87
-93    
 
 /**
 * @}

@@ -6,10 +6,8 @@ typeinfo en type_info ? revoir les nom pour éviter les redit avec les nom de cl
 verif la doc quand tout fini et comparer avec celle de rttr
 
 "à revoir":
-instance
 property (en cours pas commencé)
 serializer
-variant
 registry
 
 
@@ -19,3 +17,4 @@ registry
 
 
 add property in registry.inl surement à revoir mais plus tard
+enlever le wont crash

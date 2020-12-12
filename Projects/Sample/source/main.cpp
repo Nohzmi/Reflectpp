@@ -7,6 +7,7 @@
 #include <variant.h>
 #include <property.h>
 #include <serializer.h>
+#include <instance.h>
 #include <vld/vld.h>
 
 #include "intern.h"
@@ -21,8 +22,6 @@ enum class Testjh
 };
 
 
-
-
 int main()
 {
 	// Entry point
@@ -34,7 +33,7 @@ int main()
 	//auto testdsfsw = factory::get<volatile Base>();
 	//auto kjdhflks = testdsfsw.construct();
 
-	/*int val = 5;
+	int val = 5;
 	int* ptr = &val;
 	int* ptrnnull = nullptr;
 	int** ptr2 = &ptr;
@@ -43,7 +42,7 @@ int main()
 	Base* basenull = nullptr;
 	delete base;
 
-	std::cout << details::registry::get_instance().get_type(5)->get_name() << std::endl;
+	/*std::cout << details::registry::get_instance().get_type(5)->get_name() << std::endl;
 	std::cout << details::registry::get_instance().get_type(val)->get_name() << std::endl;
 	std::cout << details::registry::get_instance().get_type(ptr)->get_name() << std::endl;
 	std::cout << details::registry::get_instance().get_type(*ptr)->get_name() << std::endl;
@@ -71,7 +70,7 @@ int main()
 
 
 	//return 0;
-	
+
 	// Reflection test
 	auto& test = type::get<Derived>();
 	auto& test0 = type::get<Derived>();
@@ -106,7 +105,7 @@ int main()
 	variant var1 = variant(tmp0);
 	variant var2 = var1;
 	variant var3 = variant(tmp3);
-	variant var4 = variant(&tmp4);
+	//variant var4 = variant(&tmp4);
 
 	auto& tmp55 = var1.get_type();
 	auto tmp56 = var1.is_type<Base>();

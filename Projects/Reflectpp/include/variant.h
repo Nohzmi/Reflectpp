@@ -37,12 +37,12 @@ namespace reflectpp
 		variant& operator=(variant&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
-		* Create a variant from a object \n
+		* Create a variant from an object \n
 		* Don't have the ownership in this case
 		* @param object
 		*/
-		template<typename T>
-		variant(T* object) REFLECTPP_NOEXCEPT;
+		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>>>>
+		variant(T& object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored a value is valid

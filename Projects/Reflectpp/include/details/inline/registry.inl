@@ -240,7 +240,7 @@ namespace reflectpp
 			if constexpr (!is_valid_type<T>::value)
 			{
 				REFLECTPP_ASSERT(false, "invalid type");
-				return get_type_info(0);
+				return get_type_info_impl(0);
 			}
 			else
 			{

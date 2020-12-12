@@ -4,7 +4,8 @@ namespace reflectpp
 {
 	template<typename T, typename U>
 	REFLECTPP_INLINE instance::instance(T& object) REFLECTPP_NOEXCEPT :
-		m_var{ variant(object) }
+		m_is_owner{ true },
+		m_var{ new variant(object) }
 	{
 	}
 }

@@ -20,8 +20,7 @@ namespace reflectpp
 	class type;
 
 	/**
-	* Generic factory class used in reflection \n
-	* Independent of the reflection
+	* Class used to forwarding the instance of an object
 	*/
 	class REFLECTPP_API instance final
 	{
@@ -30,7 +29,7 @@ namespace reflectpp
 	public:
 
 		instance() = default;
-		~instance() = default;
+		~instance();
 		instance(const instance&) = default;
 		instance(instance&&) REFLECTPP_NOEXCEPT = default;
 		instance& operator=(const instance&) = default;
@@ -66,7 +65,8 @@ namespace reflectpp
 
 	private:
 		
-		variant m_var;
+		bool m_is_owner;
+		variant* m_var;
 	};
 }
 

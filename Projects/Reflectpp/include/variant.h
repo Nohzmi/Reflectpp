@@ -61,14 +61,14 @@ namespace reflectpp
 
 		/**
 		* Returns the value as requested type \n
-		* Use IsType() to check if the type is valid
+		* Use is_type() to check if the type is valid
 		*/
 		template<typename T>
 		T& get_value() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the value as requested type \n
-		* Use IsType() to check if the type is valid
+		* Use is_type() to check if the type is valid
 		*/
 		template<typename T>
 		const T& get_value() const REFLECTPP_NOEXCEPT;

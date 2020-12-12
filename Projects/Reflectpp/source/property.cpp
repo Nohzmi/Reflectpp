@@ -28,17 +28,18 @@ namespace reflectpp
 
 	variant property::get_value(const instance& object) const REFLECTPP_NOEXCEPT
 	{
-		REFLECTPP_ASSERT(object.m_var.m_type == m_type, "wrong object type");
+		REFLECTPP_ASSERT(object.is_valid(), "invalid instance");
+		REFLECTPP_ASSERT(object.m_var->m_type == m_type, "wrong object type");
 
 		if (m_getter != nullptr)
 		{
 			bool is_owner{ false };
-			void* data{ m_getter(object.m_var.m_data, is_owner) };
+			void* data{ m_getter(object.m_var->m_data, is_owner) };
 
 			return variant(data, is_owner, m_property_type);
 		}
 		else
-			return variant(static_cast<char*>(object.m_var.m_data) + m_offset, false, m_property_type);
+			return variant(static_cast<char*>(object.m_var->m_data) + m_offset, false, m_property_type);
 	}
 
 	property::property(GetterT getter, size_t id, const char* name, size_t offset, type* property_type, SetterT setter, type* type) REFLECTPP_NOEXCEPT :

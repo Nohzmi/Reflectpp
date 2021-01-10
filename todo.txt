@@ -3,6 +3,4 @@ comparer avec rttr
 serialisation -> real sample with vld
 verif la doc quand tout fini et comparer avec celle de rttr
 
-serializer (en cours)
-
 essayer concept pour enlever fonction template du type manager (ou pas)

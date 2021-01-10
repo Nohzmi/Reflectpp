@@ -9,7 +9,7 @@
 #pragma once
 #include <nlohmann/json.hpp>
 
-#include "variant.h"
+#include "instance.h"
 
 /**
 * @addtogroup Reflectpp
@@ -46,21 +46,17 @@ namespace reflectpp
 		* Serialize an object
 		* @param object
 		*/
-		template<typename T>
-		void save(const T& object) const REFLECTPP_NOEXCEPT;
+		void save(const instance& object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Deserialize an object
 		* @param object
 		*/
-		template<typename T>
-		void load(T& object) const REFLECTPP_NOEXCEPT;
+		void load(const instance& object) const REFLECTPP_NOEXCEPT;
 
 	private:
 
-		void save(const variant& var) const REFLECTPP_NOEXCEPT;
 		void save_type(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
-		void load(variant& var) const REFLECTPP_NOEXCEPT;
 		void load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT;
 
 		std::string m_path;
@@ -68,8 +64,6 @@ namespace reflectpp
 
 #pragma warning (pop)
 }
-
-#include "details/inline/serializer.inl"
 
 /**
 * @}

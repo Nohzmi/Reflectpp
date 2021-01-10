@@ -139,9 +139,6 @@
     <None Include="include\details\inline\hasher.inl">
       <Filter>include\details\inline</Filter>
     </None>
-    <None Include="include\details\inline\serializer.inl">
-      <Filter>include\details\inline</Filter>
-    </None>
     <None Include="include\details\inline\instance.inl">
       <Filter>include\details\inline</Filter>
     </None>

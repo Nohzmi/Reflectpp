@@ -17,6 +17,7 @@
 namespace reflectpp
 {
 	class property;
+	class serializer;
 	class type;
 
 	/**
@@ -25,6 +26,7 @@ namespace reflectpp
 	class REFLECTPP_API instance final
 	{
 		friend property;
+		friend serializer;
 
 	public:
 

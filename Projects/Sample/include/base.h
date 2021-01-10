@@ -31,7 +31,7 @@ public:
 	volatile double* GetValue4() const;
 	void SetValue4(volatile double* value);
 
-private:
+public:
 
 	float BaseValue0;
 	double BaseValue1;

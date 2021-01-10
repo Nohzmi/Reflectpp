@@ -60,7 +60,6 @@
     <None Include="include\details\inline\range.inl" />
     <None Include="include\details\inline\registration.inl" />
     <None Include="include\details\inline\registry.inl" />
-    <None Include="include\details\inline\serializer.inl" />
     <None Include="include\details\inline\type.inl" />
     <None Include="include\details\inline\type_info.inl" />
     <None Include="include\details\inline\utilities.inl" />

@@ -21,7 +21,7 @@ namespace reflectpp
 			}
 		}
 
-		template<typename T, typename propertyT, typename U>
+		template<typename T, typename propertyT>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT T::* addr) REFLECTPP_NOEXCEPT
 		{
 			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
@@ -36,17 +36,17 @@ namespace reflectpp
 
 			auto set = [offset](void* object, void* value)
 			{
-				U& set = *reinterpret_cast<U*>(static_cast<char*>(object) + offset);
-				set = *static_cast<U*>(value);
+				auto& set = *reinterpret_cast<decay<propertyT>*>(static_cast<char*>(object) + offset);
+				set = *static_cast<decay<propertyT>*>(value);
 			};
 
-			property* prop { add_property_impl(_type, name, get, set, get_type_impl<U>()) };
+			property* prop { add_property_impl(_type, name, get, set, get_type_impl<decay<propertyT>>()) };
 			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
 
 			return prop;
 		}
 
-		template<typename T, typename propertyT, typename U>
+		template<typename T, typename propertyT>
 		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) REFLECTPP_NOEXCEPT
 		{
 			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
@@ -56,26 +56,30 @@ namespace reflectpp
 				if constexpr (std::is_reference_v<propertyT>)
 				{
 					is_owner = false;
-					const U& tmp{ (static_cast<T*>(object)->*getter)() };
-
-					return const_cast<U*>(&tmp);
+					return (void*)(&(static_cast<T*>(object)->*getter)());
+				}
+				else if constexpr (std::is_pointer_v<propertyT>)
+				{
+					is_owner = false;
+					return (void*)(static_cast<T*>(object)->*getter)();
 				}
 				else
 				{
 					is_owner = true;
-					U* val{ new U() };
-					*val = (static_cast<T*>(object)->*getter)();
-
-					return  val;
+					return new propertyT((static_cast<T*>(object)->*getter)());
 				}
 			};
 
 			auto set = [setter](void* object, void* value)
 			{
-				(static_cast<T*>(object)->*setter)(*static_cast<U*>(value));
+				if constexpr (std::is_pointer_v<propertyT>)
+					(static_cast<T*>(object)->*setter)(static_cast<decay<propertyT>*>(value));
+				else
+					(static_cast<T*>(object)->*setter)(*static_cast<decay<propertyT>*>(value));
+
 			};
 
-			property* prop { add_property_impl(_type, name, get, set, get_type_impl<U>()) };
+			property* prop { add_property_impl(_type, name, get, set, get_type_impl<decay<propertyT>>()) };
 			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
 
 			return prop;

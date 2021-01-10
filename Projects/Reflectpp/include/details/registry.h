@@ -48,10 +48,10 @@ namespace reflectpp
 			template<typename T>
 			type* add_base(type* type) REFLECTPP_NOEXCEPT;
 
-			template<typename T, typename propertyT, typename U = typename std::remove_cv_t<propertyT>>
+			template<typename T, typename propertyT>
 			property* add_property(type* type, const char* name, propertyT T::* addr) REFLECTPP_NOEXCEPT;
 
-			template<typename T, typename propertyT, typename U = typename std::remove_cv_t<std::remove_reference_t<propertyT>>>
+			template<typename T, typename propertyT>
 			property* add_property(type* type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) REFLECTPP_NOEXCEPT;
 
 			template<typename T>

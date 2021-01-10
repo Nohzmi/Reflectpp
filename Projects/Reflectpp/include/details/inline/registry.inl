@@ -26,7 +26,21 @@ namespace reflectpp
 		{
 			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
 
-			property* prop { add_property_impl(_type, name, (size_t)(char*)&((T*)nullptr->*addr), get_type_impl<U>()) };
+			size_t offset = (size_t)(char*)&((T*)nullptr->*addr);
+
+			auto get = [offset](void* object, bool& is_owner) -> void*
+			{
+				is_owner = false;
+				return static_cast<char*>(object) + offset;
+			};
+
+			auto set = [offset](void* object, void* value)
+			{
+				U& set = *reinterpret_cast<U*>(static_cast<char*>(object) + offset);
+				set = *static_cast<U*>(value);
+			};
+
+			property* prop { add_property_impl(_type, name, get, set, get_type_impl<U>()) };
 			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
 
 			return prop;

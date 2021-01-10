@@ -21,114 +21,27 @@ enum class Testjh
 	E_TEMP = 0
 };
 
-
 int main()
 {
 	// Entry point
-	printf("\nHello World!\n\n");
+	Base* base_ptr = new Base();
+	Intern* intern_ptr = new Intern();
 
-	//std::cout << details::type_name(type::get<Derived>()) << std::endl;
-	//std::cout << details::type_name(&type::get<Derived>()) << std::endl;
+	intern_ptr->InternValue0 = 1.f;
+	intern_ptr->InternValue1 = 2.f;
 
-	//auto testdsfsw = factory::get<volatile Base>();
-	//auto kjdhflks = testdsfsw.construct();
+	variant base_variant = variant(*base_ptr);
+	variant intern_variant = variant(*intern_ptr);
 
-	int val = 5;
-	int* ptr = &val;
-	int* ptrnnull = nullptr;
-	int** ptr2 = &ptr;
-
-	Base* base = new Base();
-	Base* basenull = nullptr;
-	delete base;
-
-	/*std::cout << details::registry::get_instance().get_type(5)->get_name() << std::endl;
-	std::cout << details::registry::get_instance().get_type(val)->get_name() << std::endl;
-	std::cout << details::registry::get_instance().get_type(ptr)->get_name() << std::endl;
-	std::cout << details::registry::get_instance().get_type(*ptr)->get_name() << std::endl;
-	std::cout << details::registry::get_instance().get_type(&val)->get_name() << std::endl;
-	std::cout << details::registry::get_instance().get_type(ptrnnull)->get_name() << std::endl;
-	std::cout << details::registry::get_instance().get_type(ptr2)->get_name() << std::endl;*/
-
-	/*int val = 5;
-	int* ptr = &val;
-	int* ptrnnull = nullptr;
-	int** ptr2 = &ptr;*/
-
-	/*Base val = Base();
-	Base* ptr = &val;
-	Base* ptrnnull = nullptr;
-	Base** ptr2 = &ptr;
-
-	std::cout << type::get(Base()).get_name() << std::endl;
-	std::cout << type::get(val).get_name() << std::endl;
-	std::cout << type::get(ptr).get_name() << std::endl;
-	std::cout << type::get(*ptr).get_name() << std::endl;
-	std::cout << type::get(&val).get_name() << std::endl;
-	std::cout << type::get(ptrnnull).get_name() << std::endl;
-	std::cout << type::get(ptr2).get_name() << std::endl;*/
-
-
-	//return 0;
-
-	// Reflection test
-	auto& test = type::get<Derived>();
-	auto& test0 = type::get<Derived>();
-	auto& test2 = type::get<Derived>().get_base_classes();
-	auto& test3 = type::get<Derived>().get_derived_classes();
-	auto& test4 = type::get<Derived>().get_properties();
-	auto& other0 = type::get<Base>();
-	auto& other1 = type::get<Intern>();
-
-	for (auto& it : type::get<Derived>().get_base_classes())
-		printf("%s\n", it.get_name());
-
-	Base* tmp0 = new Base();
-	Base* tmp1 = new Derived();
-	int* tmp2 = new int();
-	Intern* tmp3 = new Intern();
-	Intern tmp4 = Intern();
-
-	auto& test5 = type::get(tmp0);
-	auto& test6 = type::get(tmp1);
-	auto& test7 = type::get(&tmp4);
-	//auto& test95 = type::get(tmp4);
-	//auto& test231 = type::get(5);
-
-	auto test8 = type::cast<Base*>(&tmp4);
-	auto test9 = type::cast<Derived*>(tmp0);
-
-	auto test10 = type::get<Derived>().get_factory().construct();
-	type::get<Derived>().get_factory().destroy(test10);
-	auto test11 = reflectpp::type_info::get<Intern>();
-
-	variant var1 = variant(tmp0);
-	variant var2 = var1;
-	variant var3 = variant(tmp3);
-	//variant var4 = variant(&tmp4);
-
-	auto& tmp55 = var1.get_type();
-	auto tmp56 = var1.is_type<Base>();
-	auto& tmp57 = var1.get_value<Base>();
-
-	auto other5 = type::get<Base>().create();
-
-	tmp0->SetValue(5.f);
-	tmp0->SetValue1(6.0);
-	//tmp0->value.zvalue0 = -1;
-	//tmp0->value.zvalue1 = 15;
-	tmp3->InternValue0 = 12.f;
-	tmp3->InternValue1 = 13.0;
-
-	auto varssss = type::get<Intern>().create();
-	Intern intern;
-	intern.InternValue0 = 5363.f;
-	intern.InternValue1 = 53634.0;
+	float base_value = 6.f;
+	float intern_value = 7.f;
+	double double_value = 16.f;
 
 	for (auto& prop : type::get<Intern>().get_properties())
 	{
-		//Variant var = prop.GetValue(tmp3);
-		variant var = prop.get_value(var3);
+		variant var = prop.get_value(intern_variant);
+		if (var.is_type<float>()) prop.set_value(intern_variant, intern_value);
+		if (var.is_type<double>()) prop.set_value(intern_variant, 16.0);
 
 		if (var.is_type<double>())
 			printf("%s is a double : %f\n", prop.get_name(), var.get_value<double>());
@@ -138,14 +51,15 @@ int main()
 
 	for (auto& prop : type::get<Base>().get_properties())
 	{
-		//Variant var = prop.GetValue(tmp3);
-		variant var = prop.get_value(tmp0);
+		variant var = prop.get_value(*base_ptr);
+		if (var.is_type<float>()) prop.set_value(base_variant, 9.f);
 
 		if (var.is_type<double>())
 			printf("%s is a double : %f\n", prop.get_name(), var.get_value<double>());
 		else if (var.is_type<float>())
 			printf("%s is a float : %f\n", prop.get_name(), var.get_value<float>());
 	}
+
 	/*
 	// Serialization test
 	serializer seri("test");
@@ -179,10 +93,8 @@ int main()
 
 	delete tmpload;*/
 
-	delete tmp0;
-	delete tmp1;
-	delete tmp2;
-	delete tmp3;
+	delete base_ptr;
+	delete intern_ptr;
 
 	// Exit point
 	printf("\nExit Success!\n\n");

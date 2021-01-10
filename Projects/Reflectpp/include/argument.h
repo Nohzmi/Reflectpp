@@ -45,15 +45,8 @@ namespace reflectpp
 		* Create an argument from an object
 		* @param object
 		*/
-		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<argument, details::decay<T>>>>
-		argument(const T& object) REFLECTPP_NOEXCEPT;
-
-		/**
-		* Create an argument from an object
-		* @param object
-		*/
-		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<argument, details::decay<T>>>>
-		argument(T& object) REFLECTPP_NOEXCEPT;
+		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<argument, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
+		argument(T&& object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value

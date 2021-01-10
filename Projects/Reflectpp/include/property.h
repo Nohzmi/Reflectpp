@@ -10,6 +10,7 @@
 #include "details/registry.h"
 #include "variant.h"
 #include "instance.h"
+#include "argument.h"
 
 /**
 * @addtogroup Reflectpp
@@ -53,29 +54,30 @@ namespace reflectpp
 		const char* get_name() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns offset of this property
-		*/
-		size_t get_offset() const REFLECTPP_NOEXCEPT;
-
-		/**
 		* Returns type of this property
 		*/
 		type& get_type() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns value of the property from an object of the type that contains it
+		* Returns a variant that correspond to the property of the given object
 		* @param object
 		*/
 		variant get_value(const instance& object) const REFLECTPP_NOEXCEPT;
 
+		/**
+		* Set the value of the property of the given object
+		* @param object
+		* @param arg
+		*/
+		void set_value(const instance& object, const argument& arg) const REFLECTPP_NOEXCEPT;
+
 	private:
 
-		property(GetterT getter, size_t id, const char* name, size_t offset, type* property_type, SetterT setter, type* type) REFLECTPP_NOEXCEPT;
+		property(GetterT getter, size_t id, const char* name, type* property_type, SetterT setter, type* type) REFLECTPP_NOEXCEPT;
 
 		GetterT m_getter;
 		size_t m_id;
 		const char* m_name;
-		size_t m_offset;
 		type* m_property_type;
 		SetterT m_setter;
 		type* m_type;

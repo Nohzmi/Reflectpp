@@ -3,14 +3,7 @@
 namespace reflectpp
 {
 	template<typename T, typename U>
-	REFLECTPP_INLINE argument::argument(const T& object) REFLECTPP_NOEXCEPT :
-		m_is_owner{ true },
-		m_var{ new variant(object) }
-	{
-	}
-
-	template<typename T, typename U>
-	REFLECTPP_INLINE argument::argument(T& object) REFLECTPP_NOEXCEPT :
+	REFLECTPP_INLINE argument::argument(T&& object) REFLECTPP_NOEXCEPT :
 		m_is_owner{ true },
 		m_var{ new variant(object) }
 	{

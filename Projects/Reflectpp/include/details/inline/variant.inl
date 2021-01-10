@@ -3,14 +3,14 @@
 namespace reflectpp
 {
 	template<typename T, typename U>
-	REFLECTPP_INLINE variant::variant(T& object) REFLECTPP_NOEXCEPT :
-		m_is_owner{ false },
+	REFLECTPP_INLINE variant::variant(T&& object) REFLECTPP_NOEXCEPT :
+		m_is_owner{ !std::is_reference_v<T> },
 		m_type{ details::registry::get_instance().get_type(object) }
 	{
-		if constexpr (std::is_pointer_v<std::decay_t<T>>)
-			m_data = object;
-		else
+		if constexpr (std::is_reference_v<T>)
 			m_data = &object;
+		else
+			m_data = new T(std::forward<T>(object));
 	}
 
 	template<typename T>

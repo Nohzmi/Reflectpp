@@ -41,8 +41,8 @@ namespace reflectpp
 		* Don't have the ownership in this case
 		* @param object
 		*/
-		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>>>>
-		variant(T& object) REFLECTPP_NOEXCEPT;
+		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
+		variant(T&& object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored a value is valid

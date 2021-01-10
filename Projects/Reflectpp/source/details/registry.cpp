@@ -64,7 +64,7 @@ namespace reflectpp
 			return _factory;
 		}
 
-		property* registry::add_property_impl(type* _type, const char* name, size_t offset, type* property_type) REFLECTPP_NOEXCEPT
+		property* registry::add_property_impl(type* _type, const char* name, GetterT getter, SetterT setter, type* property_type) REFLECTPP_NOEXCEPT
 		{
 			size_t id{ details::hash(name) };
 
@@ -72,23 +72,7 @@ namespace reflectpp
 				if (prop->get_id() == id)
 					return nullptr;
 
-			property* prop{ new property(nullptr, id, name, offset, property_type, nullptr, _type) };
-			m_properties.emplace_back(prop);
-
-			_type->m_properties.m_vector.emplace_back(prop);
-
-			return prop;
-		}
-
-		property* registry::add_property_impl(type* _type, const char* name, GetterT getter, SetterT setter, type* property_type) REFLECTPP_NOEXCEPT
-		{
-			size_t id{ details::hash(name)};
-
-			for (auto& prop : _type->get_properties().m_vector)
-				if (prop->get_id() == id)
-					return nullptr;
-
-			property* prop{ new property(getter, id, name, 0, property_type, setter, _type) };
+			property* prop{ new property(getter, id, name, property_type, setter, _type) };
 			m_properties.emplace_back(prop);
 
 			_type->m_properties.m_vector.emplace_back(prop);

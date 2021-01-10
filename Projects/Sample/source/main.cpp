@@ -16,11 +16,6 @@
 
 using namespace reflectpp;
 
-enum class Testjh
-{
-	E_TEMP = 0
-};
-
 int main()
 {
 	// Entry point
@@ -29,12 +24,12 @@ int main()
 
 	// Serialization test (save)
 	Base* temp = new Base();
-	temp->BaseValue0 = 10.f;
-	temp->BaseValue1 = 11.0;
-	temp->BaseValue3 = 12.0;
-	temp->BaseValue4 = 13.0;
-	temp->value.zvalue0 = 20;
-	temp->value.zvalue1 = 21;
+	//temp->BaseValue0 = 10.f;
+	//temp->BaseValue1 = 11.0;
+	//temp->BaseValue3 = 12.0;
+	//temp->BaseValue4 = 13.0;
+	//temp->value.zvalue0 = 20;
+	//temp->value.zvalue1 = 21;
 	//serialize.save(*temp);
 
 	// Serialization test (save)

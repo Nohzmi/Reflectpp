@@ -72,6 +72,9 @@
     <ClInclude Include="include\argument.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\details\specifiers.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">

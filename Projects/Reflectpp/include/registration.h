@@ -68,7 +68,7 @@ namespace reflectpp
 		* @param addr
 		*/
 		template<typename T, typename PropertyT>
-		registration property(const char* name, PropertyT T::* addr) REFLECTPP_NOEXCEPT;
+		registration property(const char* name, PropertyT T::* addr, size_t specifiers = Exposed | Serialized) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Register a property of the current type
@@ -77,7 +77,7 @@ namespace reflectpp
 		* @param setter
 		*/
 		template<typename T, typename PropertyT>
-		registration property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) REFLECTPP_NOEXCEPT;
+		registration property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT), size_t specifiers = Exposed | Serialized) REFLECTPP_NOEXCEPT;
 
 	private:
 

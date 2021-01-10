@@ -54,8 +54,13 @@ namespace reflectpp
 		size_t id{ details::hash(name) };
 
 		for (auto& prop : m_properties)
+		{
 			if (prop.get_id() == id)
+			{
+				REFLECTPP_ASSERT((prop.get_specifiers() & Exposed) > 0, "%s isn't exposed", name);
 				return prop;
+			}
+		}
 
 		REFLECTPP_ASSERT(false, "%s isn't registered", name);
 		return *m_properties.begin();

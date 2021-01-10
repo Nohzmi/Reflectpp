@@ -16,18 +16,18 @@ namespace reflectpp
 		registry::registry() = default;
 		registry::~registry() = default;
 
-		type* registry::add_base_impl(type* _type, type* base) REFLECTPP_NOEXCEPT
+		type* registry::add_base_impl(type* base_type, type* _type) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : _type->get_base_classes().m_vector)
-				if (it->get_id() == base->get_id())
+				if (it->get_id() == base_type->get_id())
 					return nullptr;
 
 			if (_type->get_base_classes().empty())
-				_type->m_hierarchy_id = base->m_hierarchy_id;
+				_type->m_hierarchy_id = base_type->m_hierarchy_id;
 
 			if (!_type->get_base_classes().empty())
 			{
-				auto updateHierarchy = [](type* type, size_t hierarchyID, auto& lambda)
+				auto updateHierarchy = [](size_t hierarchyID, auto& lambda, type* type)
 				{
 					if (type->m_hierarchy_id == hierarchyID)
 						return;
@@ -35,24 +35,24 @@ namespace reflectpp
 					type->m_hierarchy_id = hierarchyID;
 
 					for (auto& it : type->get_base_classes().m_vector)
-						lambda(it, hierarchyID, lambda);
+						lambda(hierarchyID, lambda, it);
 
 					for (auto& it : type->get_derived_classes().m_vector)
-						lambda(it, hierarchyID, lambda);
+						lambda(hierarchyID, lambda, it);
 				};
 
-				updateHierarchy(base, _type->m_hierarchy_id, updateHierarchy);
+				updateHierarchy(_type->m_hierarchy_id, updateHierarchy, base_type);
 			}
 
-			base->m_derived_types.m_vector.emplace_back(_type);
-			_type->m_base_types.m_vector.emplace_back(base);
+			base_type->m_derived_types.m_vector.emplace_back(_type);
+			_type->m_base_types.m_vector.emplace_back(base_type);
 			_type->m_properties.m_vector.insert(_type->m_properties.m_vector.cbegin(),
-				base->m_properties.m_vector.cbegin(), base->m_properties.m_vector.cbegin());
+				base_type->m_properties.m_vector.cbegin(), base_type->m_properties.m_vector.cbegin());
 
-			return base;
+			return base_type;
 		}
 
-		factory* registry::add_factory_impl(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) REFLECTPP_NOEXCEPT
+		factory* registry::add_factory_impl(ConstructorT constructor, CopyT copy, DestructorT destructor, size_t id) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_factories)
 				if (it.first == id)
@@ -64,7 +64,7 @@ namespace reflectpp
 			return _factory;
 		}
 
-		property* registry::add_property_impl(type* _type, const char* name, GetterT getter, SetterT setter, type* property_type) REFLECTPP_NOEXCEPT
+		property* registry::add_property_impl(GetterT getter, const char* name, type* property_type, SetterT setter, size_t specifiers, type* _type) REFLECTPP_NOEXCEPT
 		{
 			size_t id{ details::hash(name) };
 
@@ -72,7 +72,7 @@ namespace reflectpp
 				if (prop->get_id() == id)
 					return nullptr;
 
-			property* prop{ new property(getter, id, name, property_type, setter, _type) };
+			property* prop{ new property(getter, id, name, property_type, setter, specifiers, _type) };
 			m_properties.emplace_back(prop);
 
 			_type->m_properties.m_vector.emplace_back(prop);
@@ -104,9 +104,9 @@ namespace reflectpp
 			return _type_info;
 		}
 
-		bool registry::cast_impl(type* _type, type* otype) const REFLECTPP_NOEXCEPT
+		bool registry::cast_impl(type* object_type, type* _type) const REFLECTPP_NOEXCEPT
 		{
-			if (_type->m_hierarchy_id != otype->m_hierarchy_id)
+			if (_type->m_hierarchy_id != object_type->m_hierarchy_id)
 				return false;
 
 			auto isBaseOf = [](type* _type, size_t id, auto& lambda) -> bool
@@ -122,7 +122,7 @@ namespace reflectpp
 				return res;
 			};
 
-			return isBaseOf(otype, _type->get_id(), isBaseOf);
+			return isBaseOf(object_type, _type->get_id(), isBaseOf);
 		}
 
 		registry& registry::get_instance() REFLECTPP_NOEXCEPT

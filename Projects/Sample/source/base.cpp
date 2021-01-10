@@ -56,9 +56,8 @@ void Base::SetValue4(volatile double* value)
 REGISTRATION
 {
 	reflectpp::registration::class_<Base>()
-	.property("BaseValue0", &Base::GetValue, &Base::SetValue)
+	.property("BaseValue0", &Base::GetValue, &Base::SetValue, Serialized)
 	.property("BaseValue1", &Base::GetValue1, &Base::SetValue1)
-	//property("value", &Base::value);
 	.property("value", &Base::GetValue2, &Base::SetValue2)
 	.property("BaseValue3", &Base::GetValue3, &Base::SetValue3)
 	.property("BaseValue4", &Base::GetValue4, &Base::SetValue4);

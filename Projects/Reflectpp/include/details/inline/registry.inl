@@ -14,7 +14,7 @@ namespace reflectpp
 			}
 			else
 			{
-				type* base{ add_base_impl(_type, get_type_impl<T>()) };
+				type* base{ add_base_impl(get_type_impl<T>(), _type) };
 				REFLECTPP_ASSERT(base != nullptr, "base type already registered");
 
 				return base;
@@ -22,32 +22,32 @@ namespace reflectpp
 		}
 
 		template<typename T, typename propertyT>
-		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT T::* addr) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE property* registry::add_property(propertyT T::* addr, const char* name, size_t specifiers, type* _type) REFLECTPP_NOEXCEPT
 		{
 			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
 
 			size_t offset = (size_t)(char*)&((T*)nullptr->*addr);
 
-			auto get = [offset](void* object, bool& is_owner) -> void*
+			auto getter = [offset](void* object, bool& is_owner) -> void*
 			{
 				is_owner = false;
 				return static_cast<char*>(object) + offset;
 			};
 
-			auto set = [offset](void* object, void* value)
+			auto setter = [offset](void* object, void* value)
 			{
 				auto& set = *reinterpret_cast<decay<propertyT>*>(static_cast<char*>(object) + offset);
 				set = *static_cast<decay<propertyT>*>(value);
 			};
 
-			property* prop { add_property_impl(_type, name, get, set, get_type_impl<decay<propertyT>>()) };
+			property* prop { add_property_impl(getter, name, get_type_impl<decay<propertyT>>(), setter, specifiers, _type) };
 			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
 
 			return prop;
 		}
 
 		template<typename T, typename propertyT>
-		REFLECTPP_INLINE property* registry::add_property(type* _type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE property* registry::add_property(propertyT(T::* getter)() const, const char* name, void(T::* setter)(propertyT), size_t specifiers, type* _type) REFLECTPP_NOEXCEPT
 		{
 			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
 
@@ -78,8 +78,8 @@ namespace reflectpp
 					(static_cast<T*>(object)->*setter)(*static_cast<decay<propertyT>*>(value));
 
 			};
-
-			property* prop { add_property_impl(_type, name, get, set, get_type_impl<decay<propertyT>>()) };
+			
+			property* prop { add_property_impl(get, name, get_type_impl<decay<propertyT>>(), set, specifiers, _type) };
 			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
 
 			return prop;
@@ -124,7 +124,7 @@ namespace reflectpp
 			}
 			else
 			{
-				bool can_cast{ cast_impl(get_type<std::remove_pointer_t<T>>(), get_type(object)) };
+				bool can_cast{ cast_impl(get_type(object), get_type<std::remove_pointer_t<T>>()) };
 				return can_cast ? reinterpret_cast<T>(object) : nullptr;
 			}
 		}
@@ -166,7 +166,7 @@ namespace reflectpp
 						delete static_cast<T*>(object);
 				};
 
-				return add_factory_impl(type_id<T>(), constructor, copy, destructor);
+				return add_factory_impl(constructor, copy, destructor, type_id<T>());
 			}
 		}
 

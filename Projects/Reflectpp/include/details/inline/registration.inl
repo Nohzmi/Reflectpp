@@ -16,16 +16,16 @@ namespace reflectpp
 	}
 
 	template<typename T, typename PropertyT>
-	REFLECTPP_INLINE registration registration::property(const char* name, PropertyT T::* addr) REFLECTPP_NOEXCEPT
+	REFLECTPP_INLINE registration registration::property(const char* name, PropertyT T::* addr, size_t specifiers) REFLECTPP_NOEXCEPT
 	{
-		details::registry::get_instance().add_property(m_type, name, addr);
+		details::registry::get_instance().add_property(addr, name, specifiers, m_type);
 		return *this;
 	}
 
 	template<typename T, typename PropertyT>
-	REFLECTPP_INLINE registration registration::property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT)) REFLECTPP_NOEXCEPT
+	REFLECTPP_INLINE registration registration::property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT), size_t specifiers) REFLECTPP_NOEXCEPT
 	{
-		details::registry::get_instance().add_property(m_type, name, getter, setter);
+		details::registry::get_instance().add_property(getter, name, setter, specifiers, m_type);
 		return *this;
 	}
 }

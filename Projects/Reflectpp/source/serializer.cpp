@@ -39,14 +39,15 @@ namespace reflectpp
 		in >> j;
 
 		load_type(*object.m_var, j);
-
-		std::cout << j.dump(4) << std::endl;///////
 	}
 
 	void serializer::save_type(const variant& var, json& j) const REFLECTPP_NOEXCEPT
 	{
 		for (property& prop : var.get_type().get_properties())
 		{
+			if ((prop.get_specifiers() & specifiers::Serialized) == 0)
+				continue;
+
 			variant pvar{ prop.get_value(var) };
 
 			if (prop.get_type() == type::get<int>())
@@ -70,6 +71,9 @@ namespace reflectpp
 		for (property& prop : var.get_type().get_properties())
 		{
 			if (!j.contains(prop.get_name()))
+				continue;
+
+			if ((prop.get_specifiers() & specifiers::Serialized) == 0)
 				continue;
 
 			variant pvar{ prop.get_value(var) };

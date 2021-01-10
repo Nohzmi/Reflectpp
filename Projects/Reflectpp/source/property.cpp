@@ -16,6 +16,11 @@ namespace reflectpp
 		return m_name;
 	}
 
+	size_t property::get_specifiers() const REFLECTPP_NOEXCEPT
+	{
+		return m_specifiers;
+	}
+
 	type& property::get_type() const REFLECTPP_NOEXCEPT
 	{
 		return *m_property_type;
@@ -41,12 +46,13 @@ namespace reflectpp
 		m_setter(object.m_var->m_data, arg.m_var->m_data);
 	}
 
-	property::property(GetterT getter, size_t id, const char* name, type* property_type, SetterT setter, type* type) REFLECTPP_NOEXCEPT :
+	property::property(GetterT getter, size_t id, const char* name, type* property_type, SetterT setter, size_t specifiers, type* type) REFLECTPP_NOEXCEPT :
 		m_getter{ getter },
 		m_id{ id },
 		m_name{ name },
 		m_property_type{ property_type },
 		m_setter{ setter },
+		m_specifiers{ specifiers },
 		m_type{ type }
 	{
 	}

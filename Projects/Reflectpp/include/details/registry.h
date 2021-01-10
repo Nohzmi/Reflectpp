@@ -14,6 +14,7 @@
 
 #include "details/hasher.h"
 #include "details/platform.h"
+#include "details/specifiers.h"
 #include "details/utilities.h"
 
 namespace reflectpp
@@ -46,13 +47,13 @@ namespace reflectpp
 			registry& operator=(registry&&) REFLECTPP_NOEXCEPT = delete;
 
 			template<typename T>
-			type* add_base(type* type) REFLECTPP_NOEXCEPT;
+			type* add_base(type* _type) REFLECTPP_NOEXCEPT;
 
 			template<typename T, typename propertyT>
-			property* add_property(type* type, const char* name, propertyT T::* addr) REFLECTPP_NOEXCEPT;
+			property* add_property(propertyT T::* addr, const char* name, size_t specifiers, type* _type) REFLECTPP_NOEXCEPT;
 
 			template<typename T, typename propertyT>
-			property* add_property(type* type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT)) REFLECTPP_NOEXCEPT;
+			property* add_property(propertyT(T::* getter)() const, const char* name, void(T::* setter)(propertyT), size_t specifiers, type* _type) REFLECTPP_NOEXCEPT;
 
 			template<typename T>
 			type* add_type() REFLECTPP_NOEXCEPT;
@@ -79,12 +80,12 @@ namespace reflectpp
 			template<typename T>
 			type* get_type_impl() REFLECTPP_NOEXCEPT;
 
-			type* add_base_impl(type* _type, type* base) REFLECTPP_NOEXCEPT;
-			factory* add_factory_impl(size_t id, ConstructorT constructor, CopyT copy, DestructorT destructor) REFLECTPP_NOEXCEPT;
-			property* add_property_impl(type* _type, const char* name, GetterT getter, SetterT setter, type* property_type) REFLECTPP_NOEXCEPT;
-			type* add_type_impl(factory* _factory, size_t size, type_info* type_info) REFLECTPP_NOEXCEPT;
+			type* add_base_impl(type* base_type, type* _type) REFLECTPP_NOEXCEPT;
+			factory* add_factory_impl(ConstructorT constructor, CopyT copy, DestructorT destructor, size_t id) REFLECTPP_NOEXCEPT;
+			property* add_property_impl(GetterT getter, const char* name, type* property_type, SetterT setter, size_t specifier, type* _type) REFLECTPP_NOEXCEPT;
+			type* add_type_impl(factory* _factory, size_t size, type_info* _type_info) REFLECTPP_NOEXCEPT;
 			type_info* add_type_info(size_t id, const char* name) REFLECTPP_NOEXCEPT;
-			bool cast_impl(type* t, type* otype) const REFLECTPP_NOEXCEPT;
+			bool cast_impl(type* object_type, type* _type) const REFLECTPP_NOEXCEPT;
 			factory* get_factory_impl(size_t id) const REFLECTPP_NOEXCEPT;
 			type* get_type_impl(size_t id) const REFLECTPP_NOEXCEPT;
 			type_info* get_type_info_impl(size_t id) const REFLECTPP_NOEXCEPT;

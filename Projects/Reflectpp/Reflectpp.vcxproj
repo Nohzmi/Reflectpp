@@ -25,6 +25,7 @@
     <ClInclude Include="include\details\macros.h" />
     <ClInclude Include="include\details\platform.h" />
     <ClInclude Include="include\details\registry.h" />
+    <ClInclude Include="include\details\specifiers.h" />
     <ClInclude Include="include\details\type_traits.h" />
     <ClInclude Include="include\details\utilities.h" />
     <ClInclude Include="include\factory.h" />

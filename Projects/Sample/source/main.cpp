@@ -20,29 +20,27 @@ using namespace reflectpp;
 
 int main()
 {
+	printf("Entry point\n");
+
 	Window app;
 	app.Update();
 
-	// Entry point
-	std::cout << "Entry point" << std::endl;
-	serializer serialize("test");
+	printf("\nExit Success!\n\n");
+
+
+
+
+	/*serializer serialize("test");
 
 	// Serialization test (save)
 	Base* temp = new Base();
-	//temp->BaseValue0 = 10.f;
-	//temp->BaseValue1 = 11.0;
-	//temp->BaseValue3 = 12.0;
-	//temp->BaseValue4 = 13.0;
-	//temp->value.zvalue0 = 20;
-	//temp->value.zvalue1 = 21;
-	//serialize.save(*temp);
 
 	// Serialization test (save)
 	serialize.load(*temp);
 
 	// Exit point
-	delete temp;
-	printf("\nExit Success!\n\n");
+	delete temp;*/
+	
 
 	return EXIT_SUCCESS;
 }

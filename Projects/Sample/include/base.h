@@ -8,7 +8,7 @@
 
 #pragma once
 #include <register.h>
-#include "ztest.h"
+#include "intern.h"
 
 class Base
 {
@@ -16,29 +16,14 @@ class Base
 
 public:
 
-	float GetValue() const;
-	void SetValue(float value);
+	float GetValue0() const;
+	void SetValue0(float value);
 
-	const double& GetValue1() const;
-	void SetValue1(const double& value);
+	const Intern& GetValue1() const;
+	void SetValue1(const Intern& value);
 
-	const ZTest& GetValue2() const;
-	void SetValue2(const ZTest& value);
-
-	const double* GetValue3() const;
-	void SetValue3(const double* value);
-
-	volatile double* GetValue4() const;
-	void SetValue4(volatile double* value);
-
-public:
+private:
 
 	float BaseValue0;
-	double BaseValue1;
-	double BaseValue3;
-	double BaseValue4;
-
-public:
-
-	ZTest value;
+	Intern BaseValue1;
 };

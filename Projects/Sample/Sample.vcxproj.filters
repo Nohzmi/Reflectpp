@@ -18,7 +18,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\base.h">
+    <ClInclude Include="include\window.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\derived.h">
@@ -27,27 +27,12 @@
     <ClInclude Include="include\intern.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\ztest.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\window.h">
+    <ClInclude Include="include\base.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\derived.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\intern.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\main.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\base.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\ztest.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\Include\glad\glad.c">
@@ -56,19 +41,28 @@
     <ClCompile Include="source\window.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_draw.cpp">
-      <Filter>dependencies\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_impl_glfw.cpp">
       <Filter>dependencies\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_impl_opengl3.cpp">
       <Filter>dependencies\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_widgets.cpp">
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui.cpp">
       <Filter>dependencies\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui.cpp">
+    <ClCompile Include="source\derived.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\intern.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\base.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_draw.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_widgets.cpp">
       <Filter>dependencies\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_demo.cpp">

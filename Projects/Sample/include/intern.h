@@ -13,8 +13,8 @@ class Intern
 {
 	REFLECT(Intern)
 
-public:
+private:
 
-	float InternValue0;
-	double InternValue1;
+	int InternValue0;
+	unsigned InternValue1;
 };

@@ -4,7 +4,6 @@
 
 #include <fstream>
 #include <iomanip>
-#include <iostream>////
 
 #include "property.h"
 #include "type.h"
@@ -50,13 +49,13 @@ namespace reflectpp
 
 			variant pvar{ prop.get_value(var) };
 
-			if (prop.get_type() == type::get<int>())
+			if (pvar.is_type<int>())
 				j.emplace(prop.get_name(), pvar.get_value<int>());
-			if (prop.get_type() == type::get<unsigned>())
+			else if (pvar.is_type<unsigned>())
 				j.emplace(prop.get_name(), pvar.get_value<unsigned>());
-			else if (prop.get_type() == type::get<float>())
+			else if (pvar.is_type<float>())
 				j.emplace(prop.get_name(), pvar.get_value<float>());
-			else if (prop.get_type() == type::get<double>())
+			else if (pvar.is_type<double>())
 				j.emplace(prop.get_name(), pvar.get_value<double>());
 			else
 			{

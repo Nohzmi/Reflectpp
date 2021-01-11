@@ -172,7 +172,6 @@
     <ClInclude Include="include\derived.h" />
     <ClInclude Include="include\intern.h" />
     <ClInclude Include="include\window.h" />
-    <ClInclude Include="include\ztest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Dependencies\Include\glad\glad.c" />
@@ -187,7 +186,6 @@
     <ClCompile Include="source\intern.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\window.cpp" />
-    <ClCompile Include="source\ztest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

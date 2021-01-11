@@ -17,5 +17,4 @@ class Derived : public Base
 public:
 
 	float DerivedValue0;
-	double DerivedValue1;
 };

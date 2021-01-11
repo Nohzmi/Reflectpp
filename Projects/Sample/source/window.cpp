@@ -2,12 +2,17 @@
 
 #include "window.h"
 
-#include <stdio.h>
-#include <glad/glad.h>
-#include <glfw/glfw3.h>
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+
+#include <stdio.h>
+#include <glad/glad.h>
+#include <glfw/glfw3.h>
+
+#include <type.h>
+
+using namespace reflectpp;
 
 Window::Window()
 {
@@ -40,7 +45,7 @@ Window::Window()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
-	ImGuiIO& io = ImGui::GetIO();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 	ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
 	ImGui_ImplOpenGL3_Init("#version 460");
@@ -60,20 +65,19 @@ Window::~Window()
 
 void Window::Update() noexcept
 {
-	bool show_demo_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	m_Serializer.load(m_Base);
 
 	while (!glfwWindowShouldClose(m_Window))
 	{
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		DisplaySampleWindow();
+		MenuWindow();
+		InspectorWindow();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -81,9 +85,105 @@ void Window::Update() noexcept
 		glfwSwapBuffers(m_Window);
 		glfwPollEvents();
 	}
+
+	m_Serializer.save(m_Base);
 }
 
-void Window::DisplaySampleWindow()
+void Window::MenuWindow()
+{
+	ImGui::Begin("Menu");
+
+	ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
+
+	if (ImGui::Button("Save"))
+		m_Serializer.save(m_Base);
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Load"))
+		m_Serializer.load(m_Base);
+
+	ImGui::ColorEdit3("clear color", (float*)&m_ClearColor);
+
+	ImGui::EndChild();
+	
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	ImGui::End();
+}
+
+void Window::InspectorWindow()
+{
+	ImGui::Begin("Inspector");
+
+	if (ImGui::TreeNodeEx("Base", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		DisplayType(m_Base);
+		ImGui::TreePop();
+	}
+
+	ImGui::End();
+}
+
+void Window::DisplayType(const reflectpp::variant& var)
+{
+	for (property& prop : var.get_type().get_properties())
+	{
+		if ((prop.get_specifiers() & specifiers::Exposed) == 0)
+			continue;
+
+		variant pvar{ prop.get_value(var) };
+
+		if (pvar.is_type<int>())
+			DisplayInt(var, prop, pvar);
+		else if (pvar.is_type<unsigned>())
+			DisplayUnsigned(var, prop, pvar);
+		else if (pvar.is_type<float>())
+			DisplayFloat(var, prop, pvar);
+		else if (pvar.is_type<double>())
+			DisplayFloat(var, prop, pvar);
+		else if (ImGui::TreeNodeEx(prop.get_name(), ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			DisplayType(pvar);
+			ImGui::TreePop();
+		}
+	}
+}
+
+void Window::DisplayInt(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var)
+{
+	int value = var.get_value<int>();
+
+	if (ImGui::DragInt(prop.get_name(), &value))
+		prop.set_value(instance, value);
+}
+
+void Window::DisplayUnsigned(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var)
+{
+	unsigned value = var.get_value<unsigned>();
+
+	if (ImGui::DragInt(prop.get_name(), (int*)&value))
+		prop.set_value(instance, value);
+}
+
+void Window::DisplayFloat(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var)
+{
+	float value = var.get_value<float>();
+
+	if (ImGui::DragFloat(prop.get_name(), &value))
+		prop.set_value(instance, value);
+}
+
+void Window::DisplayDouble(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var)
+{
+	double value = var.get_value<double>();
+
+	if (ImGui::DragFloat(prop.get_name(), (float*)&value))
+		prop.set_value(instance, value);
+}
+
+/*
+void Window::SampleWindow()
 {
 	ImGui::Begin("Another Window");
 	ImGui::Text("Hello from another window!");
@@ -116,4 +216,4 @@ void Window::DisplaySampleWindow()
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
-}
+}*/

@@ -74,28 +74,28 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\Dependencies\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\Dependencies\Include;$(SolutionDir)Reflectpp\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\Dependencies\Libraries\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\Dependencies\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\Dependencies\Include;$(SolutionDir)Reflectpp\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\Dependencies\Libraries\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\Dependencies\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\Dependencies\Include;$(SolutionDir)Reflectpp\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\Dependencies\Libraries\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)..\Dependencies\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\Dependencies\Include;$(SolutionDir)Reflectpp\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\Dependencies\Libraries\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -104,12 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Reflectpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -120,7 +120,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Reflectpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -128,6 +127,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -136,12 +136,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Reflectpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,7 +152,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Reflectpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -160,6 +159,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -171,13 +171,22 @@
     <ClInclude Include="include\base.h" />
     <ClInclude Include="include\derived.h" />
     <ClInclude Include="include\intern.h" />
+    <ClInclude Include="include\window.h" />
     <ClInclude Include="include\ztest.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Dependencies\Include\glad\glad.c" />
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="source\base.cpp" />
     <ClCompile Include="source\derived.cpp" />
     <ClCompile Include="source\intern.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\window.cpp" />
     <ClCompile Include="source\ztest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -122,25 +122,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir)..\Dependencies\Include;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir)..\Dependencies\Include;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir)..\Dependencies\Include;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <ExecutablePath>$(SolutionDir)..\Dependencies\Include\;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir)..\Dependencies\Include;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -149,7 +149,6 @@
       <PreprocessorDefinitions>REFLECTPP_DLL;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)..\Dependencies\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,7 +164,6 @@
       <PreprocessorDefinitions>REFLECTPP_DLL;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)..\Dependencies\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -181,7 +179,6 @@
       <PreprocessorDefinitions>REFLECTPP_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)..\Dependencies\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -197,7 +194,6 @@
       <PreprocessorDefinitions>REFLECTPP_DLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)..\Dependencies\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

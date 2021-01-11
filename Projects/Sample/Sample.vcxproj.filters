@@ -7,6 +7,15 @@
     <Filter Include="source">
       <UniqueIdentifier>{93b329b2-20a1-4afd-9059-a627155e7926}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dependencies">
+      <UniqueIdentifier>{ab5a0b1b-bc5d-43d0-800c-0b38d9955d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\glad">
+      <UniqueIdentifier>{5be977ea-a3ec-4325-91c1-4a1e166015e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui">
+      <UniqueIdentifier>{edb317fc-1ca7-4bd4-9024-a156b03b01fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\base.h">
@@ -19,6 +28,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\ztest.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -37,6 +49,30 @@
     </ClCompile>
     <ClCompile Include="source\ztest.cpp">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\Include\glad\glad.c">
+      <Filter>dependencies\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="source\window.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_draw.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_impl_glfw.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_impl_opengl3.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_widgets.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_demo.cpp">
+      <Filter>dependencies\imgui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

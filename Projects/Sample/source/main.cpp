@@ -14,10 +14,15 @@
 #include "base.h"
 #include "derived.h"
 
+#include "window.h"
+
 using namespace reflectpp;
 
 int main()
 {
+	Window app;
+	app.Update();
+
 	// Entry point
 	std::cout << "Entry point" << std::endl;
 	serializer serialize("test");

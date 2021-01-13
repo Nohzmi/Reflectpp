@@ -2,6 +2,7 @@
 
 #include "type.h"
 
+#include "details/sequence_type.h"
 #include "factory.h"
 #include "property.h"
 #include "type_info.h"
@@ -81,11 +82,16 @@ namespace reflectpp
 		return *m_type_info;
 	}
 
-	type::type(factory* factory, size_t size, type_info* type_info) REFLECTPP_NOEXCEPT :
-		m_factory{ factory },
-		m_hierarchy_id{ type_info->get_id() },
+	bool type::is_sequential_container() const REFLECTPP_NOEXCEPT
+	{
+		return false;
+	}
+
+	type::type(factory* _factory, size_t size, type_info* _type_info) REFLECTPP_NOEXCEPT :
+		m_factory{ _factory },
+		m_hierarchy_id{ _type_info->get_id() },
 		m_size{ size },
-		m_type_info{ type_info }
+		m_type_info{ _type_info }
 	{
 	}
 }

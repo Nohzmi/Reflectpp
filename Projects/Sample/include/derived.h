@@ -10,11 +10,15 @@
 #include <register.h>
 #include "base.h"
 
+#include <vector>
+
 class Derived : public Base
 {
 	REFLECT(Derived)
 
 public:
 
-	float DerivedValue0;
+	std::vector<float> DerivedValue0;
+	float DerivedValue1;
+	Intern DerivedValue2;
 };

@@ -22,9 +22,23 @@ namespace reflectpp
 	}
 
 	template<typename T> template<typename U>
+	REFLECTPP_INLINE range<T>::iterator<U> range<T>::iterator<U>::operator++(int) REFLECTPP_NOEXCEPT
+	{
+		range<T>::iterator<U> it(*this);
+		++(*this);
+		return it;
+	}
+
+	template<typename T> template<typename U>
 	REFLECTPP_INLINE U& range<T>::iterator<U>::operator*() const REFLECTPP_NOEXCEPT
 	{
 		return (*m_range)[m_index];
+	}
+
+	template<typename T> template<typename U>
+	REFLECTPP_INLINE U* range<T>::iterator<U>::operator->() REFLECTPP_NOEXCEPT
+	{
+		return &(*m_range)[m_index];
 	}
 
 	template<typename T>

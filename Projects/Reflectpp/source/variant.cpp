@@ -39,6 +39,18 @@ namespace reflectpp
 		return *this;
 	}
 
+	variant_sequencial_view variant::create_sequential_view() const REFLECTPP_NOEXCEPT
+	{
+		REFLECTPP_ASSERT(is_sequential_container(), "invalid variant");
+		return variant_sequencial_view(m_data, m_is_owner, reinterpret_cast<details::sequence_type*>(m_type));
+	}
+
+	bool variant::is_sequential_container() const REFLECTPP_NOEXCEPT
+	{
+		REFLECTPP_ASSERT(m_type != nullptr, "invalid variant");
+		return m_type->is_sequential_container();
+	}
+
 	variant::operator bool() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid();

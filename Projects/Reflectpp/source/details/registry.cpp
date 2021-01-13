@@ -2,6 +2,8 @@
 
 #include "details/registry.h"
 
+#include "details/sequence_function.h"
+#include "details/sequence_type.h"
 #include "factory.h"
 #include "property.h"
 #include "type.h"
@@ -80,6 +82,30 @@ namespace reflectpp
 			return prop;
 		}
 
+		sequence_function* registry::add_sequence_function_impl(ClearT clear, EraseT erase, GetT get, size_t id, InsertT insert, ResizeT resize, SetT set, SizeT size) REFLECTPP_NOEXCEPT
+		{
+			for (auto& it : m_sequence_functions)
+				if (it.first == id)
+					return nullptr;
+
+			sequence_function* _sequence_function{ new sequence_function(clear, erase, get, insert, resize, set, size) };
+			m_sequence_functions.emplace(id, _sequence_function);
+
+			return _sequence_function;
+		}
+
+		type* registry::add_sequence_type_impl(type* data_type, factory* _factory, sequence_function* _sequence_function, size_t size, type_info* _type_info) REFLECTPP_NOEXCEPT
+		{
+			for (auto& type : m_types)
+				if (type->get_id() == _type_info->get_id())
+					return nullptr;
+
+			type* _type{ new sequence_type(data_type, _factory, _sequence_function, size, _type_info) };
+			m_types.emplace_back(_type);
+
+			return _type;
+		}
+
 		type* registry::add_type_impl(factory* _factory, size_t size, type_info* _type_info) REFLECTPP_NOEXCEPT
 		{
 			for (auto& type : m_types)
@@ -133,6 +159,15 @@ namespace reflectpp
 		factory* registry::get_factory_impl(size_t id) const REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_factories)
+				if (it.first == id)
+					return it.second.get();
+
+			return nullptr;
+		}
+
+		sequence_function* registry::get_sequence_function_impl(size_t id) const REFLECTPP_NOEXCEPT
+		{
+			for (auto& it : m_sequence_functions)
 				if (it.first == id)
 					return it.second.get();
 

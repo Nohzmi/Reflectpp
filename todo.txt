@@ -1,3 +1,8 @@
 conteneur
 enums
 link error en x86: recompile gl3w
+iterator constructor
+data_impl pour plus de flexibilité
+plus de forward car type de retour peut être incomplet
+check rttr doc et headers
+revoir après du coup: friend, inclusion et clean les truc des sequence pas encore fait

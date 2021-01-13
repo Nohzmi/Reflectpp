@@ -22,25 +22,47 @@ int main()
 {
 	printf("Entry point\n");
 
-	Window app;
-	app.Update();
+	//Window app;
+	//app.Update();
 
 	printf("\nExit Success!\n\n");
 
+	// Test area
+	Derived d = Derived();
+	d.DerivedValue1 = 1.f;
+	d.DerivedValue0.push_back(10.f);
+	d.DerivedValue0.push_back(11.f);
+	d.DerivedValue0.push_back(12.f);
 
+	serializer s("test");
+	s.save(d);
 
+	/*d.DerivedValue0.push_back(10.f);
+	d.DerivedValue0.push_back(11.f);
+	d.DerivedValue0.push_back(12.f);
 
-	/*serializer serialize("test");
+	variant var = type::get<Derived>().get_property("DerivedValue0").get_value(d);
+	variant_sequencial_view variant_sequence = var.create_sequential_view();
 
-	// Serialization test (save)
-	Base* temp = new Base();
+	for (auto it = variant_sequence.begin(); it != variant_sequence.end(); ++it)
+	{
+		auto test = it.get_data();
+		float getted = test.get_value<float>();
+		std::cout << getted << std::endl;
+	}
 
-	// Serialization test (save)
-	serialize.load(*temp);
+	variant_sequence.set_value(0, 0.f);
+	variant_sequence.set_value(1, 1.f);
+	variant_sequence.set_value(, 2.f);
 
-	// Exit point
-	delete temp;*/
-	
+	std::cout << variant_sequence.insert(variant_sequence.begin() + 1, 15.f).get_data().get_value<float>() << std::endl;
+	std::cout << variant_sequence.get_size() << std::endl;*/
+
+	//variant_sequence.set_size(12);
+
+	//auto test = variant_sequence.get_value(0);
+	//float getted = test.get_value<float>();
+	//variant_sequence.clear();
 
 	return EXIT_SUCCESS;
 }

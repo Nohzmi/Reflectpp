@@ -75,6 +75,15 @@
     <ClInclude Include="include\details\specifiers.h">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\details\sequence_type.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\sequence_function.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\variant_sequencial_view.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -105,6 +114,15 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\argument.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\details\sequence_type.cpp">
+      <Filter>source\details</Filter>
+    </ClCompile>
+    <ClCompile Include="source\details\sequence_function.cpp">
+      <Filter>source\details</Filter>
+    </ClCompile>
+    <ClCompile Include="source\variant_sequencial_view.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

@@ -8,6 +8,7 @@
 
 #pragma once
 #include "details/registry.h"
+#include "variant_sequencial_view.h"
 
 /**
 * @addtogroup Reflectpp
@@ -26,6 +27,7 @@ namespace reflectpp
 	{
 		friend property;
 		friend type;
+		friend variant_sequencial_view;
 
 	public:
 
@@ -53,6 +55,11 @@ namespace reflectpp
 		* Clear the stored value of this variant
 		*/
 		void clear() REFLECTPP_NOEXCEPT;
+		
+		/**
+		* Creates a variant_sequential_view from the containing value
+		*/
+		variant_sequencial_view create_sequential_view() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value
@@ -72,6 +79,11 @@ namespace reflectpp
 		*/
 		template<typename T>
 		const T& get_value() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not this type is a sequencial container
+		*/
+		bool is_sequential_container() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored value is the same type as requested type

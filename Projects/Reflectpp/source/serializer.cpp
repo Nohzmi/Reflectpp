@@ -42,25 +42,41 @@ namespace reflectpp
 
 	void serializer::save_type(const variant& var, json& j) const REFLECTPP_NOEXCEPT
 	{
-		for (property& prop : var.get_type().get_properties())
+		if (var.is_type<int>())
 		{
-			if ((prop.get_specifiers() & specifiers::Serialized) == 0)
-				continue;
+			if (!j.is_array()) j = var.get_value<int>();
+			else j.emplace_back(var.get_value<int>());
+		}
+		else if (var.is_type<unsigned>())
+		{
+			if (!j.is_array()) j = var.get_value<unsigned>();
+			else j.emplace_back(var.get_value<unsigned>());
+		}
+		else if (var.is_type<float>())
+		{
+			if (!j.is_array()) j = var.get_value<float>();
+			else j.emplace_back(var.get_value<float>());
+		}
+		else if (var.is_type<double>())
+		{
+			if (!j.is_array()) j = var.get_value<double>();
+			else j.emplace_back(var.get_value<double>());
+		}
+		else if (var.is_sequential_container())
+		{
+			j = json::array();
 
-			variant pvar{ prop.get_value(var) };
-
-			if (pvar.is_type<int>())
-				j.emplace(prop.get_name(), pvar.get_value<int>());
-			else if (pvar.is_type<unsigned>())
-				j.emplace(prop.get_name(), pvar.get_value<unsigned>());
-			else if (pvar.is_type<float>())
-				j.emplace(prop.get_name(), pvar.get_value<float>());
-			else if (pvar.is_type<double>())
-				j.emplace(prop.get_name(), pvar.get_value<double>());
-			else
+			for (auto v : var.create_sequential_view())
+				save_type(v, j);
+		}
+		else
+		{
+			for (property& prop : var.get_type().get_properties())
 			{
-				auto& pj = j[prop.get_name()];
-				save_type(pvar, pj);
+				if ((prop.get_specifiers() & specifiers::Serialized) == 0)
+					continue;
+
+				save_type(prop.get_value(var), j[prop.get_name()]);
 			}
 		}
 	}

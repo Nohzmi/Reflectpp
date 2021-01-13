@@ -46,7 +46,9 @@ namespace reflectpp
 			bool operator==(const iterator<T>& rhs) const REFLECTPP_NOEXCEPT;
 			bool operator!=(const iterator<T>& rhs) const REFLECTPP_NOEXCEPT;
 			iterator<T>& operator++() REFLECTPP_NOEXCEPT;
+			iterator<T> operator++(int) REFLECTPP_NOEXCEPT;
 			T& operator*() const REFLECTPP_NOEXCEPT;
+			T* operator->() REFLECTPP_NOEXCEPT;
 
 		private:
 
@@ -63,6 +65,7 @@ namespace reflectpp
 		range& operator=(const range&) = delete;
 		range& operator=(range&&) REFLECTPP_NOEXCEPT = default;
 
+		//TODO doc here
 		T& operator[] (size_t n) const REFLECTPP_NOEXCEPT;
 		iterator<T> begin() const REFLECTPP_NOEXCEPT;
 		bool empty() const REFLECTPP_NOEXCEPT;

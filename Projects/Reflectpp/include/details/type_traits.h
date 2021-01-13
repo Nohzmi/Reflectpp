@@ -35,6 +35,18 @@ namespace reflectpp
 			!std::is_volatile_v<T>>
 		{};
 
+		template<typename>
+		struct is_vector : std::false_type {};
+
+		template<typename T, typename A>
+		struct is_vector<std::vector<T, A>> : std::true_type {};
+
+		template<typename>
+		struct is_list : std::false_type {};
+
+		template<typename T, typename A>
+		struct is_list<std::list<T, A>> : std::true_type {};
+
 		template <typename T>
 		class is_registered
 		{

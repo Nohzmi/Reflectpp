@@ -25,6 +25,7 @@ namespace reflectpp
 	class REFLECTPP_API argument final
 	{
 		friend property;
+		friend variant_sequencial_view;
 
 	public:
 

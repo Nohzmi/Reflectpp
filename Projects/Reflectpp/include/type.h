@@ -16,6 +16,11 @@
 */
 namespace reflectpp
 {
+	namespace details
+	{
+		class sequence_type;
+	}
+
 	class factory;
 	class property;
 	class type_info;
@@ -26,9 +31,10 @@ namespace reflectpp
 	/**
 	* The basic type representation
 	*/
-	class REFLECTPP_API type final
+	class REFLECTPP_API type
 	{
 		friend details::registry;
+		friend details::sequence_type;
 
 	public:
 
@@ -122,9 +128,14 @@ namespace reflectpp
 		*/
 		type_info& get_type_info() const REFLECTPP_NOEXCEPT;
 
+		/*
+		* Returns whether or not this type is a sequencial container
+		*/
+		virtual bool is_sequential_container() const REFLECTPP_NOEXCEPT;
+
 	private:
 
-		type(factory* factory, size_t size, type_info* type_info) REFLECTPP_NOEXCEPT;
+		type(factory* _factory, size_t size, type_info* _type_info) REFLECTPP_NOEXCEPT;
 
 		range<type> m_base_types;
 		range<type> m_derived_types;

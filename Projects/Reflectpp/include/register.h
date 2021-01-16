@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "details/hasher.h"
+#include "details/hasher.hpp"
 #include "details/type_traits.h"
 
 #define REFLECT(T)														\

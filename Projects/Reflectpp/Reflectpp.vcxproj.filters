@@ -36,35 +36,14 @@
     <ClInclude Include="include\factory.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\range.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\registration.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\type_info.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\utilities.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\platform.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\assert.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\hasher.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\serializer.h">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\macros.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\type_traits.h">
-      <Filter>include\details</Filter>
     </ClInclude>
     <ClInclude Include="include\instance.h">
       <Filter>include</Filter>
@@ -72,17 +51,47 @@
     <ClInclude Include="include\argument.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\variant_sequencial_view.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\hasher.hpp">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\macros.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\platform.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\type_traits.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\utilities.hpp">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\property_data.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
     <ClInclude Include="include\details\specifiers.h">
       <Filter>include\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\sequence_type.h">
+    <ClInclude Include="include\details\type_data.h">
       <Filter>include\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\sequence_function.h">
+    <ClInclude Include="include\details\factory_data.h">
       <Filter>include\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\variant_sequencial_view.h">
-      <Filter>include</Filter>
+    <ClInclude Include="include\details\type_info_data.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\forward.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\log.hpp">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\variant_data.h">
+      <Filter>include\details</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,48 +104,27 @@
     <ClCompile Include="source\variant.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\factory.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\property.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\registration.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\type_info.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\serializer.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\instance.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\argument.cpp">
       <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\details\sequence_type.cpp">
-      <Filter>source\details</Filter>
-    </ClCompile>
-    <ClCompile Include="source\details\sequence_function.cpp">
-      <Filter>source\details</Filter>
     </ClCompile>
     <ClCompile Include="source\variant_sequencial_view.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\instance.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\details\inline\utilities.inl">
-      <Filter>include\details\inline</Filter>
-    </None>
     <None Include="include\details\inline\registry.inl">
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\factory.inl">
-      <Filter>include\details\inline</Filter>
-    </None>
-    <None Include="include\details\inline\property.inl">
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\range.inl">
@@ -154,16 +142,16 @@
     <None Include="include\details\inline\type.inl">
       <Filter>include\details\inline</Filter>
     </None>
-    <None Include="include\details\inline\assert.inl">
-      <Filter>include\details\inline</Filter>
-    </None>
-    <None Include="include\details\inline\hasher.inl">
-      <Filter>include\details\inline</Filter>
-    </None>
     <None Include="include\details\inline\instance.inl">
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\argument.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\property.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\variant_sequencial_view.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

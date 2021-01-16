@@ -4,56 +4,36 @@
 
 #include "type.h"
 
+#include "variant.h"
+#include "instance.h"
+#include "argument.h"
+
 namespace reflectpp
 {
-	size_t property::get_id() const REFLECTPP_NOEXCEPT
+	type property::get_declaring_type() const REFLECTPP_NOEXCEPT
 	{
-		return m_id;
+		return is_valid() ? type(m_data->m_type) : type();
 	}
 
-	const char* property::get_name() const REFLECTPP_NOEXCEPT
+	type property::get_type() const REFLECTPP_NOEXCEPT
 	{
-		return m_name;
+		return is_valid() ? type(m_data->m_property_type) : type();
 	}
 
-	size_t property::get_specifiers() const REFLECTPP_NOEXCEPT
+	variant property::get_value(instance object) const REFLECTPP_NOEXCEPT
 	{
-		return m_specifiers;
-	}
-
-	type& property::get_type() const REFLECTPP_NOEXCEPT
-	{
-		return *m_property_type;
-	}
-
-	variant property::get_value(const instance& object) const REFLECTPP_NOEXCEPT
-	{
-		REFLECTPP_ASSERT(object.is_valid(), "invalid instance");
-		REFLECTPP_ASSERT(object.m_var->m_type == m_type, "wrong object type");
+		if (!is_valid() || !object.is_valid() || object.get_type() != get_declaring_type())
+			return variant();
 
 		bool is_owner{ false };
-		void* data{ m_getter(object.m_var->m_data, is_owner) };
+		void* value{ m_data->m_getter(object.m_variant.m_data.m_value, is_owner) };
 
-		return variant(data, is_owner, m_property_type);
+		return variant({ is_owner, m_data->m_property_type, value });
 	}
 
-	void property::set_value(const instance& object, const argument& arg) const REFLECTPP_NOEXCEPT
+	void property::set_value(instance object, argument arg) const REFLECTPP_NOEXCEPT
 	{
-		REFLECTPP_ASSERT(object.is_valid(), "invalid instance");
-		REFLECTPP_ASSERT(object.m_var->m_type == m_type, "wrong object type");
-		REFLECTPP_ASSERT(arg.m_var->m_type == m_property_type, "wrong argument type");
-
-		m_setter(object.m_var->m_data, arg.m_var->m_data);
-	}
-
-	property::property(GetterT getter, size_t id, const char* name, type* property_type, SetterT setter, size_t specifiers, type* type) REFLECTPP_NOEXCEPT :
-		m_getter{ getter },
-		m_id{ id },
-		m_name{ name },
-		m_property_type{ property_type },
-		m_setter{ setter },
-		m_specifiers{ specifiers },
-		m_type{ type }
-	{
+		if (is_valid() && object.is_valid() && object.get_type() == get_declaring_type() && arg.get_type() == get_type())
+			m_data->m_setter(object.m_variant.m_data.m_value, arg.m_variant.m_data.m_value);
 	}
 }

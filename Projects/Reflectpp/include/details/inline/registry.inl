@@ -5,52 +5,60 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		REFLECTPP_INLINE type* registry::add_base(type* _type) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE void registry::add_base(type_data* type) REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_valid_type<T>::value || std::is_arithmetic_v<T>)
 			{
-				REFLECTPP_ASSERT(false, "invalid type");
-				return nullptr;
+				REFLECTPP_LOG("invalid type");
 			}
 			else
 			{
-				type* base{ add_base_impl(get_type_impl<T>(), _type) };
-				REFLECTPP_ASSERT(base != nullptr, "base type already registered");
-
-				return base;
+				add_base_impl(type, get_type_impl<T>());
 			}
 		}
 
 		template<typename T, typename propertyT>
-		REFLECTPP_INLINE property* registry::add_property(propertyT T::* addr, const char* name, size_t specifiers, type* _type) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE void registry::add_property(type_data* type, const char* name, propertyT T::* addr, size_t specifiers) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
-			REFLECTPP_ASSERT(!std::is_pointer_v<propertyT>, "pointer not supported");
-
-			size_t offset = (size_t)(char*)&((T*)nullptr->*addr);
-
-			auto getter = [offset](void* object, bool& is_owner) -> void*
+			if constexpr (std::is_pointer_v<propertyT>)
 			{
-				is_owner = false;
-				return static_cast<char*>(object) + offset;
-			};
-
-			auto setter = [offset](void* object, void* value)
+				REFLECTPP_LOG("pointer not supported");
+			}
+			else
 			{
-				auto& set = *reinterpret_cast<decay<propertyT>*>(static_cast<char*>(object) + offset);
-				set = *static_cast<decay<propertyT>*>(value);
-			};
+				if (get_type<T>() != type)
+				{
+					REFLECTPP_LOG("%s isn't in type", name);
+					return;
+				}
 
-			property* prop { add_property_impl(getter, name, get_type_impl<decay<propertyT>>(), setter, specifiers, _type) };
-			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
+				size_t offset = (size_t)(char*)&((T*)nullptr->*addr);
 
-			return prop;
+				auto getter = [offset](void* object, bool& is_owner) -> void*
+				{
+					is_owner = false;
+					return static_cast<char*>(object) + offset;
+				};
+
+				auto setter = [offset](void* object, void* value)
+				{
+					auto& set = *reinterpret_cast<decay<propertyT>*>(static_cast<char*>(object) + offset);
+					set = *static_cast<decay<propertyT>*>(value);
+				};
+
+				property_data property{ getter, hash(name), name, get_type_impl<decay<propertyT>>(), setter, specifiers, type };
+				add_property_impl(type , &property);
+			}
 		}
 
 		template<typename T, typename propertyT>
-		REFLECTPP_INLINE property* registry::add_property(propertyT(T::* getter)() const, const char* name, void(T::* setter)(propertyT), size_t specifiers, type* _type) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE void registry::add_property(type_data* type, const char* name, propertyT(T::* getter)() const, void(T::* setter)(propertyT), size_t specifiers) REFLECTPP_NOEXCEPT
 		{
-			REFLECTPP_ASSERT(get_type<T>() == _type, "%s isn't in type", name);
+			if (get_type<T>() != type)
+			{
+				REFLECTPP_LOG("%s isn't in type", name);
+				return;
+			}
 
 			auto get = [getter](void* object, bool& is_owner) -> void*
 			{
@@ -74,29 +82,30 @@ namespace reflectpp
 			auto set = [setter](void* object, void* value)
 			{
 				if constexpr (std::is_pointer_v<propertyT>)
+				{
 					(static_cast<T*>(object)->*setter)(static_cast<decay<propertyT>*>(value));
+				}
 				else
+				{
 					(static_cast<T*>(object)->*setter)(*static_cast<decay<propertyT>*>(value));
-
+				}
 			};
-			
-			property* prop { add_property_impl(get, name, get_type_impl<decay<propertyT>>(), set, specifiers, _type) };
-			REFLECTPP_ASSERT(prop != nullptr, "%s already registered", name);
 
-			return prop;
+			property_data property{ get, hash(name), name, get_type_impl<decay<propertyT>>(), set, specifiers, type };
+			add_property_impl(type, &property);
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE type* registry::add_type() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE type_data* registry::add_type() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_valid_type<T>::value || std::is_arithmetic_v<T>)
 			{
-				REFLECTPP_ASSERT(false, "invalid type");
+				REFLECTPP_LOG("invalid type");
 				return nullptr;
 			}
 			else if constexpr (!is_registered<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "REFLECT() macro isn't used");
+				REFLECTPP_LOG("REFLECT() macro isn't used");
 				return nullptr;
 			}
 			else
@@ -110,17 +119,17 @@ namespace reflectpp
 		{
 			if constexpr (!std::is_pointer_v<T>)
 			{
-				REFLECTPP_ASSERT(false, "not a pointer");
+				REFLECTPP_LOG("not a pointer");
 				return nullptr;
 			}
 			else if constexpr (!is_valid_type<std::remove_pointer_t<T>>::value)
 			{
-				REFLECTPP_ASSERT(false, "invalid type");
+				REFLECTPP_LOG("invalid type");
 				return nullptr;
 			}
 			else if constexpr (!is_valid_type<U>::value)
 			{
-				REFLECTPP_ASSERT(false, "invalid object type");
+				REFLECTPP_LOG("invalid object type");
 				return nullptr;
 			}
 			else
@@ -131,34 +140,42 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE factory* registry::get_factory() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE factory_data* registry::get_factory() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_valid_type<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "invalid type");
+				REFLECTPP_LOG("invalid type");
 				return nullptr;
 			}
 			else
 			{
-				factory* _factory{ get_factory_impl(type_id<T>()) };
+				factory_data* addr{ get_factory_impl(type_id<T>()) };
 
-				if (_factory != nullptr)
-					return _factory;
+				if (addr != nullptr)
+					return addr;
 
 				auto constructor = []() -> void*
 				{
 					if constexpr (std::is_constructible_v<T>)
+					{
 						return new T();
+					}
 					else
+					{
 						return nullptr;
+					}
 				};
 
 				auto copy = [](void* object) -> void*
 				{
 					if constexpr (std::is_copy_constructible_v<T>)
+					{
 						return new T(*static_cast<T*>(object));
+					}
 					else
+					{
 						return nullptr;
+					}
 				};
 
 				auto destructor = [](void* object)
@@ -167,71 +184,17 @@ namespace reflectpp
 						delete static_cast<T*>(object);
 				};
 
-				return add_factory_impl(constructor, copy, destructor, type_id<T>());
+				factory_data factory{ constructor, copy , destructor };
+				return add_factory_impl(type_id<T>(), &factory);
 			}
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE sequence_function* registry::get_sequence_function() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE type_data* registry::get_type() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_valid_type<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "invalid type");
-				return nullptr;
-			}
-			else
-			{
-				sequence_function* _sequence_function{ get_sequence_function_impl(type_id<T>()) };
-
-				if (_sequence_function != nullptr)
-					return _sequence_function;
-
-				auto clear = [](void* container)
-				{
-					static_cast<T*>(container)->clear();
-				};
-
-				auto erase = [](void* container, size_t index)
-				{
-					static_cast<T*>(container)->erase(static_cast<T*>(container)->begin() + index);
-				};
-
-				auto get = [](void* container, size_t index) -> void*
-				{
-					return static_cast<void*>(&static_cast<T*>(container)->at(index));
-				};
-
-				auto insert = [](void* container, size_t index, void* value)
-				{
-					static_cast<T*>(container)->insert(static_cast<T*>(container)->begin() + index, *static_cast<typename T::value_type*>(value));
-				};
-
-				auto resize = [](void* container, size_t size)
-				{
-					static_cast<T*>(container)->resize(size);
-				};
-
-				auto set = [](void* container, size_t index, void* value)
-				{
-					auto& set = *static_cast<typename T::value_type*>(&static_cast<T*>(container)->at(index));
-					set = *static_cast<typename T::value_type*>(value);
-				};
-
-				auto size = [](void* container) -> size_t
-				{
-					return static_cast<T*>(container)->size();
-				};
-
-				return add_sequence_function_impl(clear, erase, get, type_id<T>(), insert, resize, set, size);
-			}
-		}
-
-		template<typename T>
-		REFLECTPP_INLINE type* registry::get_type() REFLECTPP_NOEXCEPT
-		{
-			if constexpr (!is_valid_type<T>::value)
-			{
-				REFLECTPP_ASSERT(false, "invalid type");
+				REFLECTPP_LOG("invalid type");
 				return nullptr;
 			}
 			else if constexpr (std::is_arithmetic_v<T>)
@@ -240,19 +203,21 @@ namespace reflectpp
 			}
 			else
 			{
-				type* _type{ get_type_impl(type_id<T>()) };
-				REFLECTPP_ASSERT(_type != nullptr, "unregistered type");
+				type_data* type{ get_type_impl(type_id<T>()) };
 
-				return _type;
+				if (type == nullptr)
+					REFLECTPP_LOG("unregistered type");
+
+				return type;
 			}
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE type* registry::get_type(T&& object) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE type_data* registry::get_type(T&& object) REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_valid_param<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "invalid param");
+				REFLECTPP_LOG("invalid param");
 				return nullptr;
 			}
 			else if constexpr (std::is_arithmetic_v<decay<T>>)
@@ -261,7 +226,7 @@ namespace reflectpp
 			}
 			else if constexpr (!is_registered<decay<T>>::value)
 			{
-				REFLECTPP_ASSERT(false, "unregistered type");
+				REFLECTPP_LOG("unregistered type");
 				return nullptr;
 			}
 			else
@@ -269,9 +234,13 @@ namespace reflectpp
 				if constexpr (std::is_pointer_v<std::decay_t<T>>)
 				{
 					if (std::forward<T>(object) == nullptr)
+					{
 						return get_type_impl(type_id<decay<T>>());
+					}
 					else
+					{
 						return get_type_impl(std::forward<T>(object)->get_type_id());
+					}
 				}
 				else
 				{
@@ -281,41 +250,96 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE type_info* registry::get_type_info() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE type_info_data* registry::get_type_info() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_valid_type<T>::value)
 			{
-				REFLECTPP_ASSERT(false, "invalid type");
+				REFLECTPP_LOG(false, "invalid type");
 				return nullptr;
 			}
 			else
 			{
-				type_info* type_info{ get_type_info_impl(type_id<T>()) };
+				type_info_data* addr{ get_type_info_impl(type_id<T>()) };
 
-				if (type_info != nullptr)
-					return type_info;
+				if (addr != nullptr)
+					return addr;
 
-				return add_type_info(type_id<T>(), type_name<T>());
+				type_info_data type_info{ type_id<T>(), type_name<T>() };
+				return add_type_info_impl(&type_info);
 			}
 		}
 
-		template<typename T>
-		REFLECTPP_INLINE type* registry::get_type_impl() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE registry& registry::get_instance() REFLECTPP_NOEXCEPT
 		{
-			type* type{ get_type_impl(type_id<T>()) };
+			return m_instance;
+		}
 
-			if (type == nullptr)
+		template<typename T>
+		REFLECTPP_INLINE type_data* registry::get_type_impl() REFLECTPP_NOEXCEPT
+		{
+			type_data* addr{ get_type_impl(type_id<T>()) };
+
+			if (addr != nullptr)
+				return addr;
+
+			type_data type;
+			type.m_factory = get_factory<T>();
+			type.m_size = sizeof(T);
+			type.m_type_info = get_type_info<T>();
+
+			if constexpr (is_sequence_container<T>::value)
 			{
-				if constexpr (is_vector<T>::value || is_list<T>::value)
+				if constexpr (std::is_pointer_v<T::value_type>)
 				{
-					REFLECTPP_ASSERT(!std::is_pointer_v<T::value_type>, "pointer not supported");
-					return add_sequence_type_impl(get_type_impl<T::value_type>(), get_factory<T>(), get_sequence_function<T>(), sizeof(T), get_type_info<T>());
+					REFLECTPP_LOG("pointer not supported");
+					return nullptr;
 				}
 				else
-					return add_type_impl(get_factory<T>(), sizeof(T), get_type_info<T>());
-			}
+				{
+					type.m_sequence_assign = [](void* container, size_t index, void* value)
+					{
+						auto& set = *static_cast<typename T::value_type*>(&static_cast<T*>(container)->at(index));
+						set = *static_cast<typename T::value_type*>(value);
+					};
 
-			return type;
+					type.m_sequence_at = [](void* container, size_t index) -> void*
+					{
+						return static_cast<void*>(&static_cast<T*>(container)->at(index));
+					};
+
+					type.m_sequence_clear = [](void* container)
+					{
+						static_cast<T*>(container)->clear();
+					};
+
+					type.m_sequence_erase = [](void* container, size_t index)
+					{
+						static_cast<T*>(container)->erase(static_cast<T*>(container)->begin() + index);
+					};
+
+					type.m_sequence_insert = [](void* container, size_t index, void* value)
+					{
+						static_cast<T*>(container)->insert(static_cast<T*>(container)->begin() + index, *static_cast<typename T::value_type*>(value));
+					};
+
+					type.m_sequence_resize = [](void* container, size_t size)
+					{
+						static_cast<T*>(container)->resize(size);
+					};
+
+					type.m_sequence_size = [](void* container) -> size_t
+					{
+						return static_cast<T*>(container)->size();
+					};
+
+					type.m_is_sequence_container = true;
+					return add_type_impl(&type);
+				}
+			}
+			else
+			{
+				return add_type_impl(&type);
+			}
 		}
 	}
 }

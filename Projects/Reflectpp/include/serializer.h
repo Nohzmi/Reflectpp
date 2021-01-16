@@ -46,20 +46,20 @@ namespace reflectpp
 		* Serialize an object
 		* @param object
 		*/
-		void save(const instance& object) const REFLECTPP_NOEXCEPT;
+		void save(instance object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Deserialize an object
 		* @param object
 		*/
-		void load(const instance& object) const REFLECTPP_NOEXCEPT;
+		void load(instance object) const REFLECTPP_NOEXCEPT;
 
 	private:
 
 		void save_type(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
 		void load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT;
 
-		std::string m_path;
+		std::string m_path{ "default" };
 	};
 
 #pragma warning (pop)

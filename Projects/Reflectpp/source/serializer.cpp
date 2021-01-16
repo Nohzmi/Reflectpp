@@ -7,6 +7,7 @@
 
 #include "property.h"
 #include "type.h"
+#include "variant_sequencial_view.h"
 
 using json = nlohmann::json;
 
@@ -17,16 +18,16 @@ namespace reflectpp
 		m_path = std::string(path) + ".json";
 	}
 
-	void serializer::save(const instance& object) const REFLECTPP_NOEXCEPT
+	void serializer::save(instance object) const REFLECTPP_NOEXCEPT
 	{
 		json j;
-		save_type(*object.m_var, j);
+		save_type(object.m_variant, j);
 
 		std::ofstream out(m_path);
 		out << std::setw(4) << j;
 	}
 
-	void serializer::load(const instance& object) const REFLECTPP_NOEXCEPT
+	void serializer::load(instance object) const REFLECTPP_NOEXCEPT
 	{
 		json j;
 
@@ -37,7 +38,7 @@ namespace reflectpp
 
 		in >> j;
 
-		load_type(*object.m_var, j);
+		load_type(object.m_variant, j);
 	}
 
 	void serializer::save_type(const variant& var, json& j) const REFLECTPP_NOEXCEPT
@@ -71,19 +72,19 @@ namespace reflectpp
 		}
 		else
 		{
-			for (property& prop : var.get_type().get_properties())
+			for (auto it : var.get_type().get_properties())
 			{
-				if ((prop.get_specifiers() & specifiers::Serialized) == 0)
+				if ((it.get_specifiers() & specifiers::Serialized) == 0)
 					continue;
 
-				save_type(prop.get_value(var), j[prop.get_name()]);
+				save_type(it.get_value(var), j[it.get_name()]);
 			}
 		}
 	}
 
 	void serializer::load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT
 	{
-		for (property& prop : var.get_type().get_properties())
+		/*for (property& prop : var.get_type().get_properties())
 		{
 			if (!j.contains(prop.get_name()))
 				continue;
@@ -112,6 +113,42 @@ namespace reflectpp
 			{
 				load_type(pvar, pj);
 			}
+		}*/
+
+		/////////////////////////////////////
+
+		/*if (j.is_number_integer())
+		{
+			if (var.is_type<int>())
+				prop.set_value(var, j.get<int>());
+			else if (var.is_type<unsigned>())
+				prop.set_value(var, j.get<unsigned>());
 		}
+		else if (j.is_number_float())
+		{
+			if (var.is_type<float>())
+				prop.set_value(var, j.get<float>());
+			else if (var.is_type<double>())
+				prop.set_value(var, j.get<double>());
+		}
+		else if (j.is_array())
+		else
+		{
+			load_type(pvar, pj);
+		}
+
+		for (property& prop : var.get_type().get_properties())
+		{
+			if (!j.contains(prop.get_name()))
+				continue;
+
+			if ((prop.get_specifiers() & specifiers::Serialized) == 0)
+				continue;
+
+			variant pvar{ prop.get_value(var) };
+			auto& pj{ j.at(prop.get_name()) };
+
+			
+		}*/
 	}
 }

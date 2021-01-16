@@ -16,6 +16,22 @@
 
 #include "window.h"
 
+
+class Test
+{
+public:
+	Test() = default;
+	~Test() = default;
+	Test(const Test&) = default;
+	Test(Test&&) REFLECTPP_NOEXCEPT = default;
+	Test& operator=(const Test&) = default;
+	Test& operator=(Test&&) REFLECTPP_NOEXCEPT = default;
+public:
+
+	int sdjhflsdq;
+	int sdjhflsdq2;
+};
+
 using namespace reflectpp;
 
 int main()
@@ -63,6 +79,8 @@ int main()
 	//auto test = variant_sequence.get_value(0);
 	//float getted = test.get_value<float>();
 	//variant_sequence.clear();
+
+	Test test{ 5, 6 };
 
 	return EXIT_SUCCESS;
 }

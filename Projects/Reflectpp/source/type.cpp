@@ -2,96 +2,79 @@
 
 #include "type.h"
 
-#include "details/sequence_type.h"
 #include "factory.h"
 #include "property.h"
 #include "type_info.h"
+#include "variant.h"
 
 namespace reflectpp
 {
-
-	bool type::operator==(const type& rhs) const REFLECTPP_NOEXCEPT
-	{
-		return m_type_info == rhs.m_type_info;
-	}
-
-	bool type::operator!=(const type& rhs) const REFLECTPP_NOEXCEPT
-	{
-		return m_type_info != rhs.m_type_info;
-	}
-
 	variant type::create() const REFLECTPP_NOEXCEPT
 	{
-		return variant(get_factory().construct(), true, const_cast<type*>(this));
+		return variant({ true, m_data, m_data->m_factory->m_constructor() });
 	}
 
-	range<type>& type::get_base_classes() const REFLECTPP_NOEXCEPT
+	const std::vector<type>& type::get_base_classes() const REFLECTPP_NOEXCEPT
 	{
-		return *const_cast<range<type>*>(&m_base_types);
+		std::vector<type> base_types;
+
+		if (!is_valid())
+			return base_types;
+
+		for (auto it : m_data->m_base_types)
+			base_types.emplace_back(type(it));
+
+		return base_types;
 	}
 
-	range<type>& type::get_derived_classes() const REFLECTPP_NOEXCEPT
+	const std::vector<type>& type::get_derived_classes() const REFLECTPP_NOEXCEPT
 	{
-		return *const_cast<range<type>*>(&m_derived_types);
+		std::vector<type> derived_types;
+
+		if (!is_valid())
+			return derived_types;
+
+		for (auto it : m_data->m_derived_types)
+			derived_types.emplace_back(type(it));
+
+		return derived_types;
 	}
 
-	factory& type::get_factory() const REFLECTPP_NOEXCEPT
+	factory type::get_factory() const REFLECTPP_NOEXCEPT
 	{
-		return *m_factory;
+		return is_valid() ? factory(m_data->m_factory) : factory();
 	}
 
-	size_t type::get_id() const REFLECTPP_NOEXCEPT
+	property type::get_property(const char* name) const REFLECTPP_NOEXCEPT
 	{
-		return m_type_info->get_id();
-	}
+		if (!is_valid())
+			return property();
 
-	const char* type::get_name() const REFLECTPP_NOEXCEPT
-	{
-		return m_type_info->get_name();
-	}
-
-	property& type::get_property(const char* name) const REFLECTPP_NOEXCEPT
-	{
 		size_t id{ details::hash(name) };
 
-		for (auto& prop : m_properties)
-		{
-			if (prop.get_id() == id)
-			{
-				REFLECTPP_ASSERT((prop.get_specifiers() & Exposed) > 0, "%s isn't exposed", name);
-				return prop;
-			}
-		}
+		for (auto it : m_data->m_properties)
+			if (it->m_id == id)
+				return (it->m_specifiers & Exposed) > 0 ? property(it) : property();
 
-		REFLECTPP_ASSERT(false, "%s isn't registered", name);
-		return *m_properties.begin();
+		return property();
 	}
 
-	range<property>& type::get_properties() const REFLECTPP_NOEXCEPT
+	const std::vector<property>& type::get_properties() const REFLECTPP_NOEXCEPT
 	{
-		return *const_cast<range<property>*>(&m_properties);
+		std::vector<property> properties;
+
+		if (!is_valid())
+			return properties;
+
+		for (auto it : m_data->m_properties)
+			if ((it->m_specifiers & Exposed) > 0)
+				properties.emplace_back(property(it));
+
+		return properties;
 	}
 
-	size_t type::get_sizeof() const REFLECTPP_NOEXCEPT
+	type_info type::get_type_info() const REFLECTPP_NOEXCEPT
 	{
-		return m_size;
-	}
-
-	type_info& type::get_type_info() const REFLECTPP_NOEXCEPT
-	{
-		return *m_type_info;
-	}
-
-	bool type::is_sequential_container() const REFLECTPP_NOEXCEPT
-	{
-		return false;
-	}
-
-	type::type(factory* _factory, size_t size, type_info* _type_info) REFLECTPP_NOEXCEPT :
-		m_factory{ _factory },
-		m_hierarchy_id{ _type_info->get_id() },
-		m_size{ size },
-		m_type_info{ _type_info }
-	{
+		return is_valid() ? type_info(m_data->m_type_info) : type_info();
 	}
 }

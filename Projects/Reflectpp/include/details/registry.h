@@ -7,45 +7,27 @@
 */
 
 #pragma once
-#include <functional>
 #include <memory>
 #include <unordered_map>
-#include <vector>
 
-#include "details/hasher.h"
-#include "details/platform.h"
+#include "details/factory_data.h"
+#include "details/hasher.hpp"
+#include "details/log.hpp"
+#include "details/property_data.h"
 #include "details/specifiers.h"
-#include "details/utilities.h"
+#include "details/type_data.h"
+#include "details/type_info_data.h"
+#include "details/utilities.hpp"
 
 namespace reflectpp
 {
-	class factory;
-	class property;
-	class type;
-	class type_info;
-
 	namespace details
 	{
-		class sequence_function;
-
 #pragma warning(push)
 #pragma warning(disable: 4251)
 
 		class REFLECTPP_API registry final
 		{
-			using ClearT = void (*)(void*);
-			using ConstructorT = void* (*)();
-			using CopyT = void* (*)(void*);
-			using DestructorT = void (*)(void*);
-			using EraseT = void (*)(void*, size_t);
-			using GetT = void* (*)(void*, size_t);
-			using GetterT = std::function<void* (void*, bool&)>;
-			using InsertT = void (*)(void*, size_t, void*);
-			using ResizeT = void (*)(void*, size_t);
-			using SetT = void (*)(void*, size_t, void*);
-			using SetterT = std::function<void(void*, void*)>;
-			using SizeT = size_t(*)(void*);
-
 		public:
 
 			registry();
@@ -56,61 +38,46 @@ namespace reflectpp
 			registry& operator=(registry&&) REFLECTPP_NOEXCEPT = delete;
 
 			template<typename T>
-			type* add_base(type* _type) REFLECTPP_NOEXCEPT;
-
+			REFLECTPP_INLINE void add_base(type_data* type) REFLECTPP_NOEXCEPT;
 			template<typename T, typename propertyT>
-			property* add_property(propertyT T::* addr, const char* name, size_t specifiers, type* _type) REFLECTPP_NOEXCEPT;
-
+			REFLECTPP_INLINE void add_property(type_data* type, const char* name, propertyT T::* addr, size_t specifiers) REFLECTPP_NOEXCEPT;
 			template<typename T, typename propertyT>
-			property* add_property(propertyT(T::* getter)() const, const char* name, void(T::* setter)(propertyT), size_t specifiers, type* _type) REFLECTPP_NOEXCEPT;
-
+			REFLECTPP_INLINE void add_property(type_data* type, const char* name, propertyT(T::* getter)() const,  void(T::* setter)(propertyT), size_t specifiers) REFLECTPP_NOEXCEPT;
 			template<typename T>
-			type* add_type() REFLECTPP_NOEXCEPT;
-
+			REFLECTPP_INLINE type_data* add_type() REFLECTPP_NOEXCEPT;
 			template<typename T, typename U>
-			std::remove_pointer_t<T>* cast(U* object) REFLECTPP_NOEXCEPT;
-
+			REFLECTPP_INLINE std::remove_pointer_t<T>* cast(U* object) REFLECTPP_NOEXCEPT;
 			template<typename T>
-			factory* get_factory() REFLECTPP_NOEXCEPT;
-
+			REFLECTPP_INLINE factory_data* get_factory() REFLECTPP_NOEXCEPT;
 			template<typename T>
-			sequence_function* get_sequence_function() REFLECTPP_NOEXCEPT;
-
+			REFLECTPP_INLINE type_data* get_type() REFLECTPP_NOEXCEPT;
 			template<typename T>
-			type* get_type() REFLECTPP_NOEXCEPT;
-
+			REFLECTPP_INLINE type_data* get_type(T&& object) REFLECTPP_NOEXCEPT;
 			template<typename T>
-			type* get_type(T&& object) REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE type_info_data* get_type_info() REFLECTPP_NOEXCEPT;
 
-			template<typename T>
-			type_info* get_type_info() REFLECTPP_NOEXCEPT;
-
-			static registry& get_instance() REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE static registry& get_instance() REFLECTPP_NOEXCEPT;
 
 		private:
 
 			template<typename T>
-			type* get_type_impl() REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE type_data* get_type_impl() REFLECTPP_NOEXCEPT;
 
-			type* add_base_impl(type* base_type, type* _type) REFLECTPP_NOEXCEPT;
-			factory* add_factory_impl(ConstructorT constructor, CopyT copy, DestructorT destructor, size_t id) REFLECTPP_NOEXCEPT;
-			property* add_property_impl(GetterT getter, const char* name, type* property_type, SetterT setter, size_t specifier, type* _type) REFLECTPP_NOEXCEPT;
-			sequence_function* add_sequence_function_impl(ClearT clear, EraseT erase, GetT get, size_t id, InsertT insert, ResizeT resize, SetT set, SizeT size) REFLECTPP_NOEXCEPT;
-			type* add_sequence_type_impl(type* data_type, factory* _factory, sequence_function* _sequence_function, size_t size, type_info* _type_info) REFLECTPP_NOEXCEPT;
-			type* add_type_impl(factory* _factory, size_t size, type_info* _type_info) REFLECTPP_NOEXCEPT;
-			type_info* add_type_info(size_t id, const char* name) REFLECTPP_NOEXCEPT;
-			bool cast_impl(type* object_type, type* _type) const REFLECTPP_NOEXCEPT;
-			factory* get_factory_impl(size_t id) const REFLECTPP_NOEXCEPT;
-			sequence_function* get_sequence_function_impl(size_t id) const REFLECTPP_NOEXCEPT;
-			type* get_type_impl(size_t id) const REFLECTPP_NOEXCEPT;
-			type_info* get_type_info_impl(size_t id) const REFLECTPP_NOEXCEPT;
-			property* get_property_impl(size_t id) const REFLECTPP_NOEXCEPT;
+			void add_base_impl(type_data* type, type_data* base) REFLECTPP_NOEXCEPT;
+			factory_data* add_factory_impl(size_t id, factory_data* factory) REFLECTPP_NOEXCEPT;
+			void add_property_impl(type_data* type, property_data* property) REFLECTPP_NOEXCEPT;
+			type_data* add_type_impl(type_data* type) REFLECTPP_NOEXCEPT;
+			type_info_data* add_type_info_impl(type_info_data* type_info) REFLECTPP_NOEXCEPT;
+			bool cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT;
+			factory_data* get_factory_impl(size_t id) const REFLECTPP_NOEXCEPT;
+			type_data* get_type_impl(size_t id) const REFLECTPP_NOEXCEPT;
+			type_info_data* get_type_info_impl(size_t id) const REFLECTPP_NOEXCEPT;
+			property_data* get_property_impl(size_t id) const REFLECTPP_NOEXCEPT;
 
-			std::unordered_map<size_t, std::unique_ptr<factory>> m_factories;
-			std::vector<std::unique_ptr<property>> m_properties;
-			std::unordered_map<size_t, std::unique_ptr<sequence_function>> m_sequence_functions;
-			std::vector<std::unique_ptr<type_info>> m_type_infos;
-			std::vector<std::unique_ptr<type>> m_types;
+			std::unordered_map<size_t, std::unique_ptr<factory_data>> m_factories;
+			std::vector<std::unique_ptr<property_data>> m_properties;
+			std::vector<std::unique_ptr<type_info_data>> m_type_infos;
+			std::vector<std::unique_ptr<type_data>> m_types;
 
 			static registry m_instance;
 		};

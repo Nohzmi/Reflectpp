@@ -30,7 +30,7 @@ namespace reflectpp
 	public:
 
 		argument() = default;
-		~argument();
+		~argument() = default;
 		argument(const argument&) = default;
 		argument(argument&&) REFLECTPP_NOEXCEPT = default;
 		argument& operator=(const argument&) = default;
@@ -40,37 +40,49 @@ namespace reflectpp
 		* Creates an argument from a variant
 		* @param var
 		*/
-		argument(const variant& var) REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE argument(variant& var) REFLECTPP_NOEXCEPT;
+
+		/**
+		* Creates an argument from a variant
+		* @param var
+		*/
+		REFLECTPP_INLINE argument(const variant& var) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Create an argument from an object
 		* @param object
 		*/
 		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<argument, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
-		argument(T&& object) REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE argument(T& object) REFLECTPP_NOEXCEPT;
+
+		/**
+		* Create an argument from an object
+		* @param object
+		*/
+		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<argument, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
+		REFLECTPP_INLINE argument(const T& object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value
 		*/
-		type& get_type() const REFLECTPP_NOEXCEPT;
+		type get_type() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the value as requested type \n
 		* Use is_type() to check if the type is valid
 		*/
 		template<typename T>
-		T& get_value() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE T& get_value() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored value is the same type as requested type
 		*/
 		template<typename T>
-		bool is_type() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE bool is_type() const REFLECTPP_NOEXCEPT;
 
 	private:
 		
-		bool m_is_owner;
-		variant* m_var;
+		variant m_variant;
 	};
 }
 

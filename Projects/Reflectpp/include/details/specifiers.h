@@ -13,4 +13,3 @@ enum specifiers
 	Exposed		= 1 << 0,
 	Serialized	= 1 << 1
 };
-

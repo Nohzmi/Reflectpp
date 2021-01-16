@@ -6,34 +6,8 @@
 
 namespace reflectpp
 {
-	instance::~instance()
+	type instance::get_type() const REFLECTPP_NOEXCEPT
 	{
-		if (m_is_owner && m_var != nullptr)
-		{
-			delete m_var;
-			m_var = nullptr;
-		}
-	}
-
-	instance::instance(const variant& var) REFLECTPP_NOEXCEPT :
-		m_is_owner{ false },
-		m_var{ const_cast<variant*>(&var) }
-	{
-	}
-
-	instance::operator bool() const REFLECTPP_NOEXCEPT
-	{
-		return is_valid();
-	}
-
-	type& instance::get_type() const REFLECTPP_NOEXCEPT
-	{
-		REFLECTPP_ASSERT(is_valid(), "invalid instance");
-		return m_var->get_type();
-	}
-
-	bool instance::is_valid() const REFLECTPP_NOEXCEPT
-	{
-		return m_var != nullptr && m_var->is_valid();
+		return m_variant.get_type();
 	}
 }

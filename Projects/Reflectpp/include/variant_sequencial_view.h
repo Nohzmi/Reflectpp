@@ -6,9 +6,12 @@
 * @version 1.0
 */
 
-#pragma once
+#pragma once //TODO peut etre include registry ^^'
 #include "details/macros.h"
 #include "details/platform.h"
+#include "details/factory_data.h"
+#include "details/type_data.h"
+#include "details/variant_data.h"
 
 /**
 * @addtogroup Reflectpp
@@ -17,11 +20,6 @@
 
 namespace reflectpp
 {
-	namespace details
-	{
-		class sequence_type;
-	}
-
 	class argument;
 	class type;
 	class variant;
@@ -32,8 +30,6 @@ namespace reflectpp
 	*/
 	class REFLECTPP_API variant_sequencial_view final
 	{
-		friend variant;
-
 	public:
 
 		class REFLECTPP_API iterator
@@ -42,74 +38,76 @@ namespace reflectpp
 
 		public:
 
+			iterator() = default;
 			~iterator() = default;
 			iterator(const iterator&) = default;
 			iterator(iterator&&) REFLECTPP_NOEXCEPT = default;
 			iterator& operator=(const iterator&) = default;
 			iterator& operator=(iterator&&) REFLECTPP_NOEXCEPT = default;
+			iterator(size_t index, variant_sequencial_view* variant) REFLECTPP_NOEXCEPT;
 
-			bool operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT;
-			bool operator!=(const iterator& rhs) const REFLECTPP_NOEXCEPT;
-			iterator& operator++() REFLECTPP_NOEXCEPT;
-			iterator operator++(int) REFLECTPP_NOEXCEPT;
-			iterator& operator--() REFLECTPP_NOEXCEPT;
-			iterator operator--(int) REFLECTPP_NOEXCEPT;
-			iterator& operator+=(int i) REFLECTPP_NOEXCEPT;
-			iterator operator+(int i) REFLECTPP_NOEXCEPT;
-			iterator& operator-=(int i) REFLECTPP_NOEXCEPT;
-			iterator operator-(int i) REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE bool operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE bool operator!=(const iterator& rhs) const REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE iterator& operator++() REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE iterator operator++(int) REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE iterator& operator--() REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE iterator operator--(int) REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE iterator& operator+=(int i) REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE iterator operator+(int i) REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE iterator& operator-=(int i) REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE iterator operator-(int i) REFLECTPP_NOEXCEPT;
 			variant operator*() const REFLECTPP_NOEXCEPT;
 			variant get_data() const REFLECTPP_NOEXCEPT;
 
 		private:
 
-			iterator() = default;
-
 			size_t m_index;
-			const variant_sequencial_view* m_variant_sequencial_view;
+			variant_sequencial_view* m_variant_sequencial_view;
 		};
 
-		~variant_sequencial_view();
-		variant_sequencial_view(const variant_sequencial_view&);
+		variant_sequencial_view() = default;
+		REFLECTPP_INLINE ~variant_sequencial_view();
+		REFLECTPP_INLINE variant_sequencial_view(const variant_sequencial_view&);
 		variant_sequencial_view(variant_sequencial_view&&) REFLECTPP_NOEXCEPT = default;
-		variant_sequencial_view& operator=(const variant_sequencial_view&);
+		REFLECTPP_INLINE variant_sequencial_view& operator=(const variant_sequencial_view&);
 		variant_sequencial_view& operator=(variant_sequencial_view&&) REFLECTPP_NOEXCEPT = default;
+		REFLECTPP_INLINE explicit variant_sequencial_view(const details::variant_data& data) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		operator bool() const ;
+		REFLECTPP_INLINE operator bool() const;
 
 		/**
 		* Returns an iterator to the first element of the container
 		*/
-		iterator begin() const ;
+		REFLECTPP_INLINE iterator begin() const ;
 
 		/**
 		* Remove all elements from the containers
 		*/
-		void clear() ;
+		REFLECTPP_INLINE void clear() ;
 
 		/**
 		* Returns an iterator to the element following the last element of the container
 		*/
-		iterator end() const ;
+		REFLECTPP_INLINE iterator end() const ;
 
 		/**
 		* Removes the element at the position pos
 		* @param pos
 		*/
-		iterator erase(const iterator& pos) ;
+		REFLECTPP_INLINE iterator erase(const iterator& pos) ;
 
 		/**
 		* Returns the number of elements
 		*/
-		size_t get_size() const ;
+		REFLECTPP_INLINE size_t get_size() const ;
 
 		/**
 		* Returns the type of the stored value
 		*/
-		type& get_type() const ;
+		type get_type() const ;
 
 		/**
 		* Returns the current value at index
@@ -120,47 +118,45 @@ namespace reflectpp
 		/**
 		* Returns the data type of the stored value
 		*/
-		type& get_value_type() const ;
+		type get_value_type() const ;
 
 		/**
 		* Insert a value into the container
 		* @param pos
 		* @param value
 		*/
-		iterator insert(const iterator& pos, const argument& value) const ;
+		iterator insert(const iterator& pos, argument value) const ;
 
 		/**
 		* Returns whether or not the container has elements
 		*/
-		bool is_empty() const ;
+		REFLECTPP_INLINE bool is_empty() const ;
 
 		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		bool is_valid() const ;
+		REFLECTPP_INLINE bool is_valid() const ;
 
 		/**
 		* Sets the size of the sequential container
 		* @param size
 		*/
-		void set_size(size_t size) const ;
+		REFLECTPP_INLINE void set_size(size_t size) const ;
 
 		/**
 		* Set the content of the the argument at the specified index into the underlying sequential container
 		* @param index
 		* @param value
 		*/
-		void set_value(size_t index, const argument& value) const ;
+		void set_value(size_t index, argument value) const ;
 
 	private:
 
-		variant_sequencial_view(void* data, bool is_owner, details::sequence_type* _sequence_type);
-
-		void* m_data;
-		bool m_is_owner;
-		details::sequence_type* m_sequence_type;
+		details::variant_data m_data;
 	};
 }
+
+#include "details/inline/variant_sequencial_view.inl"
 
 /**
 * @}

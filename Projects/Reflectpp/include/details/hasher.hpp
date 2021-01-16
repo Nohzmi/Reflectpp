@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 /**
-* @file hasher.h
+* @file hasher.hpp
 * @author Nohzmi
 * @version 1.0
 */
@@ -16,8 +16,10 @@ namespace reflectpp
 {
 	namespace details
 	{
-		size_t hash(const char* str) REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE size_t hash(const char* str) REFLECTPP_NOEXCEPT
+		{
+			std::hash<std::string> hasher;
+			return hasher(std::string(str));
+		}
 	}
 }
-
-#include "details/inline/hasher.inl"

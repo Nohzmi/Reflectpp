@@ -8,7 +8,7 @@
 
 #pragma once
 #include "details/registry.h"
-#include "variant_sequencial_view.h"
+#include "details/variant_data.h"
 
 /**
 * @addtogroup Reflectpp
@@ -17,8 +17,8 @@
 
 namespace reflectpp
 {
-	class type;
 	class property;
+	class variant_sequencial_view;
 
 	/**
 	* Allows to store data of any type
@@ -26,17 +26,17 @@ namespace reflectpp
 	class REFLECTPP_API variant final
 	{
 		friend property;
-		friend type;
 		friend variant_sequencial_view;
 
 	public:
 
-		variant();
-		~variant();
-		variant(const variant&);
+		variant() = default;
+		REFLECTPP_INLINE ~variant();
+		REFLECTPP_INLINE variant(const variant&);
 		variant(variant&&) REFLECTPP_NOEXCEPT = default;
-		variant& operator=(const variant&);
+		REFLECTPP_INLINE variant& operator=(const variant&);
 		variant& operator=(variant&&) REFLECTPP_NOEXCEPT = default;
+		REFLECTPP_INLINE explicit variant(const details::variant_data& data) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Create a variant from an object \n
@@ -44,17 +44,17 @@ namespace reflectpp
 		* @param object
 		*/
 		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
-		variant(T&& object) REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE variant(T&& object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		operator bool() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Clear the stored value of this variant
 		*/
-		void clear() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE void clear() REFLECTPP_NOEXCEPT;
 		
 		/**
 		* Creates a variant_sequential_view from the containing value
@@ -64,45 +64,41 @@ namespace reflectpp
 		/**
 		* Returns the type of the stored value
 		*/
-		type& get_type() const REFLECTPP_NOEXCEPT;
+		type get_type() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the value as requested type \n
 		* Use is_type() to check if the type is valid
 		*/
 		template<typename T>
-		T& get_value() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE T& get_value() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the value as requested type \n
 		* Use is_type() to check if the type is valid
 		*/
 		template<typename T>
-		const T& get_value() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE const T& get_value() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not this type is a sequencial container
 		*/
-		bool is_sequential_container() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE bool is_sequential_container() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored value is the same type as requested type
 		*/
 		template<typename T>
-		bool is_type() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE bool is_type() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		bool is_valid() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE bool is_valid() const REFLECTPP_NOEXCEPT;
 
 	private:
 
-		variant(void* data, bool is_owner, type* type) REFLECTPP_NOEXCEPT;
-
-		void* m_data;
-		bool m_is_owner;
-		type* m_type;
+		details::variant_data m_data;
 	};
 }
 

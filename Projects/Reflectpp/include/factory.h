@@ -22,51 +22,52 @@ namespace reflectpp
 	*/
 	class REFLECTPP_API factory final
 	{
-		friend details::registry;
-
-		using ConstructorT = void* (*)();
-		using CopyT = void* (*)(void*);
-		using DestructorT = void (*)(void*);
-
 	public:
 
-		factory() = delete;
+		factory() = default;
 		~factory() = default;
 		factory(const factory&) = default;
 		factory(factory&&) REFLECTPP_NOEXCEPT = default;
 		factory& operator=(const factory&) = default;
 		factory& operator=(factory&&) REFLECTPP_NOEXCEPT = default;
+		REFLECTPP_INLINE explicit factory(details::factory_data* data) REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this factory is valid
+		*/
+		REFLECTPP_INLINE operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns a pointer on created object
 		*/
-		void* construct() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE void* construct() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns a pointer on copied object
 		* @param object
 		*/
-		void* copy(void* object) const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE void* copy(void* object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Destroys given object
 		* @param object
 		*/
-		void destroy(void* object) const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE void destroy(void* object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Get factory of the requested type
 		*/
 		template<typename T>
-		static factory& get() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE static factory get() REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this factory is valid
+		*/
+		REFLECTPP_INLINE bool is_valid() const REFLECTPP_NOEXCEPT;
 
 	private:
 
-		factory(ConstructorT constructor, CopyT copy, DestructorT destructor) REFLECTPP_NOEXCEPT;
-
-		ConstructorT m_constructor;
-		CopyT m_copy;
-		DestructorT m_destructor;
+		details::factory_data* m_data{ nullptr };
 	};
 }
 

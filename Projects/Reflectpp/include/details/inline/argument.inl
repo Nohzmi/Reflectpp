@@ -2,24 +2,38 @@
 
 namespace reflectpp
 {
+	REFLECTPP_INLINE argument::argument(variant& var) REFLECTPP_NOEXCEPT :
+		m_variant{ var }
+	{
+	}
+
+	REFLECTPP_INLINE argument::argument(const variant& var) REFLECTPP_NOEXCEPT :
+		m_variant{ var }
+	{
+	}
+
 	template<typename T, typename U>
-	REFLECTPP_INLINE argument::argument(T&& object) REFLECTPP_NOEXCEPT :
-		m_is_owner{ true },
-		m_var{ new variant(object) }
+	REFLECTPP_INLINE argument::argument(T& object) REFLECTPP_NOEXCEPT :
+		m_variant{ variant(object) }
+	{
+	}
+
+	template<typename T, typename U>
+	REFLECTPP_INLINE argument::argument(const T& object) REFLECTPP_NOEXCEPT :
+	m_variant{ variant(object) }
 	{
 	}
 
 	template<typename T>
 	REFLECTPP_INLINE T& argument::get_value() const REFLECTPP_NOEXCEPT
 	{
-		REFLECTPP_ASSERT(m_var != nullptr && m_var->is_valid(), "invalid argument");
-		return m_var->get_value();
+		return m_variant.get_value<T>();
+
 	}
 
 	template<typename T>
 	REFLECTPP_INLINE bool argument::is_type() const REFLECTPP_NOEXCEPT
 	{
-		REFLECTPP_ASSERT(m_var != nullptr && m_var->is_valid(), "invalid argument");
-		return m_var->is_type<T>();
+		return m_variant.is_type<T>();
 	}
 }

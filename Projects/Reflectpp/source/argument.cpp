@@ -6,24 +6,8 @@
 
 namespace reflectpp
 {
-	argument::~argument()
+	type argument::get_type() const REFLECTPP_NOEXCEPT
 	{
-		if (m_is_owner && m_var != nullptr)
-		{
-			delete m_var;
-			m_var = nullptr;
-		}
-	}
-
-	argument::argument(const variant& var) REFLECTPP_NOEXCEPT :
-		m_is_owner{ false },
-		m_var{ const_cast<variant*>(&var) }
-	{
-	}
-
-	type& argument::get_type() const REFLECTPP_NOEXCEPT
-	{
-		REFLECTPP_ASSERT(m_var != nullptr && m_var->is_valid(), "invalid argument");
-		return m_var->get_type();
+		return m_variant.get_type();
 	}
 }

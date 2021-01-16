@@ -8,9 +8,6 @@
 
 #pragma once
 #include "details/registry.h"
-#include "variant.h"
-#include "instance.h"
-#include "argument.h"
 
 /**
 * @addtogroup Reflectpp
@@ -20,6 +17,9 @@
 namespace reflectpp
 {
 	class type;
+	class instance;
+	class argument;
+	class variant;
 
 #pragma warning(push)
 #pragma warning(disable: 4251)
@@ -29,68 +29,85 @@ namespace reflectpp
 	*/
 	class REFLECTPP_API property final
 	{
-		friend details::registry;
-
-		using GetterT = std::function<void* (void*, bool&)>;
-		using SetterT = std::function<void(void*, void*)>;
-
 	public:
 
-		property() = delete;
+		property() = default;
 		~property() = default;
-		property(const property&) = delete;
+		property(const property&) = default;
 		property(property&&) REFLECTPP_NOEXCEPT = default;
-		property& operator=(const property&) = delete;
+		property& operator=(const property&) = default;
 		property& operator=(property&&) REFLECTPP_NOEXCEPT = default;
+		REFLECTPP_INLINE explicit property(details::property_data* data) REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two property are the same
+		* @param rhs
+		*/
+		REFLECTPP_INLINE bool operator==(const property& rhs) const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two property are the same
+		* @param rhs
+		*/
+		REFLECTPP_INLINE bool operator!=(const property& rhs) const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this property info is valid
+		*/
+		REFLECTPP_INLINE operator bool() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns the type of the class or struct that declares this property
+		*/
+		type get_declaring_type() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns id of this property
 		*/
-		size_t get_id() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE size_t get_id() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns name of this property
 		*/
-		const char* get_name() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE const char* get_name() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns specifiers of this property
 		*/
-		size_t get_specifiers() const REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE size_t get_specifiers() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns type of this property
 		*/
-		type& get_type() const REFLECTPP_NOEXCEPT;
+		type get_type() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns a variant that correspond to the property of the given object
 		* @param object
 		*/
-		variant get_value(const instance& object) const REFLECTPP_NOEXCEPT;
+		variant get_value(instance object) const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this property is valid
+		*/
+		REFLECTPP_INLINE bool is_valid() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Set the value of the property of the given object
 		* @param object
 		* @param arg
 		*/
-		void set_value(const instance& object, const argument& arg) const REFLECTPP_NOEXCEPT;
+		void set_value(instance object, argument arg) const REFLECTPP_NOEXCEPT;
 
 	private:
 
-		property(GetterT getter, size_t id, const char* name, type* property_type, SetterT setter, size_t specifiers, type* type) REFLECTPP_NOEXCEPT;
-
-		GetterT m_getter;
-		size_t m_id;
-		const char* m_name;
-		type* m_property_type;
-		SetterT m_setter;
-		size_t m_specifiers;
-		type* m_type;
+		details::property_data* m_data{ nullptr };
 	};
 
 #pragma warning (pop)
 }
+
+#include "details/inline/property.inl"
 
 /**
 * @}

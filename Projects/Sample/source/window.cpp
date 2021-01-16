@@ -11,6 +11,7 @@
 #include <glfw/glfw3.h>
 
 #include <type.h>
+#include <argument.h>
 
 using namespace reflectpp;
 
@@ -127,7 +128,7 @@ void Window::InspectorWindow()
 
 void Window::DisplayType(const reflectpp::variant& var)
 {
-	for (property& prop : var.get_type().get_properties())
+	for (property prop : var.get_type().get_properties())
 	{
 		if ((prop.get_specifiers() & specifiers::Exposed) == 0)
 			continue;

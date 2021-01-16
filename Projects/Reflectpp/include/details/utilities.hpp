@@ -1,7 +1,21 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
+/**
+* @file utilities.hpp
+* @author Nohzmi
+* @version 1.0
+*/
+
+#pragma once
+#include <typeinfo>
+
+#include "details/macros.h"
+#include "details/type_traits.h"
+
 namespace reflectpp
 {
+	class type;
+
 	namespace details
 	{
 		template<typename T>
@@ -12,9 +26,7 @@ namespace reflectpp
 				return typeid(decay<T>).hash_code();
 			}
 			else
-			{
 				return decay<T>::type_id();
-			}
 		}
 
 		template<typename T>

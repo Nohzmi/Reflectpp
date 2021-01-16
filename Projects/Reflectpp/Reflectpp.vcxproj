@@ -50,6 +50,7 @@
     <ClCompile Include="source\details\registry.cpp" />
     <ClCompile Include="source\instance.cpp" />
     <ClCompile Include="source\property.cpp" />
+    <ClCompile Include="source\registration.cpp" />
     <ClCompile Include="source\serializer.cpp" />
     <ClCompile Include="source\type.cpp" />
     <ClCompile Include="source\variant.cpp" />

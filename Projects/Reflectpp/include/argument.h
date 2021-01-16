@@ -8,6 +8,7 @@
 
 #pragma once
 #include "variant.h"
+#include "details/variant_data.h"
 
 /**
 * @addtogroup Reflectpp
@@ -29,11 +30,11 @@ namespace reflectpp
 
 	public:
 
-		argument() = default;
-		~argument() = default;
-		argument(const argument&) = default;
+		argument() = delete;
+		REFLECTPP_INLINE ~argument();
+		REFLECTPP_INLINE argument(const argument&);
 		argument(argument&&) REFLECTPP_NOEXCEPT = default;
-		argument& operator=(const argument&) = default;
+		REFLECTPP_INLINE argument& operator=(const argument&);
 		argument& operator=(argument&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
@@ -53,14 +54,7 @@ namespace reflectpp
 		* @param object
 		*/
 		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<argument, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
-		REFLECTPP_INLINE argument(T& object) REFLECTPP_NOEXCEPT;
-
-		/**
-		* Create an argument from an object
-		* @param object
-		*/
-		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<argument, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
-		REFLECTPP_INLINE argument(const T& object) REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE argument(T&& object) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value
@@ -82,7 +76,8 @@ namespace reflectpp
 
 	private:
 		
-		variant m_variant;
+		bool m_is_owner{ false };
+		variant* m_variant{ nullptr };
 	};
 }
 

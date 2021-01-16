@@ -19,10 +19,6 @@ namespace reflectpp
 			Constructor m_constructor{ nullptr };
 			Copy m_copy{ nullptr };
 			Destructor m_destructor{ nullptr };
-
-		public:
-			factory_data() = default;
-			~factory_data() = default;
 		};
 	}
 }

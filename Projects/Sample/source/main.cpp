@@ -8,6 +8,8 @@
 #include <property.h>
 #include <serializer.h>
 #include <instance.h>
+#include <variant_sequencial_view.h>
+#include <argument.h>
 #include <vld/vld.h>
 
 #include "intern.h"
@@ -44,16 +46,18 @@ int main()
 	printf("\nExit Success!\n\n");
 
 	// Test area
-	Derived d = Derived();
+	/*Derived d = Derived();
 	d.DerivedValue1 = 1.f;
 	d.DerivedValue0.push_back(10.f);
 	d.DerivedValue0.push_back(11.f);
 	d.DerivedValue0.push_back(12.f);
 
-	serializer s("test");
-	s.save(d);
+	//auto testrdftgfd = type::get<Base>();
 
-	/*d.DerivedValue0.push_back(10.f);
+	
+
+
+	d.DerivedValue0.push_back(10.f);
 	d.DerivedValue0.push_back(11.f);
 	d.DerivedValue0.push_back(12.f);
 
@@ -69,18 +73,26 @@ int main()
 
 	variant_sequence.set_value(0, 0.f);
 	variant_sequence.set_value(1, 1.f);
-	variant_sequence.set_value(, 2.f);
+	variant_sequence.set_value(2, 2.f);
 
 	std::cout << variant_sequence.insert(variant_sequence.begin() + 1, 15.f).get_data().get_value<float>() << std::endl;
-	std::cout << variant_sequence.get_size() << std::endl;*/
+	std::cout << variant_sequence.get_size() << std::endl;
+
+	for (auto it = variant_sequence.begin(); it != variant_sequence.end(); ++it)
+	{
+		auto test = it.get_data();
+		float getted = test.get_value<float>();
+		std::cout << getted << std::endl;
+	}
+
+	serializer s("test");
+	s.save(d);*/
 
 	//variant_sequence.set_size(12);
 
 	//auto test = variant_sequence.get_value(0);
 	//float getted = test.get_value<float>();
 	//variant_sequence.clear();
-
-	Test test{ 5, 6 };
 
 	return EXIT_SUCCESS;
 }

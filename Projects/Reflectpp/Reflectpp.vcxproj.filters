@@ -119,6 +119,9 @@
     <ClCompile Include="source\instance.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\registration.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\details\inline\registry.inl">

@@ -45,7 +45,7 @@ namespace reflectpp
 		registration(registration&&) REFLECTPP_NOEXCEPT = default;
 		registration& operator=(const registration&) = default;
 		registration& operator=(registration&&) REFLECTPP_NOEXCEPT = default;
-		REFLECTPP_INLINE explicit registration(details::type_data* type) REFLECTPP_NOEXCEPT;
+		explicit registration(details::type_data* type) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Register the base class of the current type

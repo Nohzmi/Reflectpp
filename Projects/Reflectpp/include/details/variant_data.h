@@ -20,10 +20,6 @@ namespace reflectpp
 			bool m_is_owner{ false };
 			type_data* m_type{nullptr};
 			void* m_value{ nullptr };
-
-		public:
-			variant_data() = default;
-			~variant_data() = default;
 		};
 	}
 }

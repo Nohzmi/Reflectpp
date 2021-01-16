@@ -25,10 +25,6 @@ namespace reflectpp
 			Setter m_setter{ nullptr };
 			size_t m_specifiers{ 0 };
 			type_data* m_type{ nullptr };
-
-		public:
-			property_data() = default;
-			~property_data() = default;
 		};
 	}
 }

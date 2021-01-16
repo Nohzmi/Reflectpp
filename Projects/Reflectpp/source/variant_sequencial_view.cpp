@@ -32,7 +32,7 @@ namespace reflectpp
 
 	variant variant_sequencial_view::get_value(size_t index) const
 	{
-		return is_valid() ? variant({ false, m_data.m_type, m_data.m_type->m_sequence_at(m_data.m_value, index) }) : variant();
+		return is_valid() ? variant({ false, m_data.m_type->m_value_type, m_data.m_type->m_sequence_at(m_data.m_value, index) }) : variant();
 	}
 
 	type variant_sequencial_view::get_value_type() const
@@ -45,7 +45,7 @@ namespace reflectpp
 		if (!is_valid() || value.get_type() != get_value_type() || pos.m_index >= get_size())
 			return end();
 
-		m_data.m_type->m_sequence_insert(m_data.m_value, pos.m_index, value.m_variant.m_data.m_value);
+		m_data.m_type->m_sequence_insert(m_data.m_value, pos.m_index, value.m_variant->m_data.m_value);
 		return begin() + pos.m_index;
 	}
 
@@ -54,6 +54,6 @@ namespace reflectpp
 		if (!is_valid() || value.get_type() != get_value_type() || index >= get_size())
 			return;
 
-		m_data.m_type->m_sequence_assign(m_data.m_value, index, value.m_variant.m_data.m_value);
+		m_data.m_type->m_sequence_assign(m_data.m_value, index, value.m_variant->m_data.m_value);
 	}
 }

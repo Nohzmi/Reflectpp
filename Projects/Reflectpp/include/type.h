@@ -83,12 +83,12 @@ namespace reflectpp
 		/**
 		* Returns base types of this type
 		*/
-		const std::vector<type>& get_base_classes() const REFLECTPP_NOEXCEPT;
+		std::vector<type> get_base_classes() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns derived types of this type
 		*/
-		const std::vector<type>& get_derived_classes() const REFLECTPP_NOEXCEPT;
+		std::vector<type> get_derived_classes() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns factory of this type
@@ -114,7 +114,7 @@ namespace reflectpp
 		/**
 		* Returns all property of this type
 		*/
-		const std::vector<property>& get_properties() const REFLECTPP_NOEXCEPT;
+		std::vector<property> get_properties() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns size of this type

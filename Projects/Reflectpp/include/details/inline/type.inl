@@ -31,13 +31,13 @@ namespace reflectpp
 	template<typename T>
 	REFLECTPP_INLINE type type::get() REFLECTPP_NOEXCEPT
 	{
-		return *details::registry::get_instance().get_type<T>();
+		return type(details::registry::get_instance().get_type<T>());
 	}
 
 	template<typename T>
 	REFLECTPP_INLINE type type::get(T&& object) REFLECTPP_NOEXCEPT
 	{
-		return *details::registry::get_instance().get_type(std::forward<T>(object));
+		return type(details::registry::get_instance().get_type(std::forward<T>(object)));
 	}
 
 	REFLECTPP_INLINE size_t type::get_id() const REFLECTPP_NOEXCEPT
@@ -62,6 +62,6 @@ namespace reflectpp
 
 	REFLECTPP_INLINE bool type::is_valid() const REFLECTPP_NOEXCEPT
 	{
-		return false;
+		return m_data != nullptr;
 	}
 }

@@ -14,7 +14,7 @@ namespace reflectpp
 		return variant({ true, m_data, m_data->m_factory->m_constructor() });
 	}
 
-	const std::vector<type>& type::get_base_classes() const REFLECTPP_NOEXCEPT
+	std::vector<type> type::get_base_classes() const REFLECTPP_NOEXCEPT
 	{
 		std::vector<type> base_types;
 
@@ -27,7 +27,7 @@ namespace reflectpp
 		return base_types;
 	}
 
-	const std::vector<type>& type::get_derived_classes() const REFLECTPP_NOEXCEPT
+	std::vector<type> type::get_derived_classes() const REFLECTPP_NOEXCEPT
 	{
 		std::vector<type> derived_types;
 
@@ -59,7 +59,7 @@ namespace reflectpp
 		return property();
 	}
 
-	const std::vector<property>& type::get_properties() const REFLECTPP_NOEXCEPT
+	std::vector<property> type::get_properties() const REFLECTPP_NOEXCEPT
 	{
 		std::vector<property> properties;
 

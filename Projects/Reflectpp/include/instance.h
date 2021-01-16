@@ -30,11 +30,11 @@ namespace reflectpp
 
 	public:
 
-		instance() = default;
-		~instance() = default;
-		instance(const instance&) = default;
+		instance() = delete;
+		REFLECTPP_INLINE ~instance();
+		REFLECTPP_INLINE instance(const instance&);
 		instance(instance&&) REFLECTPP_NOEXCEPT = default;
-		instance& operator=(const instance&) = default;
+		REFLECTPP_INLINE instance& operator=(const instance&);
 		instance& operator=(instance&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
@@ -67,7 +67,8 @@ namespace reflectpp
 
 	private:
 		
-		variant m_variant;
+		bool m_is_owner{ false };
+		variant* m_variant{ nullptr };
 	};
 }
 

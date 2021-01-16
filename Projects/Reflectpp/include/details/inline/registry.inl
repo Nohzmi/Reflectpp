@@ -333,6 +333,8 @@ namespace reflectpp
 					};
 
 					type.m_is_sequence_container = true;
+					type.m_value_type = get_type_impl<T::value_type>();
+
 					return add_type_impl(&type);
 				}
 			}

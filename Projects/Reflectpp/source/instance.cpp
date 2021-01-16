@@ -8,6 +8,6 @@ namespace reflectpp
 {
 	type instance::get_type() const REFLECTPP_NOEXCEPT
 	{
-		return m_variant.get_type();
+		return m_variant->get_type();
 	}
 }

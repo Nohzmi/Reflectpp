@@ -41,10 +41,6 @@ namespace reflectpp
 			type_info_data* m_type_info{ nullptr };
 			type_data* m_value_type{ nullptr };
 			type_data* m_wrapped_type{ nullptr };
-
-		public:
-			type_data() = default;
-			~type_data() = default;
 		};
 	}
 }

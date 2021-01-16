@@ -72,7 +72,7 @@ namespace reflectpp
 			}
 
 			m_properties.emplace_back(new property_data(*property));
-			type->m_properties.emplace_back(m_properties.back());
+			type->m_properties.emplace_back(m_properties.back().get());
 		}
 
 		type_data* registry::add_type_impl(type_data* type) REFLECTPP_NOEXCEPT

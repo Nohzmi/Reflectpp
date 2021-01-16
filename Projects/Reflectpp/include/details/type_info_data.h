@@ -17,11 +17,6 @@ namespace reflectpp
 		{
 			size_t m_id{ 0 };
 			const char* m_name{ "" };
-
-		public:
-			type_info_data() = default;
-			~type_info_data() = default;
-
 		};
 	}
 }

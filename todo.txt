@@ -68,3 +68,5 @@ voir pour enlever les get_id vu que et voir aussi pour enlever id (quasi sure qu
 revoir serialiezer en détail
 registry.inl 278 (trouver meilleur nom) -> prendre l'adresse des init ?
 includre registry pour passer en dans sequencial view ?
+bien mettre explicit partout si besoin
+revoir include de instance/argument

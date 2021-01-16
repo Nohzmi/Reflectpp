@@ -2,11 +2,6 @@
 
 namespace reflectpp
 {
-	REFLECTPP_INLINE registration::registration(details::type_data* type) REFLECTPP_NOEXCEPT :
-		m_type{ type }
-	{
-	}
-
 	template<typename T>
 	REFLECTPP_INLINE registration registration::base() REFLECTPP_NOEXCEPT
 	{

@@ -26,7 +26,7 @@ namespace reflectpp
 			return variant();
 
 		bool is_owner{ false };
-		void* value{ m_data->m_getter(object.m_variant.m_data.m_value, is_owner) };
+		void* value{ m_data->m_getter(object.m_variant->m_data.m_value, is_owner) };
 
 		return variant({ is_owner, m_data->m_property_type, value });
 	}
@@ -34,6 +34,6 @@ namespace reflectpp
 	void property::set_value(instance object, argument arg) const REFLECTPP_NOEXCEPT
 	{
 		if (is_valid() && object.is_valid() && object.get_type() == get_declaring_type() && arg.get_type() == get_type())
-			m_data->m_setter(object.m_variant.m_data.m_value, arg.m_variant.m_data.m_value);
+			m_data->m_setter(object.m_variant->m_data.m_value, arg.m_variant->m_data.m_value);
 	}
 }

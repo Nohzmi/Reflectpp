@@ -7,7 +7,8 @@
 */
 
 #pragma once
-#include "details/registry.h"
+#include "details/macros.h"
+#include "details/platform.h"
 
 /**
 * @addtogroup Reflectpp
@@ -16,13 +17,15 @@
 
 namespace reflectpp
 {
+	namespace details
+	{
+		struct property_data;
+	}
+
 	class type;
 	class instance;
 	class argument;
 	class variant;
-
-#pragma warning(push)
-#pragma warning(disable: 4251)
 
 	/**
 	* Show a property of a class in reflection
@@ -37,24 +40,24 @@ namespace reflectpp
 		property(property&&) REFLECTPP_NOEXCEPT = default;
 		property& operator=(const property&) = default;
 		property& operator=(property&&) REFLECTPP_NOEXCEPT = default;
-		REFLECTPP_INLINE explicit property(details::property_data* data) REFLECTPP_NOEXCEPT;
+		explicit property(details::property_data* data) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not two property are the same
 		* @param rhs
 		*/
-		REFLECTPP_INLINE bool operator==(const property& rhs) const REFLECTPP_NOEXCEPT;
+		bool operator==(const property& rhs) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not two property are the same
 		* @param rhs
 		*/
-		REFLECTPP_INLINE bool operator!=(const property& rhs) const REFLECTPP_NOEXCEPT;
+		bool operator!=(const property& rhs) const REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this property info is valid
 		*/
-		REFLECTPP_INLINE operator bool() const REFLECTPP_NOEXCEPT;
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the class or struct that declares this property
@@ -64,17 +67,17 @@ namespace reflectpp
 		/**
 		* Returns id of this property
 		*/
-		REFLECTPP_INLINE size_t get_id() const REFLECTPP_NOEXCEPT;
+		size_t get_id() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns name of this property
 		*/
-		REFLECTPP_INLINE const char* get_name() const REFLECTPP_NOEXCEPT;
+		const char* get_name() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns specifiers of this property
 		*/
-		REFLECTPP_INLINE size_t get_specifiers() const REFLECTPP_NOEXCEPT;
+		size_t get_specifiers() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns type of this property
@@ -90,7 +93,7 @@ namespace reflectpp
 		/*
 		* Returns whether or not this property is valid
 		*/
-		REFLECTPP_INLINE bool is_valid() const REFLECTPP_NOEXCEPT;
+		bool is_valid() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Set the value of the property of the given object
@@ -103,11 +106,7 @@ namespace reflectpp
 
 		details::property_data* m_data{ nullptr };
 	};
-
-#pragma warning (pop)
 }
-
-#include "details/inline/property.inl"
 
 /**
 * @}

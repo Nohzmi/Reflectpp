@@ -16,7 +16,6 @@
 
 namespace reflectpp
 {
-	class property;
 	class serializer;
 	class type;
 
@@ -25,23 +24,22 @@ namespace reflectpp
 	*/
 	class REFLECTPP_API instance final
 	{
-		friend property;
 		friend serializer;
 
 	public:
 
 		instance() = delete;
-		REFLECTPP_INLINE ~instance();
-		REFLECTPP_INLINE instance(const instance&);
+		~instance();
+		instance(const instance&);
 		instance(instance&&) REFLECTPP_NOEXCEPT = default;
-		REFLECTPP_INLINE instance& operator=(const instance&);
+		instance& operator=(const instance&);
 		instance& operator=(instance&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
 		* Creates an instance from a variant
 		* @param var
 		*/
-		REFLECTPP_INLINE instance(const variant& var) REFLECTPP_NOEXCEPT;
+		instance(const variant& var) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Create an instance from an object
@@ -53,7 +51,13 @@ namespace reflectpp
 		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		REFLECTPP_INLINE explicit operator bool() const REFLECTPP_NOEXCEPT;
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns the raw value of this instance \n
+		* Not recommended to use
+		*/
+		void* get_raw_data() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value
@@ -63,7 +67,7 @@ namespace reflectpp
 		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		REFLECTPP_INLINE bool is_valid() const REFLECTPP_NOEXCEPT;
+		bool is_valid() const REFLECTPP_NOEXCEPT;
 
 	private:
 		

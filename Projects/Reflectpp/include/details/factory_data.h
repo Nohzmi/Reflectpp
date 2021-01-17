@@ -8,13 +8,12 @@
 
 #pragma once
 #include "details/forward.h"
-#include "details/platform.h"
 
 namespace reflectpp
 {
 	namespace details
 	{
-		struct REFLECTPP_API factory_data final
+		struct factory_data final
 		{
 			Constructor m_constructor{ nullptr };
 			Copy m_copy{ nullptr };

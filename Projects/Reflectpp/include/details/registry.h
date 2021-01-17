@@ -13,6 +13,7 @@
 #include "details/factory_data.h"
 #include "details/hasher.hpp"
 #include "details/log.hpp"
+#include "details/platform.h"
 #include "details/property_data.h"
 #include "details/specifiers.h"
 #include "details/type_data.h"
@@ -56,7 +57,7 @@ namespace reflectpp
 			template<typename T>
 			REFLECTPP_INLINE type_info_data* get_type_info() REFLECTPP_NOEXCEPT;
 
-			REFLECTPP_INLINE static registry& get_instance() REFLECTPP_NOEXCEPT;
+			static registry& get_instance() REFLECTPP_NOEXCEPT;
 
 		private:
 

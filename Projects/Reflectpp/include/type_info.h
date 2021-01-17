@@ -30,24 +30,24 @@ namespace reflectpp
 		type_info(type_info&&) REFLECTPP_NOEXCEPT = default;
 		type_info& operator=(const type_info&) = default;
 		type_info& operator=(type_info&&) REFLECTPP_NOEXCEPT = default;
-		REFLECTPP_INLINE explicit type_info(details::type_info_data* data) REFLECTPP_NOEXCEPT;
+		explicit type_info(details::type_info_data* data) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not two types are the same
 		* @param rhs
 		*/
-		REFLECTPP_INLINE bool operator==(const type_info& rhs) const REFLECTPP_NOEXCEPT;
+		bool operator==(const type_info& rhs) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not two types are the same
 		* @param rhs
 		*/
-		REFLECTPP_INLINE bool operator!=(const type_info& rhs) const REFLECTPP_NOEXCEPT;
+		bool operator!=(const type_info& rhs) const REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this type info is valid
 		*/
-		REFLECTPP_INLINE operator bool() const REFLECTPP_NOEXCEPT;
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Get type info of the requested type
@@ -58,17 +58,17 @@ namespace reflectpp
 		/**
 		* Returns id of this type info
 		*/
-		REFLECTPP_INLINE size_t get_id() const REFLECTPP_NOEXCEPT;
+		size_t get_id() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns name of this type info
 		*/
-		REFLECTPP_INLINE const char* get_name() const REFLECTPP_NOEXCEPT;
+		const char* get_name() const REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this type info is valid
 		*/
-		REFLECTPP_INLINE bool is_valid() const REFLECTPP_NOEXCEPT;
+		bool is_valid() const REFLECTPP_NOEXCEPT;
 
 	private:
 

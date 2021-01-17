@@ -9,6 +9,26 @@
 
 namespace reflectpp
 {
+	type::type(details::type_data* data) REFLECTPP_NOEXCEPT :
+		m_data{ data }
+	{
+	}
+
+	bool type::operator==(const type& rhs) const REFLECTPP_NOEXCEPT
+	{
+		return m_data == rhs.m_data;
+	}
+
+	bool type::operator!=(const type& rhs) const REFLECTPP_NOEXCEPT
+	{
+		return !(*this == rhs);
+	}
+
+	type::operator bool() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid();
+	}
+
 	variant type::create() const REFLECTPP_NOEXCEPT
 	{
 		return variant({ true, m_data, m_data->m_factory->m_constructor() });
@@ -45,6 +65,16 @@ namespace reflectpp
 		return is_valid() ? factory(m_data->m_factory) : factory();
 	}
 
+	size_t type::get_id() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data->m_type_info->m_id : 0;
+	}
+
+	const char* type::get_name() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data->m_type_info->m_name : "";
+	}
+
 	property type::get_property(const char* name) const REFLECTPP_NOEXCEPT
 	{
 		if (!is_valid())
@@ -73,8 +103,23 @@ namespace reflectpp
 		return properties;
 	}
 
+	size_t type::get_sizeof() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data->m_size : 0;
+	}
+
 	type_info type::get_type_info() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? type_info(m_data->m_type_info) : type_info();
+	}
+
+	bool type::is_sequential_container() const REFLECTPP_NOEXCEPT
+	{
+		return m_data->m_is_sequence_container;
+	}
+
+	bool type::is_valid() const REFLECTPP_NOEXCEPT
+	{
+		return m_data != nullptr;
 	}
 }

@@ -17,7 +17,6 @@
 
 namespace reflectpp
 {
-	class property;
 	class variant_sequencial_view;
 
 	/**
@@ -25,18 +24,15 @@ namespace reflectpp
 	*/
 	class REFLECTPP_API variant final
 	{
-		friend property;
-		friend variant_sequencial_view;
-
 	public:
 
 		variant() = default;
-		REFLECTPP_INLINE ~variant();
-		REFLECTPP_INLINE variant(const variant&);
+		~variant();
+		variant(const variant&);
 		variant(variant&&) REFLECTPP_NOEXCEPT = default;
-		REFLECTPP_INLINE variant& operator=(const variant&);
+		variant& operator=(const variant&);
 		variant& operator=(variant&&) REFLECTPP_NOEXCEPT = default;
-		REFLECTPP_INLINE explicit variant(const details::variant_data& data) REFLECTPP_NOEXCEPT;
+		explicit variant(const details::variant_data& data) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Create a variant from an object \n
@@ -47,19 +43,37 @@ namespace reflectpp
 		REFLECTPP_INLINE variant(T&& object) REFLECTPP_NOEXCEPT;
 
 		/**
+		* Returns whether or not two variant are the same value
+		* @param rhs
+		*/
+		bool operator==(const variant& rhs) const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two variant are the same value
+		* @param rhs
+		*/
+		bool operator!=(const variant& rhs) const REFLECTPP_NOEXCEPT;
+
+		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		REFLECTPP_INLINE operator bool() const REFLECTPP_NOEXCEPT;
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Clear the stored value of this variant
 		*/
-		REFLECTPP_INLINE void clear() REFLECTPP_NOEXCEPT;
+		void clear() REFLECTPP_NOEXCEPT;
 		
 		/**
 		* Creates a variant_sequential_view from the containing value
 		*/
 		variant_sequencial_view create_sequential_view() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns the raw value of this variant \n
+		* Not recommended to use, please use get_type() instead
+		*/
+		void* get_raw_data() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value
@@ -83,7 +97,7 @@ namespace reflectpp
 		/**
 		* Returns whether or not this type is a sequencial container
 		*/
-		REFLECTPP_INLINE bool is_sequential_container() const REFLECTPP_NOEXCEPT;
+		bool is_sequential_container() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored value is the same type as requested type
@@ -94,7 +108,7 @@ namespace reflectpp
 		/**
 		* Returns whether or not the stored a value is valid
 		*/
-		REFLECTPP_INLINE bool is_valid() const REFLECTPP_NOEXCEPT;
+		bool is_valid() const REFLECTPP_NOEXCEPT;
 
 	private:
 

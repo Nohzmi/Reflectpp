@@ -20,9 +20,6 @@ namespace reflectpp
 	class type_info;
 	class variant;
 
-#pragma warning(push)
-#pragma warning(disable: 4251)
-
 	/**
 	* The basic type representation
 	*/
@@ -36,24 +33,24 @@ namespace reflectpp
 		type(type&&) REFLECTPP_NOEXCEPT = default;
 		type& operator=(const type&) = default;
 		type& operator=(type&&) REFLECTPP_NOEXCEPT = default;
-		REFLECTPP_INLINE explicit type(details::type_data* data) REFLECTPP_NOEXCEPT;
+		explicit type(details::type_data* data) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not two types are the same
 		* @param rhs
 		*/
-		REFLECTPP_INLINE bool operator==(const type& rhs) const REFLECTPP_NOEXCEPT;
+		bool operator==(const type& rhs) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not two types are the same
 		* @param rhs
 		*/
-		REFLECTPP_INLINE bool operator!=(const type& rhs) const REFLECTPP_NOEXCEPT;
+		bool operator!=(const type& rhs) const REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this type is valid
 		*/
-		REFLECTPP_INLINE operator bool() const REFLECTPP_NOEXCEPT;
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Allows to cast between class hierarchies up, down and side
@@ -98,12 +95,12 @@ namespace reflectpp
 		/**
 		* Returns id of this type
 		*/
-		REFLECTPP_INLINE size_t get_id() const REFLECTPP_NOEXCEPT;
+		size_t get_id() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns name of this type
 		*/
-		REFLECTPP_INLINE const char* get_name() const REFLECTPP_NOEXCEPT;
+		const char* get_name() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns property by name of this type
@@ -119,7 +116,7 @@ namespace reflectpp
 		/**
 		* Returns size of this type
 		*/
-		REFLECTPP_INLINE size_t get_sizeof() const REFLECTPP_NOEXCEPT;
+		size_t get_sizeof() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns type info of this type
@@ -129,19 +126,17 @@ namespace reflectpp
 		/*
 		* Returns whether or not this type is a sequencial container
 		*/
-		REFLECTPP_INLINE bool is_sequential_container() const REFLECTPP_NOEXCEPT;
+		bool is_sequential_container() const REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this type is valid
 		*/
-		REFLECTPP_INLINE bool is_valid() const REFLECTPP_NOEXCEPT;
+		bool is_valid() const REFLECTPP_NOEXCEPT;
 
 	private:
 
 		details::type_data* m_data{ nullptr };
 	};
-
-#pragma warning (pop)
 }
 
 #include "details/inline/type.inl"

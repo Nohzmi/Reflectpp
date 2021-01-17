@@ -7,7 +7,6 @@
 */
 
 #pragma once
-#include "details/platform.h"
 
 namespace reflectpp
 {
@@ -15,10 +14,10 @@ namespace reflectpp
 	{
 		struct type_data;
 
-		struct REFLECTPP_API variant_data final
+		struct variant_data final
 		{
 			bool m_is_owner{ false };
-			type_data* m_type{nullptr};
+			type_data* m_type{ nullptr };
 			void* m_value{ nullptr };
 		};
 	}

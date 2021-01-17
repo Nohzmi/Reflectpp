@@ -206,7 +206,10 @@ namespace reflectpp
 				type_data* type{ get_type_impl(type_id<T>()) };
 
 				if (type == nullptr)
+				{
 					REFLECTPP_LOG("unregistered type");
+					return nullptr;
+				}
 
 				return type;
 			}
@@ -267,11 +270,6 @@ namespace reflectpp
 				type_info_data type_info{ type_id<T>(), type_name<T>() };
 				return add_type_info_impl(&type_info);
 			}
-		}
-
-		REFLECTPP_INLINE registry& registry::get_instance() REFLECTPP_NOEXCEPT
-		{
-			return m_instance;
 		}
 
 		template<typename T>

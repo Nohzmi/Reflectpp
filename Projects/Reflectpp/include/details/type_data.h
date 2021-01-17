@@ -10,7 +10,6 @@
 #include <vector>
 
 #include "details/forward.h"
-#include "details/platform.h"
 
 namespace reflectpp
 {
@@ -20,7 +19,7 @@ namespace reflectpp
 		struct property_data;
 		struct type_info_data;
 
-		struct REFLECTPP_API type_data final
+		struct type_data final
 		{
 			std::vector<type_data*> m_base_types;
 			std::vector<type_data*> m_derived_types;

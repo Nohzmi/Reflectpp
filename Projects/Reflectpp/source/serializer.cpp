@@ -13,9 +13,9 @@ using json = nlohmann::json;
 
 namespace reflectpp
 {
-	serializer::serializer(const char* path)
+	serializer::serializer(const char* path) REFLECTPP_NOEXCEPT
 	{
-		m_path = std::string(path) + ".json";
+		m_path = "temp.json";// (std::string(path) + ".json").c_str();//TODO clean
 	}
 
 	void serializer::save(instance object) const REFLECTPP_NOEXCEPT
@@ -67,8 +67,8 @@ namespace reflectpp
 		{
 			j = json::array();
 
-			for (auto v : var.create_sequential_view())
-				save_type(v, j);
+			for (auto it : var.create_sequential_view())
+				save_type(it, j);
 		}
 		else
 		{
@@ -84,7 +84,7 @@ namespace reflectpp
 
 	void serializer::load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT
 	{
-		/*for (property& prop : var.get_type().get_properties())
+		/*for (auto it : var.get_type().get_properties())
 		{
 			if (!j.contains(prop.get_name()))
 				continue;
@@ -137,7 +137,7 @@ namespace reflectpp
 			load_type(pvar, pj);
 		}
 
-		for (property& prop : var.get_type().get_properties())
+		for (auto it : var.get_type().get_properties())
 		{
 			if (!j.contains(prop.get_name()))
 				continue;

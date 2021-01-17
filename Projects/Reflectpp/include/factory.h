@@ -30,29 +30,29 @@ namespace reflectpp
 		factory(factory&&) REFLECTPP_NOEXCEPT = default;
 		factory& operator=(const factory&) = default;
 		factory& operator=(factory&&) REFLECTPP_NOEXCEPT = default;
-		REFLECTPP_INLINE explicit factory(details::factory_data* data) REFLECTPP_NOEXCEPT;
+		explicit factory(details::factory_data* data) REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this factory is valid
 		*/
-		REFLECTPP_INLINE operator bool() const REFLECTPP_NOEXCEPT;
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns a pointer on created object
 		*/
-		REFLECTPP_INLINE void* construct() const REFLECTPP_NOEXCEPT;
+		void* construct() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns a pointer on copied object
 		* @param object
 		*/
-		REFLECTPP_INLINE void* copy(void* object) const REFLECTPP_NOEXCEPT;
+		void* copy(void* object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Destroys given object
 		* @param object
 		*/
-		REFLECTPP_INLINE void destroy(void* object) const REFLECTPP_NOEXCEPT;
+		void destroy(void* object) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Get factory of the requested type
@@ -63,7 +63,7 @@ namespace reflectpp
 		/*
 		* Returns whether or not this factory is valid
 		*/
-		REFLECTPP_INLINE bool is_valid() const REFLECTPP_NOEXCEPT;
+		bool is_valid() const REFLECTPP_NOEXCEPT;
 
 	private:
 

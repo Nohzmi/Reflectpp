@@ -18,9 +18,6 @@
 
 namespace reflectpp
 {
-#pragma warning(push)
-#pragma warning(disable: 4251)
-
 	/**
 	* Generic factory class used in reflection \n
 	* Independent of the reflection
@@ -40,7 +37,7 @@ namespace reflectpp
 		* Create a variant from a object
 		* @param path
 		*/
-		serializer(const char* path);
+		serializer(const char* path) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Serialize an object
@@ -59,10 +56,8 @@ namespace reflectpp
 		void save_type(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
 		void load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT;
 
-		std::string m_path{ "default" };
+		const char* m_path{ "default" };
 	};
-
-#pragma warning (pop)
 }
 
 /**

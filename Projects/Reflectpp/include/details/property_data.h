@@ -8,7 +8,6 @@
 
 #pragma once
 #include "details/forward.h"
-#include "details/platform.h"
 
 namespace reflectpp
 {
@@ -16,7 +15,7 @@ namespace reflectpp
 	{
 		struct type_data;
 
-		struct REFLECTPP_API property_data final
+		struct property_data final
 		{
 			Getter m_getter{ nullptr };
 			size_t m_id{ 0 };

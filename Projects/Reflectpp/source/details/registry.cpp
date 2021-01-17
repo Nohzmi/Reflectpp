@@ -11,6 +11,11 @@ namespace reflectpp
 		registry::registry() = default;
 		registry::~registry() = default;
 
+		registry& registry::get_instance() REFLECTPP_NOEXCEPT
+		{
+			return m_instance;
+		}
+
 		void registry::add_base_impl(type_data* type, type_data* base) REFLECTPP_NOEXCEPT
 		{
 			for (auto it : type->m_base_types)

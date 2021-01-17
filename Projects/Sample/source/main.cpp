@@ -18,22 +18,6 @@
 
 #include "window.h"
 
-
-class Test
-{
-public:
-	Test() = default;
-	~Test() = default;
-	Test(const Test&) = default;
-	Test(Test&&) REFLECTPP_NOEXCEPT = default;
-	Test& operator=(const Test&) = default;
-	Test& operator=(Test&&) REFLECTPP_NOEXCEPT = default;
-public:
-
-	int sdjhflsdq;
-	int sdjhflsdq2;
-};
-
 using namespace reflectpp;
 
 int main()
@@ -46,20 +30,19 @@ int main()
 	printf("\nExit Success!\n\n");
 
 	// Test area
-	/*Derived d = Derived();
+	Derived d = Derived();
 	d.DerivedValue1 = 1.f;
 	d.DerivedValue0.push_back(10.f);
 	d.DerivedValue0.push_back(11.f);
 	d.DerivedValue0.push_back(12.f);
-
-	//auto testrdftgfd = type::get<Base>();
-
-	
-
-
 	d.DerivedValue0.push_back(10.f);
 	d.DerivedValue0.push_back(11.f);
 	d.DerivedValue0.push_back(12.f);
+
+	variant var1 = type::get<Derived>().get_property("DerivedValue1").get_value(d);
+	float lkdj = var1.get_value<float>();
+	double lkddj = var1.get_value<double>();
+
 
 	variant var = type::get<Derived>().get_property("DerivedValue0").get_value(d);
 	variant_sequencial_view variant_sequence = var.create_sequential_view();
@@ -78,15 +61,23 @@ int main()
 	std::cout << variant_sequence.insert(variant_sequence.begin() + 1, 15.f).get_data().get_value<float>() << std::endl;
 	std::cout << variant_sequence.get_size() << std::endl;
 
-	for (auto it = variant_sequence.begin(); it != variant_sequence.end(); ++it)
+	for (auto it : variant_sequence)
 	{
-		auto test = it.get_data();
-		float getted = test.get_value<float>();
+		//auto test = it.get_data();
+		float getted = it.get_value<float>();
 		std::cout << getted << std::endl;
 	}
 
 	serializer s("test");
-	s.save(d);*/
+	s.save(d);
+
+	variant_sequencial_view vars = variant_sequencial_view();
+	for (auto it : vars)
+	{
+		//auto test = it.get_data();
+		//float getted = test.get_value<float>();
+		std::cout << it.is_valid() << std::endl;
+	}
 
 	//variant_sequence.set_size(12);
 

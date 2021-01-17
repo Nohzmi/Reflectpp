@@ -8,7 +8,6 @@
 
 #pragma once
 #include "variant.h"
-#include "details/variant_data.h"
 
 /**
 * @addtogroup Reflectpp
@@ -17,7 +16,6 @@
 
 namespace reflectpp
 {
-	class property;
 	class type;
 
 	/**
@@ -25,29 +23,26 @@ namespace reflectpp
 	*/
 	class REFLECTPP_API argument final
 	{
-		friend property;
-		friend variant_sequencial_view;
-
 	public:
 
 		argument() = delete;
-		REFLECTPP_INLINE ~argument();
-		REFLECTPP_INLINE argument(const argument&);
+		~argument();
+		argument(const argument&);
 		argument(argument&&) REFLECTPP_NOEXCEPT = default;
-		REFLECTPP_INLINE argument& operator=(const argument&);
+		argument& operator=(const argument&);
 		argument& operator=(argument&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
 		* Creates an argument from a variant
 		* @param var
 		*/
-		REFLECTPP_INLINE argument(variant& var) REFLECTPP_NOEXCEPT;
+		argument(variant& var) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Creates an argument from a variant
 		* @param var
 		*/
-		REFLECTPP_INLINE argument(const variant& var) REFLECTPP_NOEXCEPT;
+		argument(const variant& var) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Create an argument from an object
@@ -55,6 +50,12 @@ namespace reflectpp
 		*/
 		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<argument, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
 		REFLECTPP_INLINE argument(T&& object) REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns the raw value of this argument \n
+		* Not recommended to use, please use get_type() instead
+		*/
+		void* get_raw_data() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value

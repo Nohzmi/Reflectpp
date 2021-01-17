@@ -48,11 +48,13 @@
   <ItemGroup>
     <ClCompile Include="source\argument.cpp" />
     <ClCompile Include="source\details\registry.cpp" />
+    <ClCompile Include="source\factory.cpp" />
     <ClCompile Include="source\instance.cpp" />
     <ClCompile Include="source\property.cpp" />
     <ClCompile Include="source\registration.cpp" />
     <ClCompile Include="source\serializer.cpp" />
     <ClCompile Include="source\type.cpp" />
+    <ClCompile Include="source\type_info.cpp" />
     <ClCompile Include="source\variant.cpp" />
     <ClCompile Include="source\variant_sequencial_view.cpp" />
   </ItemGroup>
@@ -60,14 +62,11 @@
     <None Include="include\details\inline\argument.inl" />
     <None Include="include\details\inline\factory.inl" />
     <None Include="include\details\inline\instance.inl" />
-    <None Include="include\details\inline\property.inl" />
-    <None Include="include\details\inline\range.inl" />
     <None Include="include\details\inline\registration.inl" />
     <None Include="include\details\inline\registry.inl" />
     <None Include="include\details\inline\type.inl" />
     <None Include="include\details\inline\type_info.inl" />
     <None Include="include\details\inline\variant.inl" />
-    <None Include="include\details\inline\variant_sequencial_view.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

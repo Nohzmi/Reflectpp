@@ -7,13 +7,12 @@
 */
 
 #pragma once
-#include "details/platform.h"
 
 namespace reflectpp
 {
 	namespace details
 	{
-		struct REFLECTPP_API type_info_data final
+		struct type_info_data final
 		{
 			size_t m_id{ 0 };
 			const char* m_name{ "" };

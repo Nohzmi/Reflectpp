@@ -1,72 +1,15 @@
-conteneur
-enums
-link error en x86: recompile gl3w
-iterator constructor
-data_impl pour plus de flexibilité
-plus de forward car type de retour peut être incomplet
-check rttr doc et headers
-revoir après du coup: friend, inclusion et clean les truc des sequence pas encore fait
-
-la lambda recursive
-auto isBaseOf [isBaseOf](...)
-{
-  ...
-}
-
-Cleaning:
-details/*
+Taches:
+Revoir serializer (enlever le friend de instance)
+Fichier pour les forward declaration
+Revoir la gestion mémoire de argument/instance (avec constructor default)
+Comparer fonctions et commentaire avec rttr
+Essayer la lib dans un projet extern: #pragma warning (registry.inl) et ddl interface
+Réparer le sample en x86: recompile gl3w
+Gestion des enums
+Gestion des conteneur associatif
 
 
-
-voir pour peut-être inline des trucs autre que les template functions
-vérifier que je retourne des const ref
-check les comm et voir pour copier rttr mais attention droit et tout
-argument
-factory
-instance
-property
-register
-registration
-serializer
-type
-type_info
-variant
-variant_sequencial_view
-
-
+Temporaire:
 empecher de save/load autre chose qu'une class
 comme ça quand je load je peux retrouver la property
 ou enregistrer un getter/setter dans le type
-
-
-
-
-
-
-
-enlever les push pop d'erreur pour voir
-essayer d'enlever les platform.h dans les data
-variant full inl ? et tous les cpp en faite
-revoir le isowner des variant et variant sequence
-verif variant get value pour un nullptr
-quand meme repasser sur variant hein mdr
-check que je peux créer un type invalid
-appeler les constructeur de data
-verif pas de delete ou presque
-verif bien operator == et bool comme dans rttr (et le code mdr compare les pointeur maxime)
-verifier les friend restant
-bien tester le cast de return des const vector& retourner
-voir pour passer les truc dans inl (faire shema)
-verif les value (membre) pour qu'ils ai toute une variable par defautl
-voir pour operateur== dans variant et variant_sequence
-verif include ddans les cpp et les h
-operator bool en explicit
-les friend a essayer d'enlever
-for (auto que des it !
-reinterprete cast au lieu de static cast dans variant ?
-voir pour enlever les get_id vu que et voir aussi pour enlever id (quasi sure que non) car rttr n'a pas ces fonctions
-revoir serialiezer en détail
-registry.inl 278 (trouver meilleur nom) -> prendre l'adresse des init ?
-includre registry pour passer en dans sequencial view ?
-bien mettre explicit partout si besoin
-revoir include de instance/argument

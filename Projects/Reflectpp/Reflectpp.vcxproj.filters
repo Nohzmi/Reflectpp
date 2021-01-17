@@ -122,15 +122,18 @@
     <ClCompile Include="source\registration.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\factory.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\type_info.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\details\inline\registry.inl">
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\factory.inl">
-      <Filter>include\details\inline</Filter>
-    </None>
-    <None Include="include\details\inline\range.inl">
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\registration.inl">
@@ -149,12 +152,6 @@
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\argument.inl">
-      <Filter>include\details\inline</Filter>
-    </None>
-    <None Include="include\details\inline\property.inl">
-      <Filter>include\details\inline</Filter>
-    </None>
-    <None Include="include\details\inline\variant_sequencial_view.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

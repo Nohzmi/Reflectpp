@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 #include <iostream>
+#include <map>
 #include <type.h>
 #include <factory.h>
 #include <type_info.h>
@@ -78,6 +79,8 @@ int main()
 		//float getted = test.get_value<float>();
 		std::cout << it.is_valid() << std::endl;
 	}
+
+	//std::map
 
 	//variant_sequence.set_size(12);
 

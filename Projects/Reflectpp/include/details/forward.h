@@ -28,5 +28,6 @@ namespace reflectpp
 	class type;
 	class type_info;
 	class variant;
+	class variant_associative_view;
 	class variant_sequencial_view;
 }

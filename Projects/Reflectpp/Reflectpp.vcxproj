@@ -44,6 +44,7 @@
     <ClInclude Include="include\type.h" />
     <ClInclude Include="include\type_info.h" />
     <ClInclude Include="include\variant.h" />
+    <ClInclude Include="include\variant_associative_view.h" />
     <ClInclude Include="include\variant_sequencial_view.h" />
   </ItemGroup>
   <ItemGroup>

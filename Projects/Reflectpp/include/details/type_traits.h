@@ -8,7 +8,9 @@
 
 #pragma once
 #include <list>
+#include <map>
 #include <type_traits>
+#include <unordered_map>
 #include <vector>
 
 namespace reflectpp
@@ -40,11 +42,20 @@ namespace reflectpp
 		template<typename>
 		struct is_sequence_container : std::false_type {};
 
-		template<typename T, typename A>
-		struct is_sequence_container<std::vector<T, A>> : std::true_type {};
+		template<typename T>
+		struct is_sequence_container<std::list<T>> : std::true_type {};
 
-		template<typename T, typename A>
-		struct is_sequence_container<std::list<T, A>> : std::true_type {};
+		template<typename T>
+		struct is_sequence_container<std::vector<T>> : std::true_type {};
+
+		template<typename>
+		struct is_associative_container : std::false_type {};
+
+		template<typename T, typename Key>
+		struct is_associative_container<std::map<T, Key>> : std::true_type {};
+
+		template<typename T, typename Key>
+		struct is_associative_container<std::unordered_map<T, Key>> : std::true_type {};
 
 		template<typename T>
 		struct is_valid_param : std::bool_constant<

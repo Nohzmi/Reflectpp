@@ -285,7 +285,48 @@ namespace reflectpp
 			type.m_size = sizeof(T);
 			type.m_type_info = get_type_info<T>();
 
-			if constexpr (is_sequence_container<T>::value)
+			if constexpr (is_associative_container<T>::value)
+			{
+				if constexpr (std::is_pointer_v<T::value_type>)
+				{
+					REFLECTPP_LOG("pointer not supported");
+					return nullptr;
+				}
+				else
+				{
+					/*type.m_sequence_at = [](void* container, size_t index) -> void*
+					{
+						return static_cast<void*>(&static_cast<T*>(container)->at(index));
+					};
+
+					type.m_sequence_clear = [](void* container)
+					{
+						static_cast<T*>(container)->clear();
+					};
+
+					type.m_sequence_erase = [](void* container, size_t index)
+					{
+						static_cast<T*>(container)->erase(static_cast<T*>(container)->begin() + index);
+					};
+
+					type.m_sequence_insert = [](void* container, size_t index, void* value)
+					{
+						static_cast<T*>(container)->insert(static_cast<T*>(container)->begin() + index, *static_cast<typename T::value_type*>(value));
+					};
+
+					type.m_sequence_size = [](void* container) -> size_t
+					{
+						return static_cast<T*>(container)->size();
+					};*/
+
+					type.m_is_associative_container = true;
+					type.m_value_type = get_type_impl<T::mapped_type>();
+					type.m_key_type = get_type_impl<T::key_type>();
+
+					return add_type_impl(&type);
+				}
+			}
+			else if constexpr (is_sequence_container<T>::value)
 			{
 				if constexpr (std::is_pointer_v<T::value_type>)
 				{

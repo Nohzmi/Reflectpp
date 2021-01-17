@@ -96,6 +96,9 @@
     <ClInclude Include="include\details\forward.h">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\variant_associative_view.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">

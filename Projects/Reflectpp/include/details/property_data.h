@@ -8,13 +8,12 @@
 
 #pragma once
 #include "details/forward.h"
+#include "details/typedef.h"
 
 namespace reflectpp
 {
 	namespace details
 	{
-		struct type_data;
-
 		struct property_data final
 		{
 			Getter m_getter{ nullptr };

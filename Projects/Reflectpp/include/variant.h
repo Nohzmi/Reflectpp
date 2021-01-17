@@ -17,8 +17,6 @@
 
 namespace reflectpp
 {
-	class variant_sequencial_view;
-
 	/**
 	* Allows to store data of any type
 	*/

@@ -1,13 +1,10 @@
 Taches:
 Revoir serializer (enlever le friend de instance)
-Fichier pour les forward declaration
-Revoir la gestion mémoire de argument/instance (avec constructor default)
 Comparer fonctions et commentaire avec rttr
 Essayer la lib dans un projet extern: #pragma warning (registry.inl) et ddl interface
 Réparer le sample en x86: recompile gl3w
 Gestion des enums
 Gestion des conteneur associatif
-
 
 Temporaire:
 empecher de save/load autre chose qu'une class

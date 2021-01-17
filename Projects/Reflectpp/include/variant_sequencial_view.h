@@ -18,10 +18,6 @@
 
 namespace reflectpp
 {
-	class argument;
-	class type;
-	class variant;
-
 	/**
 	* Allows to store sequence containers of any type \n
 	* Sequence container: vector, list, ...etc

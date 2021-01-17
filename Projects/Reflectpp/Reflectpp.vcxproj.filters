@@ -84,13 +84,16 @@
     <ClInclude Include="include\details\type_info_data.h">
       <Filter>include\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\forward.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\details\log.hpp">
       <Filter>include\details</Filter>
     </ClInclude>
     <ClInclude Include="include\details\variant_data.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\typedef.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\forward.h">
       <Filter>include\details</Filter>
     </ClInclude>
   </ItemGroup>

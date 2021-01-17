@@ -15,11 +15,6 @@
 */
 namespace reflectpp
 {
-	class factory;
-	class property;
-	class type_info;
-	class variant;
-
 	/**
 	* The basic type representation
 	*/

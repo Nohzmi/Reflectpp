@@ -7,6 +7,7 @@
 */
 
 #pragma once
+#include "details/forward.h"
 #include "details/macros.h"
 #include "details/platform.h"
 
@@ -17,16 +18,6 @@
 
 namespace reflectpp
 {
-	namespace details
-	{
-		struct property_data;
-	}
-
-	class type;
-	class instance;
-	class argument;
-	class variant;
-
 	/**
 	* Show a property of a class in reflection
 	*/

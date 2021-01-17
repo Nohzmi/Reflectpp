@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "details/forward.h"
+#include "details/typedef.h"
 
 namespace reflectpp
 {

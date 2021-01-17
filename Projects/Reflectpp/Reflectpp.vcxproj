@@ -20,9 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\argument.h" />
+    <ClInclude Include="include\details\forward.h" />
     <ClInclude Include="include\details\log.hpp" />
     <ClInclude Include="include\details\factory_data.h" />
-    <ClInclude Include="include\details\forward.h" />
+    <ClInclude Include="include\details\typedef.h" />
     <ClInclude Include="include\details\hasher.hpp" />
     <ClInclude Include="include\details\macros.h" />
     <ClInclude Include="include\details\platform.h" />

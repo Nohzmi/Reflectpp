@@ -14,8 +14,6 @@
 
 namespace reflectpp
 {
-	class type;
-
 	namespace details
 	{
 		template<typename T>

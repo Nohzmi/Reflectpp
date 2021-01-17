@@ -10,15 +10,12 @@
 #include <vector>
 
 #include "details/forward.h"
+#include "details/typedef.h"
 
 namespace reflectpp
 {
 	namespace details
 	{
-		struct factory_data;
-		struct property_data;
-		struct type_info_data;
-
 		struct type_data final
 		{
 			std::vector<type_data*> m_base_types;

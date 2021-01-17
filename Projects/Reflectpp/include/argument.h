@@ -16,8 +16,6 @@
 
 namespace reflectpp
 {
-	class type;
-
 	/**
 	* Class used to forwarding the argument of an object
 	*/

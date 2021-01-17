@@ -16,9 +16,6 @@
 
 namespace reflectpp
 {
-	class serializer;
-	class type;
-
 	/**
 	* Class used to forwarding the instance of an object
 	*/

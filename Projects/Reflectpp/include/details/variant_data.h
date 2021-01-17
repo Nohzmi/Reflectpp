@@ -7,13 +7,12 @@
 */
 
 #pragma once
+#include "details/forward.h"
 
 namespace reflectpp
 {
 	namespace details
 	{
-		struct type_data;
-
 		struct variant_data final
 		{
 			bool m_is_owner{ false };

@@ -10,3 +10,9 @@ Temporaire:
 empecher de save/load autre chose qu'une class
 comme ça quand je load je peux retrouver la property
 ou enregistrer un getter/setter dans le type
+vérifier les type de retour des variant view
+merge fonction comme AssociativeClear et SequenceClear
+revoir view avec fonction sur iterateur pour plus de simplicité & optimisé
+rename has_...
+aulink vld to binaries
+rename typedef, pointer sequence

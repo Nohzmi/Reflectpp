@@ -7,6 +7,9 @@
 */
 
 #pragma once
+#include <array>
+#include <deque>
+#include <forward_list>
 #include <list>
 #include <map>
 #include <type_traits>
@@ -17,8 +20,34 @@ namespace reflectpp
 {
 	namespace details
 	{
+		template<typename>
+		struct is_array : std::false_type {};
+		template<typename T, size_t Size>
+		struct is_array<std::array<T, Size>> : std::true_type {};
+
+		///////
+		template<typename>
+		struct is_associative_container : std::false_type {};
+		template<typename T, typename Key>
+		struct is_associative_container<std::map<T, Key>> : std::true_type {};
+		template<typename T, typename Key>
+		struct is_associative_container<std::unordered_map<T, Key>> : std::true_type {};
+		///////
+
+		template<typename>
+		struct is_deque : std::false_type {};
 		template<typename T>
-		using decay = std::remove_pointer_t<std::decay_t<T>>;
+		struct is_deque<std::deque<T>> : std::true_type {};
+
+		template<typename>
+		struct is_forward_list : std::false_type {};
+		template<typename T>
+		struct is_forward_list<std::forward_list<T>> : std::true_type {};
+
+		template<typename>
+		struct is_list : std::false_type {};
+		template<typename T>
+		struct is_list<std::list<T>> : std::true_type {};
 
 		template <typename T>
 		class is_registered
@@ -39,24 +68,6 @@ namespace reflectpp
 			enum { value = sizeof(test<T>(0)) == sizeof(true_type) };
 		};
 
-		template<typename>
-		struct is_sequence_container : std::false_type {};
-
-		template<typename T>
-		struct is_sequence_container<std::list<T>> : std::true_type {};
-
-		template<typename T>
-		struct is_sequence_container<std::vector<T>> : std::true_type {};
-
-		template<typename>
-		struct is_associative_container : std::false_type {};
-
-		template<typename T, typename Key>
-		struct is_associative_container<std::map<T, Key>> : std::true_type {};
-
-		template<typename T, typename Key>
-		struct is_associative_container<std::unordered_map<T, Key>> : std::true_type {};
-
 		template<typename T>
 		struct is_valid_param : std::bool_constant<
 			!std::is_array_v<T> &&
@@ -75,5 +86,13 @@ namespace reflectpp
 			!std::is_void_v<T> &&
 			!std::is_volatile_v<T>>
 		{};
+
+		template<typename>
+		struct is_vector : std::false_type {};
+		template<typename T>
+		struct is_vector<std::vector<T>> : std::true_type {};
+
+		template<typename T>
+		using decay = std::remove_pointer_t<std::decay_t<T>>;
 	}
 }

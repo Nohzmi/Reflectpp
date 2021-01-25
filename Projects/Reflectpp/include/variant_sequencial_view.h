@@ -28,6 +28,8 @@ namespace reflectpp
 
 		class REFLECTPP_API iterator
 		{
+			friend variant_sequencial_view;
+
 		public:
 
 			iterator() = default;
@@ -36,7 +38,7 @@ namespace reflectpp
 			iterator(iterator&&) REFLECTPP_NOEXCEPT = default;
 			iterator& operator=(const iterator&) = default;
 			iterator& operator=(iterator&&) REFLECTPP_NOEXCEPT = default;
-			iterator(size_t index, variant_sequencial_view* variant) REFLECTPP_NOEXCEPT;
+			explicit iterator(size_t index, const variant_sequencial_view* variant) REFLECTPP_NOEXCEPT;
 
 			bool operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT;
 			bool operator!=(const iterator& rhs) const REFLECTPP_NOEXCEPT;
@@ -50,12 +52,11 @@ namespace reflectpp
 			iterator operator-(size_t i) REFLECTPP_NOEXCEPT;
 			variant operator*() const REFLECTPP_NOEXCEPT;
 			variant get_data() const REFLECTPP_NOEXCEPT;
-			size_t get_index() const REFLECTPP_NOEXCEPT;
 
 		private:
 
-			size_t m_index;
-			variant_sequencial_view* m_variant_sequencial_view;
+			size_t m_index{ 0 };
+			variant_sequencial_view* m_variant{ nullptr };
 		};
 
 		variant_sequencial_view() = default;
@@ -67,7 +68,7 @@ namespace reflectpp
 		explicit variant_sequencial_view(const details::variant_data& data) REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns whether or not the stored a value is valid
+		* Returns whether or not the stored value is valid
 		*/
 		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
@@ -93,12 +94,12 @@ namespace reflectpp
 		iterator erase(const iterator& pos) REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns the number of elements
+		* Returns the number of elements in the sequential container
 		*/
 		size_t get_size() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns the type of the container
+		* Returns the type object of this sequential container
 		*/
 		type get_type() const REFLECTPP_NOEXCEPT;
 
@@ -109,7 +110,7 @@ namespace reflectpp
 		variant get_value(size_t index) const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns the value type of the container
+		* Returns the type object from the value of this sequential container
 		*/
 		type get_value_type() const REFLECTPP_NOEXCEPT;
 
@@ -121,27 +122,35 @@ namespace reflectpp
 		iterator insert(const iterator& pos, argument value) const REFLECTPP_NOEXCEPT;
 
 		/**
+		* Returns whether or not the container is dynamic \n
+		* When a sequential view is dynamic, it is possible to change its size, clear its content or insert and erase values from it
+		*/
+		bool is_dynamic() const REFLECTPP_NOEXCEPT;
+
+		/**
 		* Returns whether or not the container has elements
 		*/
 		bool is_empty() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns whether or not the stored a value is valid
+		* Returns whether or not the stored value is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Sets the size of the sequential container
+		* Sets the size of the sequential container \n
+		* Returns whether or not the size could be changed
 		* @param size
 		*/
-		void set_size(size_t size) const REFLECTPP_NOEXCEPT;
+		bool set_size(size_t size) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Set the content of the the argument at the specified index into the underlying sequential container
+		* Returns whether or not the size could be set
 		* @param index
 		* @param value
 		*/
-		void set_value(size_t index, argument value) const REFLECTPP_NOEXCEPT;
+		bool set_value(size_t index, argument value) const REFLECTPP_NOEXCEPT;
 
 	private:
 

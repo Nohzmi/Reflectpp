@@ -10,6 +10,7 @@
 #include <register.h>
 #include "base.h"
 
+#include <array>
 #include <vector>
 
 class Derived : public Base

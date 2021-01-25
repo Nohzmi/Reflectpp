@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 #include <iostream>
+#include <unordered_map>
 #include <map>
 #include <type.h>
 #include <factory.h>
@@ -54,13 +55,17 @@ int main()
 		float getted = test.get_value<float>();
 		std::cout << getted << std::endl;
 	}
+	std::cout << std::endl;
 
 	variant_sequence.set_value(0, 0.f);
 	variant_sequence.set_value(1, 1.f);
 	variant_sequence.set_value(2, 2.f);
 
+	std::cout << std::endl;
 	std::cout << variant_sequence.insert(variant_sequence.begin() + 1, 15.f).get_data().get_value<float>() << std::endl;
+	//variant_sequence.insert(variant_sequence.begin(), 15.f);
 	std::cout << variant_sequence.get_size() << std::endl;
+	std::cout << std::endl;
 
 	for (auto it : variant_sequence)
 	{
@@ -68,6 +73,7 @@ int main()
 		float getted = it.get_value<float>();
 		std::cout << getted << std::endl;
 	}
+	std::cout << std::endl;
 
 	serializer s("test");
 	s.save(d);

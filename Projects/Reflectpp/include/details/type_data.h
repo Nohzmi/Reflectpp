@@ -18,12 +18,18 @@ namespace reflectpp
 	{
 		struct type_data final
 		{
+			AssociativeClear m_associative_clear{ nullptr };
+			AssociativeErase m_associative_erase{ nullptr };
+			AssociativeFind m_associative_find{ nullptr };
+			AssociativeInsert m_associative_insert{ nullptr };
+			AssociativeSize m_associative_size{ nullptr };
 			std::vector<type_data*> m_base_types;
 			std::vector<type_data*> m_derived_types;
 			factory_data* m_factory{ nullptr };
 			size_t m_hierarchy_id{ 0 };
 			bool m_is_associative_container{ false };
 			bool m_is_sequence_container{ false };
+			type_data* m_iterator_type{ nullptr };
 			type_data* m_key_type{ nullptr };
 			std::vector<property_data*> m_properties;
 			SequenceAssign m_sequence_assign{ nullptr };

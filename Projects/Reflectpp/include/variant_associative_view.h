@@ -7,6 +7,8 @@
 */
 
 #pragma once
+#include <utility>
+
 #include "details/forward.h"
 #include "details/macros.h"
 #include "details/platform.h"
@@ -49,9 +51,10 @@ namespace reflectpp
 			iterator operator+(size_t i) REFLECTPP_NOEXCEPT;
 			iterator& operator-=(size_t i) REFLECTPP_NOEXCEPT;
 			iterator operator-(size_t i) REFLECTPP_NOEXCEPT;
-			variant operator*() const REFLECTPP_NOEXCEPT;
-			variant get_data() const REFLECTPP_NOEXCEPT;
-			size_t get_index() const REFLECTPP_NOEXCEPT;
+			std::pair<variant, variant> operator*() const REFLECTPP_NOEXCEPT;
+			size_t get_index() const REFLECTPP_NOEXCEPT;// a voir si inutile
+			variant get_key() const REFLECTPP_NOEXCEPT;
+			variant get_value() const REFLECTPP_NOEXCEPT;
 
 		private:
 
@@ -87,7 +90,11 @@ namespace reflectpp
 		*/
 		iterator end() const REFLECTPP_NOEXCEPT;
 
-		//TODO std::pair< const_iterator, const_iterator > 	equal_range (argument key)
+		/**
+		* Returns a range containing all elements with the given key in the container
+		* @param key
+		*/
+		std::pair<iterator, iterator> equal_range(argument key) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Removes the element with the key
@@ -118,12 +125,6 @@ namespace reflectpp
 		type get_type() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns the current value at index
-		* @param index
-		*/
-		variant get_value(size_t index) const REFLECTPP_NOEXCEPT;
-
-		/**
 		* Returns the value type of the container
 		*/
 		type get_value_type() const REFLECTPP_NOEXCEPT;
@@ -132,16 +133,14 @@ namespace reflectpp
 		* Insert a key into the container
 		* @param key
 		*/
-		iterator insert(argument key) const REFLECTPP_NOEXCEPT;
-		// pas même type de retour que rttr (std::pair<const_iterator, bool>)
+		//iterator insert(argument key) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Insert a key-value pair into the container
 		* @param key
 		* @param value
 		*/
-		iterator insert(argument key, argument value) const REFLECTPP_NOEXCEPT;
-		// pas même type de retour que rttr (std::pair<const_iterator, bool>)
+		void insert(argument key, argument value) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the container has elements
@@ -152,13 +151,6 @@ namespace reflectpp
 		* Returns whether or not the stored a value is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Set the content of the the argument at the specified index into the underlying sequential container
-		* @param index
-		* @param value
-		*/
-		void set_value(size_t index, argument value) const REFLECTPP_NOEXCEPT;
 
 	private:
 

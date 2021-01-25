@@ -294,30 +294,47 @@ namespace reflectpp
 				}
 				else
 				{
+
+
+
 					/*type.m_sequence_at = [](void* container, size_t index) -> void*
 					{
 						return static_cast<void*>(&static_cast<T*>(container)->at(index));
 					};
 
-					type.m_sequence_clear = [](void* container)
+					
+
+					
+
+					
+
+					*/
+
+					type.m_associative_clear = [](void* container)
 					{
 						static_cast<T*>(container)->clear();
 					};
 
-					type.m_sequence_erase = [](void* container, size_t index)
+					type.m_associative_erase = [](void* container, void* key)
 					{
-						static_cast<T*>(container)->erase(static_cast<T*>(container)->begin() + index);
+						static_cast<T*>(container)->erase(*static_cast<typename T::key_type*>(key));
 					};
 
-					type.m_sequence_insert = [](void* container, size_t index, void* value)
+					type.m_associative_find = [](void* container, void* key) -> void*
 					{
-						static_cast<T*>(container)->insert(static_cast<T*>(container)->begin() + index, *static_cast<typename T::value_type*>(value));
+						static_cast<T*>(container)->find(*static_cast<typename T::key_type*>(key));
+						// get index
 					};
 
-					type.m_sequence_size = [](void* container) -> size_t
+					type.m_associative_insert = [](void* container, void* key, void* value)
+					{
+						static_cast<T*>(container)->insert(std::make_pair(*static_cast<typename T::key_type*>(key), *static_cast<typename T::mapped_type*>(value)));
+					};
+
+					type.m_associative_size = [](void* container) -> size_t
 					{
 						return static_cast<T*>(container)->size();
-					};*/
+					};
 
 					type.m_is_associative_container = true;
 					type.m_value_type = get_type_impl<T::mapped_type>();
@@ -326,7 +343,7 @@ namespace reflectpp
 					return add_type_impl(&type);
 				}
 			}
-			else if constexpr (is_sequence_container<T>::value)
+			else if constexpr (is_array<T>::value || is_deque<T>::value || is_forward_list<T>::value || is_list<T>::value || is_vector<T>::value)
 			{
 				if constexpr (std::is_pointer_v<T::value_type>)
 				{
@@ -337,41 +354,101 @@ namespace reflectpp
 				{
 					type.m_sequence_assign = [](void* container, size_t index, void* value)
 					{
-						auto& set = *static_cast<typename T::value_type*>(&static_cast<T*>(container)->at(index));
-						set = *static_cast<typename T::value_type*>(value);
+						if constexpr (!is_forward_list<T>::value && !is_list<T>::value)
+						{
+							auto& set = *static_cast<typename T::value_type*>(&static_cast<T*>(container)->at(index));
+							set = *static_cast<typename T::value_type*>(value);
+						}
+						else
+						{
+							T* data{ static_cast<T*>(container) };
+
+							for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
+							{
+								if (i == index)
+								{
+									auto& set = *static_cast<typename T::value_type*>(&(*it));
+									set = *static_cast<typename T::value_type*>(value);
+									break;
+								}
+							}
+						}
 					};
 
 					type.m_sequence_at = [](void* container, size_t index) -> void*
 					{
-						return static_cast<void*>(&static_cast<T*>(container)->at(index));
+						if constexpr (!is_forward_list<T>::value && !is_list<T>::value)
+						{
+							return static_cast<void*>(&static_cast<T*>(container)->at(index));
+						}
+						else
+						{
+							T* data{ static_cast<T*>(container) };
+
+							for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
+								if (i == index)
+									return static_cast<void*>(&(*it));
+
+							return nullptr;
+						}
 					};
 
-					type.m_sequence_clear = [](void* container)
+					if constexpr (!is_array<T>::value)
 					{
-						static_cast<T*>(container)->clear();
-					};
+						type.m_sequence_clear = [](void* container)
+						{
+							static_cast<T*>(container)->clear();
+						};
 
-					type.m_sequence_erase = [](void* container, size_t index)
-					{
-						static_cast<T*>(container)->erase(static_cast<T*>(container)->begin() + index);
-					};
+						type.m_sequence_erase = [](void* container, size_t index)
+						{
+							if constexpr (!is_forward_list<T>::value)
+							{
+								static_cast<T*>(container)->erase(static_cast<T*>(container)->begin() + index);
+							}
+							else
+							{
+								static_cast<T*>(container)->erase_after(static_cast<T*>(container)->begin() + index);
+							}
+						};
 
-					type.m_sequence_insert = [](void* container, size_t index, void* value)
-					{
-						static_cast<T*>(container)->insert(static_cast<T*>(container)->begin() + index, *static_cast<typename T::value_type*>(value));
-					};
+						type.m_sequence_insert = [](void* container, size_t index, void* value)
+						{
+							if constexpr (!is_forward_list<T>::value)
+							{
+								static_cast<T*>(container)->insert(static_cast<T*>(container)->begin() + index, *static_cast<typename T::value_type*>(value));
+							}
+							else
+							{
+								static_cast<T*>(container)->insert_after(static_cast<T*>(container)->begin() + index, *static_cast<typename T::value_type*>(value));
+							}
+						};
 
-					type.m_sequence_resize = [](void* container, size_t size)
-					{
-						static_cast<T*>(container)->resize(size);
-					};
+						type.m_sequence_resize = [](void* container, size_t size)
+						{
+							static_cast<T*>(container)->resize(size);
+						};
+					}
 
 					type.m_sequence_size = [](void* container) -> size_t
 					{
-						return static_cast<T*>(container)->size();
+						if constexpr (!is_forward_list<T>::value)
+						{
+							return static_cast<T*>(container)->size();
+						}
+						else
+						{
+							int size{ 0 };
+
+							for (auto it : *static_cast<T*>(container))
+								++size;
+
+							return size;
+						}
 					};
 
 					type.m_is_sequence_container = true;
+					type.m_iterator_type = get_type_impl<T::iterator>();
 					type.m_value_type = get_type_impl<T::value_type>();
 
 					return add_type_impl(&type);

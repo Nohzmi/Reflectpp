@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\argument.h" />
+    <ClInclude Include="include\details\specifiers.h" />
     <ClInclude Include="include\details\forward.h" />
     <ClInclude Include="include\details\log.hpp" />
     <ClInclude Include="include\details\factory_data.h" />
@@ -29,7 +30,6 @@
     <ClInclude Include="include\details\platform.h" />
     <ClInclude Include="include\details\property_data.h" />
     <ClInclude Include="include\details\registry.h" />
-    <ClInclude Include="include\details\specifiers.h" />
     <ClInclude Include="include\details\type_data.h" />
     <ClInclude Include="include\details\type_info_data.h" />
     <ClInclude Include="include\details\type_traits.h" />
@@ -44,7 +44,6 @@
     <ClInclude Include="include\type.h" />
     <ClInclude Include="include\type_info.h" />
     <ClInclude Include="include\variant.h" />
-    <ClInclude Include="include\variant_associative_view.h" />
     <ClInclude Include="include\variant_sequencial_view.h" />
   </ItemGroup>
   <ItemGroup>

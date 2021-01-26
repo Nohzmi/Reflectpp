@@ -38,7 +38,7 @@ namespace reflectpp
 			iterator(iterator&&) REFLECTPP_NOEXCEPT = default;
 			iterator& operator=(const iterator&) = default;
 			iterator& operator=(iterator&&) REFLECTPP_NOEXCEPT = default;
-			explicit iterator(size_t index, const variant_sequencial_view* variant) REFLECTPP_NOEXCEPT;
+			explicit iterator(size_t index, variant_sequencial_view* variant) REFLECTPP_NOEXCEPT;
 
 			bool operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT;
 			bool operator!=(const iterator& rhs) const REFLECTPP_NOEXCEPT;
@@ -119,7 +119,7 @@ namespace reflectpp
 		* @param pos
 		* @param value
 		*/
-		iterator insert(const iterator& pos, argument value) const REFLECTPP_NOEXCEPT;
+		iterator insert(const iterator& pos, argument value) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the container is dynamic \n
@@ -142,7 +142,7 @@ namespace reflectpp
 		* Returns whether or not the size could be changed
 		* @param size
 		*/
-		bool set_size(size_t size) const REFLECTPP_NOEXCEPT;
+		bool set_size(size_t size) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Set the content of the the argument at the specified index into the underlying sequential container
@@ -150,7 +150,7 @@ namespace reflectpp
 		* @param index
 		* @param value
 		*/
-		bool set_value(size_t index, argument value) const REFLECTPP_NOEXCEPT;
+		bool set_value(size_t index, argument value) REFLECTPP_NOEXCEPT;
 
 	private:
 

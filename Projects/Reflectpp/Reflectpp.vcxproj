@@ -44,6 +44,7 @@
     <ClInclude Include="include\type.h" />
     <ClInclude Include="include\type_info.h" />
     <ClInclude Include="include\variant.h" />
+    <ClInclude Include="include\variant_associative_view.h" />
     <ClInclude Include="include\variant_sequencial_view.h" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +58,7 @@
     <ClCompile Include="source\type.cpp" />
     <ClCompile Include="source\type_info.cpp" />
     <ClCompile Include="source\variant.cpp" />
+    <ClCompile Include="source\variant_associative_view.cpp" />
     <ClCompile Include="source\variant_sequencial_view.cpp" />
   </ItemGroup>
   <ItemGroup>

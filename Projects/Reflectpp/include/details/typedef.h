@@ -13,10 +13,12 @@ namespace reflectpp
 {
 	namespace details
 	{
+		using AssociativeAt = std::pair<void*, void*> (*)(void*, size_t);
 		using AssociativeClear = void (*)(void*);
-		using AssociativeErase = void (*)(void*, void*);
-		using AssociativeFind = void* (*)(void*, void*);
-		using AssociativeInsert = void (*)(void*, void*, void*);
+		using AssociativeEqualRange = std::pair<size_t, size_t> (*)(void*, void*);
+		using AssociativeErase = size_t (*)(void*, void*);
+		using AssociativeFind = size_t (*)(void*, void*);
+		using AssociativeInsert = std::pair<size_t, bool> (*)(void*, void*, void*);
 		using AssociativeSize = size_t(*)(void*);
 		using Constructor = void* (*)();
 		using Copy = void* (*)(void*);

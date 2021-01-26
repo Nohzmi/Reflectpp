@@ -27,10 +27,14 @@ namespace reflectpp
 	*/
 	class REFLECTPP_API variant_associative_view final
 	{
+		friend class iterator;
+
 	public:
 
 		class REFLECTPP_API iterator
 		{
+			friend variant_associative_view;
+
 		public:
 
 			iterator() = default;
@@ -39,10 +43,10 @@ namespace reflectpp
 			iterator(iterator&&) REFLECTPP_NOEXCEPT = default;
 			iterator& operator=(const iterator&) = default;
 			iterator& operator=(iterator&&) REFLECTPP_NOEXCEPT = default;
-			iterator(size_t index, variant_associative_view* variant) REFLECTPP_NOEXCEPT;
+			explicit iterator(size_t index, variant_associative_view* variant) REFLECTPP_NOEXCEPT;
 
-			bool operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT;
-			bool operator!=(const iterator& rhs) const REFLECTPP_NOEXCEPT;
+			bool operator==(const iterator & rhs) const REFLECTPP_NOEXCEPT;
+			bool operator!=(const iterator & rhs) const REFLECTPP_NOEXCEPT;
 			iterator& operator++() REFLECTPP_NOEXCEPT;
 			iterator operator++(int) REFLECTPP_NOEXCEPT;
 			iterator& operator--() REFLECTPP_NOEXCEPT;
@@ -52,14 +56,13 @@ namespace reflectpp
 			iterator& operator-=(size_t i) REFLECTPP_NOEXCEPT;
 			iterator operator-(size_t i) REFLECTPP_NOEXCEPT;
 			std::pair<variant, variant> operator*() const REFLECTPP_NOEXCEPT;
-			size_t get_index() const REFLECTPP_NOEXCEPT;// a voir si inutile
 			variant get_key() const REFLECTPP_NOEXCEPT;
 			variant get_value() const REFLECTPP_NOEXCEPT;
 
 		private:
 
-			size_t m_index;
-			variant_associative_view* m_variant_associative_view;
+			size_t m_index{ 0 };
+			variant_associative_view* m_variant{ nullptr };
 		};
 
 		variant_associative_view() = default;
@@ -98,10 +101,10 @@ namespace reflectpp
 
 		/**
 		* Removes the element with the key
+		* Returns the number of elements removed
 		* @param key
 		*/
-		void erase(argument key) REFLECTPP_NOEXCEPT;
-		//TODO return size_t in rttr
+		size_t erase(argument key) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Finds an element with specific key
@@ -133,14 +136,15 @@ namespace reflectpp
 		* Insert a key into the container
 		* @param key
 		*/
-		//iterator insert(argument key) const REFLECTPP_NOEXCEPT;
+		//iterator insert(argument key) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Insert a key-value pair into the container
+		* Returns a pair consisting of an iterator to the inserted element and a bool denoting whether the insertion took place. 
 		* @param key
 		* @param value
 		*/
-		void insert(argument key, argument value) const REFLECTPP_NOEXCEPT;
+		std::pair<iterator, bool> insert(argument key, argument value) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the container has elements
@@ -153,6 +157,8 @@ namespace reflectpp
 		bool is_valid() const REFLECTPP_NOEXCEPT;
 
 	private:
+
+		std::pair<variant, variant> get_value(size_t index) const REFLECTPP_NOEXCEPT;
 
 		details::variant_data m_data;
 	};

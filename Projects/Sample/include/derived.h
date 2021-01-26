@@ -19,7 +19,8 @@ class Derived : public Base
 
 public:
 
-	std::vector<float> DerivedValue0;
-	float DerivedValue1;
-	Intern DerivedValue2;
+	float DerivedValue0;
+	Intern DerivedValue1;
+	std::vector<float> DerivedValue2;
+	std::map<char, float> DerivedValue3;
 };

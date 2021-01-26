@@ -18,7 +18,9 @@ namespace reflectpp
 	{
 		struct type_data final
 		{
+			AssociativeAt m_associative_at{ nullptr };
 			AssociativeClear m_associative_clear{ nullptr };
+			AssociativeEqualRange m_associative_equal_range{ nullptr };
 			AssociativeErase m_associative_erase{ nullptr };
 			AssociativeFind m_associative_find{ nullptr };
 			AssociativeInsert m_associative_insert{ nullptr };

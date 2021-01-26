@@ -63,6 +63,11 @@ namespace reflectpp
 		void clear() REFLECTPP_NOEXCEPT;
 		
 		/**
+		* Creates a variant_associative_view from the containing value
+		*/
+		variant_associative_view create_associative_view() const REFLECTPP_NOEXCEPT;
+
+		/**
 		* Creates a variant_sequential_view from the containing value
 		*/
 		variant_sequencial_view create_sequential_view() const REFLECTPP_NOEXCEPT;
@@ -91,6 +96,11 @@ namespace reflectpp
 		*/
 		template<typename T>
 		REFLECTPP_INLINE const T& get_value() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not this type is an associative container
+		*/
+		bool is_associative_container() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not this type is a sequencial container

@@ -3,6 +3,7 @@
 #include "variant.h"
 
 #include "type.h"
+#include "variant_associative_view.h"
 #include "variant_sequencial_view.h"
 
 namespace reflectpp
@@ -56,6 +57,11 @@ namespace reflectpp
 		m_data = details::variant_data();
 	}
 
+	variant_associative_view variant::create_associative_view() const REFLECTPP_NOEXCEPT
+	{
+		return is_associative_container() ? variant_associative_view({ false, m_data.m_type, m_data.m_value }) : variant_associative_view();
+	}
+
 	variant_sequencial_view variant::create_sequential_view() const REFLECTPP_NOEXCEPT
 	{
 		return is_sequential_container() ? variant_sequencial_view({ false, m_data.m_type, m_data.m_value }) : variant_sequencial_view();
@@ -69,6 +75,11 @@ namespace reflectpp
 	type variant::get_type() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? type(m_data.m_type) : type();
+	}
+
+	bool variant::is_associative_container() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data.m_type->m_is_associative_container : false;
 	}
 
 	bool variant::is_sequential_container() const REFLECTPP_NOEXCEPT

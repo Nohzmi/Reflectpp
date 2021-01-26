@@ -96,6 +96,9 @@
     <ClInclude Include="include\details\specifiers.h">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\variant_associative_view.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -129,6 +132,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\variant_sequencial_view.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\variant_associative_view.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

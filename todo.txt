@@ -11,8 +11,20 @@ empecher de save/load autre chose qu'une class
 comme ça quand je load je peux retrouver la property
 ou enregistrer un getter/setter dans le type
 vérifier les type de retour des variant view
+commentaire des views
+
 merge fonction comme AssociativeClear et SequenceClear
-revoir view avec fonction sur iterateur pour plus de simplicité & optimisé
-rename has_...
-aulink vld to binaries
+aulink vld to binaries ?
 rename typedef, pointer sequence
+variant ou autre get value mettre reinterpret cast
+ajouter sequence et associatif manquant si besoin et test
+enlever friend des iterator ?
+maybe utility dans typedef ? si compile on s'en fout
+essayer d'enlever bout de code useless dans les lambda de associative, partout ?
+fusion is_map et autre car useless ?
+genraliser l'implementation de conteneur autre que la stl -> has_function with special cas of stl
+rajouter des log (dans type ?)
+test all sequence avec all type
+revoir les cast
+clean associative
+finir le insert du set

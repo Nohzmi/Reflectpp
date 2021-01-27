@@ -27,9 +27,9 @@ namespace reflectpp
 		variant() = default;
 		~variant();
 		variant(const variant&);
-		variant(variant&&) REFLECTPP_NOEXCEPT = default;
+		variant(variant&&) REFLECTPP_NOEXCEPT;
 		variant& operator=(const variant&);
-		variant& operator=(variant&&) REFLECTPP_NOEXCEPT = default;
+		variant& operator=(variant&&) REFLECTPP_NOEXCEPT;
 		explicit variant(const details::variant_data& data) REFLECTPP_NOEXCEPT;
 
 		/**

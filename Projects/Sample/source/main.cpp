@@ -62,10 +62,10 @@ int main()
 	std::cout << "is_empty: " << variant_sequence.is_empty() << std::endl;
 	std::cout << "is_valid: " << variant_sequence.is_valid() << std::endl << std::endl;
 
-	variant_sequence.clear();
+	/*variant_sequence.clear();
 	std::cout << "clear" << std::endl;
 	std::cout << "size: " << variant_sequence.get_size() << std::endl;
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 
 	//************************************//
 	//***** variant associative view *****//
@@ -106,14 +106,26 @@ int main()
 	std::cout << "is_valid: " << variant_associative.is_valid() << std::endl;
 	std::cout << std::endl;
 
-	variant_associative.clear();
+	/*variant_associative.clear();
 	std::cout << "size: " << variant_associative.get_size() << std::endl;
 	for (auto it : variant_associative)
 		std::cout << "{ " << it.first.get_value<char>() << ", " << it.second.get_value<float>() << " } ";
-	std::cout << std::endl << std::endl;
+	std::cout << std::endl << std::endl;*/
 
-	//serializer s("test");
-	//s.save(object);
+	//**********************//
+	//***** other test *****//
+
+	std::cout << "//**********************//" << std::endl;
+	std::cout << "//***** other test *****//" << std::endl;
+	std::cout << std::endl;
+
+	int intval = 5;
+	variant var5 = variant(intval);
+	variant var6 = variant(6);
+	variant var7 = variant(std::move(intval));
+
+	serializer s("test");
+	s.load(object);
 
 	return EXIT_SUCCESS;
 }

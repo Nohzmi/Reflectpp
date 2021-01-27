@@ -18,11 +18,29 @@ namespace reflectpp
 		*this = copy;
 	}
 
+	variant::variant(variant&& move) REFLECTPP_NOEXCEPT
+	{
+		*this = std::move(move);
+	}
+
 	variant& variant::operator=(const variant& copy)
 	{
 		m_data.m_is_owner = copy.is_valid();
 		m_data.m_type = copy.m_data.m_type;
 		m_data.m_value = copy.is_valid() ? m_data.m_type->m_factory->m_copy(copy.m_data.m_value) : nullptr;
+		return *this;
+	}
+
+	variant& variant::operator=(variant&& move) REFLECTPP_NOEXCEPT
+	{
+		m_data.m_is_owner = move.m_data.m_is_owner;
+		m_data.m_type = move.m_data.m_type;
+		m_data.m_value = move.m_data.m_value;
+
+		move.m_data.m_is_owner = false;
+		move.m_data.m_type = nullptr;
+		move.m_data.m_value = nullptr;
+
 		return *this;
 	}
 

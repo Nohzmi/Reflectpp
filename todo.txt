@@ -5,6 +5,7 @@ Essayer la lib dans un projet extern: #pragma warning (registry.inl) et ddl inte
 Réparer le sample en x86: recompile gl3w
 Gestion des enums
 Gestion des conteneur associatif
+Optimisation de la serialization
 
 Temporaire:
 empecher de save/load autre chose qu'une class
@@ -28,3 +29,9 @@ test all sequence avec all type
 revoir les cast
 clean associative
 finir le insert du set
+cas du non dynamic dans le load
+load save base type ?
+create variant d'un vecteur ?
+for (auto& si possible
+opti de la save avec le moins de copie possible pour éviter de new
+argument/instance move

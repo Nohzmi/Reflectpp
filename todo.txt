@@ -6,12 +6,9 @@ Réparer le sample en x86: recompile gl3w
 Gestion des enums
 Gestion des conteneur associatif
 Optimisation de la serialization
+Ajouter des include pour l'utilisateur et un include qui inclue tout ? (register.h -> forward.h par exemple)
 
 Temporaire:
-empecher de save/load autre chose qu'une class
-comme ça quand je load je peux retrouver la property
-ou enregistrer un getter/setter dans le type
-vérifier les type de retour des variant view
 commentaire des views
 
 merge fonction comme AssociativeClear et SequenceClear
@@ -35,3 +32,6 @@ create variant d'un vecteur ?
 for (auto& si possible
 opti de la save avec le moins de copie possible pour éviter de new
 argument/instance move
+copy move éviter de s'entre appeler ? check sur le net
+
+serializer (for auto&) test, verif les auto

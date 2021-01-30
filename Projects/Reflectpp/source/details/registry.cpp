@@ -18,7 +18,7 @@ namespace reflectpp
 
 		void registry::add_base_impl(type_data* type, type_data* base) REFLECTPP_NOEXCEPT
 		{
-			for (auto it : type->m_base_types)
+			for (auto& it : type->m_base_types)
 			{
 				if (it == base)
 				{
@@ -40,10 +40,10 @@ namespace reflectpp
 
 					type->m_hierarchy_id = hierarchyID;
 
-					for (auto it : type->m_base_types)
+					for (auto& it : type->m_base_types)
 						lambda(it, hierarchyID, lambda);
 
-					for (auto it : type->m_derived_types)
+					for (auto& it : type->m_derived_types)
 						lambda(it, hierarchyID, lambda);
 				};
 
@@ -67,9 +67,9 @@ namespace reflectpp
 
 		void registry::add_property_impl(type_data* type, property_data* property) REFLECTPP_NOEXCEPT
 		{
-			for (auto it : type->m_properties)
+			for (auto& it : type->m_properties)
 			{
-				if (it == property)
+				if (it->m_id == property->m_id)
 				{
 					REFLECTPP_LOG("%s already registered", property->m_name);
 					return;
@@ -83,7 +83,7 @@ namespace reflectpp
 		type_data* registry::add_type_impl(type_data* type) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_types)
-				if (it.get() == type)
+				if (it.get()->m_type_info->m_id == type->m_type_info->m_id)
 					return nullptr;
 
 			m_types.emplace_back(new type_data(*type));
@@ -93,7 +93,7 @@ namespace reflectpp
 		type_info_data* registry::add_type_info_impl(type_info_data* type_info) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_type_infos)
-				if (it.get() == type_info)
+				if (it.get()->m_id == type_info->m_id)
 					return nullptr;
 
 			m_type_infos.emplace_back(new type_info_data(*type_info));
@@ -112,7 +112,7 @@ namespace reflectpp
 
 				bool res{ false };
 
-				for (auto it : object->m_base_types)
+				for (auto& it : object->m_base_types)
 					res |= lambda(it, type, lambda);
 
 				return res;

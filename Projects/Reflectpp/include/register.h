@@ -8,7 +8,7 @@
 
 #pragma once
 #include "details/hasher.hpp"
-#include "details/type_traits.h"
+#include "details/register_traits.h"
 
 #define REFLECT(T)														\
 private:																\

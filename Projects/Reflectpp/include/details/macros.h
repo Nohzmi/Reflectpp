@@ -8,5 +8,6 @@
 
 #pragma once
 
+#define REFLECTPP_CONSTEXPR constexpr
 #define REFLECTPP_NOEXCEPT noexcept
 #define REFLECTPP_INLINE inline

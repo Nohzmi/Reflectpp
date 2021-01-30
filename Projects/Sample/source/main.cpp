@@ -23,6 +23,16 @@
 
 using namespace reflectpp;
 
+class TestFunc
+{
+public:
+
+	int someFunc()
+	{
+		return 5;
+	}
+};
+
 int main()
 {
 	//******************//
@@ -126,6 +136,10 @@ int main()
 
 	serializer s("test");
 	s.load(object);
+
+	//auto testsdfgh = reflectpp::details::implement_at<std::vector<int>>::value;
+
+	//void* funcPtr = (void*)(TestFunc::someFunc);
 
 	return EXIT_SUCCESS;
 }

@@ -20,6 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\argument.h" />
+    <ClInclude Include="include\custom_associative_container.hpp" />
+    <ClInclude Include="include\details\associative_container.hpp" />
+    <ClInclude Include="include\details\associative_container_data.h" />
+    <ClInclude Include="include\details\register_traits.h" />
+    <ClInclude Include="include\details\sequence_container.hpp" />
+    <ClInclude Include="include\details\sequence_container_data.h" />
     <ClInclude Include="include\details\specifiers.h" />
     <ClInclude Include="include\details\forward.h" />
     <ClInclude Include="include\details\log.hpp" />
@@ -40,6 +46,7 @@
     <ClInclude Include="include\property.h" />
     <ClInclude Include="include\register.h" />
     <ClInclude Include="include\registration.h" />
+    <ClInclude Include="include\custom_sequence_container.hpp" />
     <ClInclude Include="include\serializer.h" />
     <ClInclude Include="include\type.h" />
     <ClInclude Include="include\type_info.h" />

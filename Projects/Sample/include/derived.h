@@ -12,6 +12,8 @@
 
 #include <array>
 #include <vector>
+#include <map>
+#include <list>
 
 class Derived : public Base
 {
@@ -23,4 +25,5 @@ public:
 	Intern DerivedValue1;
 	std::vector<float> DerivedValue2;
 	std::map<char, float> DerivedValue3;
+	std::list<float> DerivedValue4;
 };

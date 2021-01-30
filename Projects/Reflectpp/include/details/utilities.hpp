@@ -10,6 +10,7 @@
 #include <typeinfo>
 
 #include "details/macros.h"
+#include "details/register_traits.h"
 #include "details/type_traits.h"
 
 namespace reflectpp

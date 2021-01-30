@@ -273,6 +273,283 @@ namespace reflectpp
 		}
 
 		template<typename T>
+		REFLECTPP_INLINE type_data* registry::get_associative_container_impl(type_data& type) REFLECTPP_NOEXCEPT
+		{
+			if constexpr (std::is_pointer_v<T::value_type>)
+			{
+				REFLECTPP_LOG("pointer not supported");
+				return nullptr;
+			}
+			else
+			{
+				type.m_associative_at = [](void* container, size_t index) -> std::pair<void*, void*>
+				{
+					T* data{ static_cast<T*>(container) };
+
+					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
+					{
+						if (i == index)
+						{
+							if constexpr (is_map<T>::value || is_multimap<T>::value)
+							{
+								void* a = (void*)(&(it->first));/////////////////////////////////////////////////////////////////////////////
+								void* b = (void*)(&(it->second));
+								return std::make_pair(a, b);
+								//return std::make_pair<void*, void*>(reinterpret_cast<void*>(&(it->first)), reinterpret_cast<void*>(&(it->second)));
+							}
+							else if constexpr (is_multiset<T>::value || is_set<T>::value)
+							{
+								return std::make_pair(static_cast<void*>(&(*it)), nullptr);
+							}
+						}
+					}
+				};
+
+				type.m_associative_clear = [](void* container)
+				{
+					static_cast<T*>(container)->clear();
+				};
+
+				type.m_associative_equal_range = [](void* container, void* key) -> std::pair<size_t, size_t>
+				{
+					T* data{ static_cast<T*>(container) };
+					auto range{ data->equal_range(*static_cast<typename T::key_type*>(key)) };
+
+					if (range.first == range.second)
+					{
+						if (range.first == data->begin())
+						{
+							return std::make_pair(0, 0);
+						}
+						else if (range.first == data->end())
+						{
+							size_t size{ data->size() };
+							return std::make_pair(size, size);
+						}
+					}
+
+					std::pair<size_t, size_t> size_range{ 0, 0 };
+					std::pair<bool, bool> stop{ false, false };
+
+					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
+					{
+						if (it == range.first)
+						{
+							size_range.first = i;
+							stop.first = true;
+						}
+						else if (it == range.second)
+						{
+							size_range.second = i;
+							stop.second = true;
+						}
+
+						if (stop.first && stop.second)
+							break;
+					}
+
+					return size_range;
+				};
+
+				type.m_associative_erase = [](void* container, void* key) -> size_t
+				{
+					return static_cast<T*>(container)->erase(*static_cast<typename T::key_type*>(key));
+				};
+
+				type.m_associative_find = [](void* container, void* key) -> size_t
+				{
+					T* data{ static_cast<T*>(container) };
+					auto find{ data->find(*static_cast<typename T::key_type*>(key)) };
+
+					if (find == data->end())
+						return data->size();
+
+					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
+						if (it == find)
+							return i;
+
+					return data->size();
+				};
+
+				type.m_associative_insert = [](void* container, void* key, void* value) -> std::pair<size_t, bool>
+				{
+					T* data{ static_cast<T*>(container) };
+					auto insert{ data->insert(std::make_pair(*static_cast<typename T::key_type*>(key), *static_cast<typename T::mapped_type*>(value))) };
+
+					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
+						if (it == insert.first)
+							return std::make_pair(i, true);
+
+					return std::make_pair(data->size(), false);
+				};
+
+				type.m_associative_size = [](void* container) -> size_t
+				{
+					return static_cast<T*>(container)->size();
+				};
+
+				type.m_is_associative_container = true;
+				type.m_key_type = get_type_impl<T::key_type>();
+
+				if constexpr (is_map<T>::value || is_multimap<T>::value)
+				{
+					type.m_value_type = get_type_impl<T::mapped_type>();
+				}
+
+				return add_type_impl(&type);
+			}
+		}
+
+		template<typename T>
+		REFLECTPP_INLINE type_data* registry::get_sequence_container_impl(type_data& type) REFLECTPP_NOEXCEPT
+		{
+			if constexpr (std::is_pointer_v<T::value_type>)
+			{
+				REFLECTPP_LOG("pointer not supported");
+				return nullptr;
+			}
+			else
+			{
+				auto sequence_data{ get_sequence_container_data(T()) };///
+
+				if (sequence_data.m_at != nullptr)
+				{
+					type.m_sequence_assign = [](void* container, size_t index, void* value)
+					{
+						auto obj{ static_cast<T*>(container) };
+						get_sequence_container_data(*obj).m_at(obj, index) = *static_cast<typename T::value_type*>(value);
+					};
+
+					type.m_sequence_at = [](void* container, size_t index) -> void*
+					{
+						auto obj{ static_cast<T*>(container) };
+						return static_cast<void*>(&get_sequence_container_data(*obj).m_at(obj, index));
+					};
+				}
+				else
+				{
+					type.m_sequence_assign = [](void* container, size_t index, void* value)
+					{
+						size_t i{ 0 };
+
+						for (auto& it : *static_cast<T*>(container))
+						{
+							if (i == index)
+							{
+								it = *static_cast<typename T::value_type*>(value);
+								break;
+							}
+
+							++i;
+						}
+					};
+
+					type.m_sequence_at = [](void* container, size_t index) -> void*
+					{
+						size_t i{ 0 };
+
+						for (auto& it : *static_cast<T*>(container))
+						{
+							if (i == index)
+								return static_cast<void*>(&it);
+
+							++i;
+						}
+
+						return nullptr;
+					};
+				}
+
+				if (sequence_data.m_clear != nullptr)
+				{
+					type.m_sequence_clear = [](void* container)
+					{
+						auto obj{ static_cast<T*>(container) };
+						get_sequence_container_data(*obj).m_clear(obj);
+					};
+				}
+
+				if (sequence_data.m_erase != nullptr)
+				{
+					type.m_sequence_erase = [](void* container, size_t index)
+					{
+						auto obj{ static_cast<T*>(container) };
+						auto data{ get_sequence_container_data(*obj) };
+						size_t i{ 0 };
+
+						for (auto it = data.m_begin(obj); it != data.m_end(obj); ++it, ++i)
+						{
+							if (i == index)
+							{
+								data.m_erase(obj, it);
+								break;
+							}
+						}
+					};
+				}
+
+				if (sequence_data.m_insert != nullptr)
+				{
+					type.m_sequence_insert = [](void* container, size_t index, void* value)
+					{
+						auto obj{ static_cast<T*>(container) };
+						auto val{ static_cast<typename T::value_type*>(value) };
+						auto data{ get_sequence_container_data(*obj) };
+						size_t i{ 0 };
+
+						for (auto it = data.m_begin(obj); it != data.m_end(obj); ++it, ++i)
+						{
+							if (i == index)
+							{
+								data.m_insert(obj, it, *val);
+								break;
+							}
+						}
+
+						if (i == index)
+							data.m_insert(obj, data.m_end(obj), *val);
+					};
+				}
+
+				if (sequence_data.m_resize != nullptr)
+				{
+					type.m_sequence_resize = [](void* container, size_t size)
+					{
+						auto obj{ static_cast<T*>(container) };
+						get_sequence_container_data(*obj).m_resize(obj, size);
+					};
+				}
+
+				if (sequence_data.m_size != nullptr)
+				{
+					type.m_sequence_size = [](void* container) -> size_t
+					{
+						auto obj{ static_cast<T*>(container) };
+						return get_sequence_container_data(*obj).m_size(obj);
+					};
+				}
+				else
+				{
+					type.m_sequence_size = [](void* container) -> size_t
+					{
+						size_t size{ 0 };
+
+						for (auto& it : *static_cast<T*>(container))
+							++size;
+
+						return size;
+					};
+				}
+
+				type.m_is_sequence_container = true;
+				type.m_iterator_type = get_type_impl<T::iterator>();
+				type.m_value_type = get_type_impl<T::value_type>();
+
+				return add_type_impl(&type);
+			}
+		}
+
+		template<typename T>
 		REFLECTPP_INLINE type_data* registry::get_type_impl() REFLECTPP_NOEXCEPT
 		{
 			type_data* addr{ get_type_impl(type_id<T>()) };
@@ -285,242 +562,13 @@ namespace reflectpp
 			type.m_size = sizeof(T);
 			type.m_type_info = get_type_info<T>();
 
-			if constexpr (is_associative_container<T>::value)
+			if constexpr (is_sequence_container<T>::value)
 			{
-				if constexpr (std::is_pointer_v<T::value_type>)
-				{
-					REFLECTPP_LOG("pointer not supported");
-					return nullptr;
-				}
-				else
-				{
-					type.m_associative_at = [](void* container, size_t index) -> std::pair<void*, void*>
-					{
-						T* data{ static_cast<T*>(container) };
-
-						for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
-						{
-							if (i == index)
-							{
-								if constexpr (is_map<T>::value || is_multimap<T>::value)
-								{
-									void* a = (void*)(&(it->first));/////////////////////////////////////////////////////////////////////////////
-									void* b = (void*)(&(it->second));
-									return std::make_pair(a, b);
-									//return std::make_pair<void*, void*>(reinterpret_cast<void*>(&(it->first)), reinterpret_cast<void*>(&(it->second)));
-								}
-								else if constexpr (is_multiset<T>::value || is_set<T>::value)
-								{
-									return std::make_pair(static_cast<void*>(&(*it)), nullptr);
-								}
-							}
-						}
-					};
-
-					type.m_associative_clear = [](void* container)
-					{
-						static_cast<T*>(container)->clear();
-					};
-
-					type.m_associative_equal_range = [](void* container, void* key) -> std::pair<size_t, size_t>
-					{
-						T* data{ static_cast<T*>(container) };
-						auto range{ data->equal_range(*static_cast<typename T::key_type*>(key)) };
-
-						if (range.first == range.second)
-						{
-							if (range.first == data->begin())
-							{
-								return std::make_pair(0, 0);
-							}
-							else if (range.first == data->end())
-							{
-								size_t size{ data->size() };
-								return std::make_pair(size, size);
-							}
-						}
-
-						std::pair<size_t, size_t> size_range{ 0, 0 };
-						std::pair<bool, bool> stop{ false, false };
-
-						for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
-						{
-							if (it == range.first)
-							{
-								size_range.first = i;
-								stop.first = true;
-							}
-							else if (it == range.second)
-							{
-								size_range.second = i;
-								stop.second = true;
-							}
-
-							if (stop.first && stop.second)
-								break;
-						}
-
-						return size_range;
-					};
-
-					type.m_associative_erase = [](void* container, void* key) -> size_t
-					{
-						return static_cast<T*>(container)->erase(*static_cast<typename T::key_type*>(key));
-					};
-
-					type.m_associative_find = [](void* container, void* key) -> size_t
-					{
-						T* data{ static_cast<T*>(container) };
-						auto find{ data->find(*static_cast<typename T::key_type*>(key)) };
-
-						if (find == data->end())
-							return data->size();
-
-						for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
-							if (it == find)
-								return i;
-
-						return data->size();
-					};
-
-					type.m_associative_insert = [](void* container, void* key, void* value) -> std::pair<size_t, bool>
-					{
-						T* data{ static_cast<T*>(container) };
-						auto insert{ data->insert(std::make_pair(*static_cast<typename T::key_type*>(key), *static_cast<typename T::mapped_type*>(value))) };
-
-						for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
-							if (it == insert.first)
-								return std::make_pair(i, true);
-
-						return std::make_pair(data->size(), false);
-					};
-
-					type.m_associative_size = [](void* container) -> size_t
-					{
-						return static_cast<T*>(container)->size();
-					};
-
-					type.m_is_associative_container = true;
-					type.m_key_type = get_type_impl<T::key_type>();
-
-					if constexpr (is_map<T>::value || is_multimap<T>::value)
-					{
-						type.m_value_type = get_type_impl<T::mapped_type>();
-					}
-
-					return add_type_impl(&type);
-				}
+				return get_sequence_container_impl<T>(type);
 			}
-			else if constexpr (is_sequence_container<T>::value)
+			else if constexpr (is_associative_container<T>::value)
 			{
-				if constexpr (std::is_pointer_v<T::value_type>)
-				{
-					REFLECTPP_LOG("pointer not supported");
-					return nullptr;
-				}
-				else
-				{
-					type.m_sequence_assign = [](void* container, size_t index, void* value)
-					{
-						if constexpr (!is_forward_list<T>::value && !is_list<T>::value)
-						{
-							auto& set = *static_cast<typename T::value_type*>(&static_cast<T*>(container)->at(index));
-							set = *static_cast<typename T::value_type*>(value);
-						}
-						else
-						{
-							T* data{ static_cast<T*>(container) };
-
-							for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
-							{
-								if (i == index)
-								{
-									auto& set = *static_cast<typename T::value_type*>(&(*it));
-									set = *static_cast<typename T::value_type*>(value);
-									break;
-								}
-							}
-						}
-					};
-
-					type.m_sequence_at = [](void* container, size_t index) -> void*
-					{
-						if constexpr (!is_forward_list<T>::value && !is_list<T>::value)
-						{
-							return static_cast<void*>(&static_cast<T*>(container)->at(index));
-						}
-						else
-						{
-							T* data{ static_cast<T*>(container) };
-
-							for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
-								if (i == index)
-									return static_cast<void*>(&(*it));
-
-							return nullptr;
-						}
-					};
-
-					if constexpr (!is_array<T>::value)
-					{
-						type.m_sequence_clear = [](void* container)
-						{
-							static_cast<T*>(container)->clear();
-						};
-
-						type.m_sequence_erase = [](void* container, size_t index)
-						{
-							if constexpr (!is_forward_list<T>::value)
-							{
-								static_cast<T*>(container)->erase(static_cast<T*>(container)->begin() + index);
-							}
-							else
-							{
-								static_cast<T*>(container)->erase_after(static_cast<T*>(container)->begin() + index);
-							}
-						};
-
-						type.m_sequence_insert = [](void* container, size_t index, void* value)
-						{
-							if constexpr (!is_forward_list<T>::value)
-							{
-								static_cast<T*>(container)->insert(static_cast<T*>(container)->begin() + index, *static_cast<typename T::value_type*>(value));
-							}
-							else
-							{
-								static_cast<T*>(container)->insert_after(static_cast<T*>(container)->begin() + index, *static_cast<typename T::value_type*>(value));
-							}
-						};
-
-						type.m_sequence_resize = [](void* container, size_t size)
-						{
-							static_cast<T*>(container)->resize(size);
-						};
-					}
-
-					type.m_sequence_size = [](void* container) -> size_t
-					{
-						if constexpr (!is_forward_list<T>::value)
-						{
-							return static_cast<T*>(container)->size();
-						}
-						else
-						{
-							int size{ 0 };
-
-							for (auto it : *static_cast<T*>(container))
-								++size;
-
-							return size;
-						}
-					};
-
-					type.m_is_sequence_container = true;
-					type.m_iterator_type = get_type_impl<T::iterator>();
-					type.m_value_type = get_type_impl<T::value_type>();
-
-					return add_type_impl(&type);
-				}
+				return get_associative_container_impl<T>(type);
 			}
 			else
 			{

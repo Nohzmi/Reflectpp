@@ -99,6 +99,27 @@
     <ClInclude Include="include\variant_associative_view.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\details\register_traits.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\sequence_container.hpp">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\sequence_container_data.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\custom_sequence_container.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\associative_container.hpp">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\associative_container_data.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\custom_associative_container.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">

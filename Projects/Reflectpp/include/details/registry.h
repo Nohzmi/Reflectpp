@@ -19,6 +19,8 @@
 #include "details/type_data.h"
 #include "details/type_info_data.h"
 #include "details/utilities.hpp"
+#include "custom_associative_container.hpp"
+#include "custom_sequence_container.hpp"
 
 namespace reflectpp
 {
@@ -61,6 +63,10 @@ namespace reflectpp
 
 		private:
 
+			template<typename T>
+			REFLECTPP_INLINE type_data* get_associative_container_impl(type_data& type) REFLECTPP_NOEXCEPT;
+			template<typename T>
+			REFLECTPP_INLINE type_data* get_sequence_container_impl(type_data& type) REFLECTPP_NOEXCEPT;
 			template<typename T>
 			REFLECTPP_INLINE type_data* get_type_impl() REFLECTPP_NOEXCEPT;
 

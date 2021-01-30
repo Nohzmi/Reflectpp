@@ -1,0 +1,126 @@
+// Copyright (c) 2020, Nohzmi. All rights reserved.
+
+/**
+* @file sequence_container.hpp
+* @author Nohzmi
+* @version 1.0
+*/
+
+#pragma once
+#include <array>
+#include <deque>
+#include <forward_list>
+#include <list>
+#include <vector>
+
+#include "details/macros.h"
+#include "details/sequence_container_data.h"
+
+namespace reflectpp
+{
+	namespace details
+	{
+		template<typename T>
+		REFLECTPP_INLINE sequence_container_data<void> get_sequence_container_data(T) REFLECTPP_NOEXCEPT
+		{
+			return sequence_container_data<void>();
+		}
+
+		template<typename>
+		struct is_sequence_container : std::false_type {};
+
+		template<typename T, size_t Size>
+		REFLECTPP_INLINE sequence_container_data<std::array<T, Size>> get_sequence_container_data(std::array<T, Size>) REFLECTPP_NOEXCEPT
+		{
+			sequence_container_data<std::array<T, Size>> data;
+			return data;
+		}
+
+		template<typename T, size_t Size>
+		struct is_sequence_container<std::array<T, Size>> : std::true_type {};
+
+		template<typename T>
+		REFLECTPP_INLINE sequence_container_data<std::deque<T>> get_sequence_container_data(std::deque<T>) REFLECTPP_NOEXCEPT
+		{
+			sequence_container_data<std::deque<T>> data;
+			return data;
+		}
+
+		template<typename T>
+		struct is_sequence_container<std::deque<T>> : std::true_type {};
+
+		template<typename T>
+		REFLECTPP_INLINE sequence_container_data<std::forward_list<T>> get_sequence_container_data(std::forward_list<T>) REFLECTPP_NOEXCEPT
+		{
+			sequence_container_data<std::forward_list<T>> data;
+			return data;
+		}
+
+		template<typename T>
+		struct is_sequence_container<std::forward_list<T>> : std::true_type {};
+
+		template<typename T>
+		REFLECTPP_INLINE sequence_container_data<std::list<T>> get_sequence_container_data(std::list<T>) REFLECTPP_NOEXCEPT
+		{
+			sequence_container_data<std::list<T>> data;
+			return data;
+		}
+
+		template<typename T>
+		struct is_sequence_container<std::list<T>> : std::true_type {};
+
+		template<typename T>
+		REFLECTPP_INLINE sequence_container_data<std::vector<T>> get_sequence_container_data(std::vector<T>) REFLECTPP_NOEXCEPT
+		{
+			using iterator = typename std::vector<T>::iterator;
+			using value_type = typename std::vector<T>::value_type;
+	
+			sequence_container_data<std::vector<T>> data;
+
+			data.m_at = [](std::vector<T>* container, size_t pos) -> value_type&
+			{
+				return container->at(pos);
+			};
+
+			data.m_begin = [](std::vector<T>* container) -> iterator
+			{
+				return container->begin();
+			};
+
+			data.m_clear = [](std::vector<T>* container)
+			{
+				container->clear();
+			};
+
+			data.m_end = [](std::vector<T>* container) -> iterator
+			{
+				return container->end();
+			};
+
+			data.m_erase = [](std::vector<T>* container, iterator pos) -> iterator
+			{
+				return container->erase(pos);
+			};
+
+			data.m_insert = [](std::vector<T>* container, iterator pos, const value_type& value) -> iterator
+			{
+				return container->insert(pos, value);
+			};
+
+			data.m_resize = [](std::vector<T>* container, size_t count)
+			{
+				container->resize(count);
+			};
+
+			data.m_size = [](std::vector<T>* container) -> size_t
+			{
+				return container->size();
+			};
+
+			return data;
+		}
+
+		template<typename T>
+		struct is_sequence_container<std::vector<T>> : std::true_type {};
+	}
+}

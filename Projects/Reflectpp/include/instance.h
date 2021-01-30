@@ -25,12 +25,12 @@ namespace reflectpp
 
 	public:
 
-		instance() = delete;
+		instance() = default;
 		~instance();
 		instance(const instance&);
-		instance(instance&&) REFLECTPP_NOEXCEPT = default;
+		instance(instance&&) REFLECTPP_NOEXCEPT;
 		instance& operator=(const instance&);
-		instance& operator=(instance&&) REFLECTPP_NOEXCEPT = default;
+		instance& operator=(instance&&) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Creates an instance from a variant

@@ -53,6 +53,9 @@ int main()
 	//variant var = type::get<Derived>().get_property("DerivedValue2").get_value(object);
 	variant var = variant(object.DerivedValue2);
 
+	instance intance00 = object;
+	instance intance02 = intance00;
+
 	variant_sequencial_view variant_sequence = var.create_sequential_view();
 	variant_sequence.set_size(2);
 	variant_sequence.set_value(0, 0.f);

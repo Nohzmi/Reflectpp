@@ -23,12 +23,12 @@ namespace reflectpp
 	{
 	public:
 
-		argument() = delete;
+		argument() = default;
 		~argument();
 		argument(const argument&);
-		argument(argument&&) REFLECTPP_NOEXCEPT = default;
+		argument(argument&&) REFLECTPP_NOEXCEPT;
 		argument& operator=(const argument&);
-		argument& operator=(argument&&) REFLECTPP_NOEXCEPT = default;
+		argument& operator=(argument&&) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Creates an argument from a variant

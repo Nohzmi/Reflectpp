@@ -12,6 +12,3 @@ Ajouter des logs ?
 Temporaire:
 aulink vld to binaries ?
 rename typedef, pointer sequence
-
-argument/instance move
-copy move éviter de s'entre appeler ? check sur le net

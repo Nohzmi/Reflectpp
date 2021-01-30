@@ -27,14 +27,10 @@ namespace reflectpp
 	*/
 	class REFLECTPP_API variant_associative_view final
 	{
-		friend class iterator;
-
 	public:
 
 		class REFLECTPP_API iterator
 		{
-			friend variant_associative_view;
-
 		public:
 
 			iterator() = default;
@@ -134,13 +130,14 @@ namespace reflectpp
 
 		/**
 		* Insert a key into the container
+		* Returns a pair consisting of an iterator to the inserted element and a bool denoting whether the insertion took place
 		* @param key
 		*/
-		//iterator insert(argument key) REFLECTPP_NOEXCEPT;
+		std::pair<iterator, bool> insert(argument key) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Insert a key-value pair into the container
-		* Returns a pair consisting of an iterator to the inserted element and a bool denoting whether the insertion took place. 
+		* Returns a pair consisting of an iterator to the inserted element and a bool denoting whether the insertion took place
 		* @param key
 		* @param value
 		*/

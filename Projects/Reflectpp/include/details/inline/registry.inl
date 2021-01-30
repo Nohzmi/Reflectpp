@@ -197,7 +197,7 @@ namespace reflectpp
 				REFLECTPP_LOG("invalid type");
 				return nullptr;
 			}
-			else if constexpr (std::is_arithmetic_v<T>)
+			else if constexpr (std::is_arithmetic_v<T> || is_associative_container<T>::value || is_sequence_container<T>::value)
 			{
 				return get_type_impl<T>();
 			}
@@ -223,7 +223,7 @@ namespace reflectpp
 				REFLECTPP_LOG("invalid param");
 				return nullptr;
 			}
-			else if constexpr (std::is_arithmetic_v<decay<T>>)
+			else if constexpr (std::is_arithmetic_v<decay<T>> || is_associative_container<decay<T>>::value || is_sequence_container<decay<T>>::value)
 			{
 				return get_type_impl<decay<T>>();
 			}
@@ -295,7 +295,7 @@ namespace reflectpp
 								void* a = (void*)(&(it->first));/////////////////////////////////////////////////////////////////////////////
 								void* b = (void*)(&(it->second));
 								return std::make_pair(a, b);
-								//return std::make_pair<void*, void*>(reinterpret_cast<void*>(&(it->first)), reinterpret_cast<void*>(&(it->second)));
+								//return std::make_pair<void*, void*>(reinterpret_cast<void*>(&(it->first)), reinterpret_cast<void*>(&(it->second))); evité si possible reinterpret_cast
 							}
 							else if constexpr (is_multiset<T>::value || is_set<T>::value)
 							{
@@ -303,6 +303,8 @@ namespace reflectpp
 							}
 						}
 					}
+
+					return std::pair<void*, void*>();
 				};
 
 				type.m_associative_clear = [](void* container)
@@ -371,7 +373,19 @@ namespace reflectpp
 					return data->size();
 				};
 
-				type.m_associative_insert = [](void* container, void* key, void* value) -> std::pair<size_t, bool>
+				type.m_associative_insert_key = [](void* container, void* key) -> std::pair<size_t, bool>
+				{
+					T* data{ static_cast<T*>(container) };
+					auto insert{ data->insert(std::make_pair(*static_cast<typename T::key_type*>(key), typename T::mapped_type())) };
+
+					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
+						if (it == insert.first)
+							return std::make_pair(i, true);
+
+					return std::make_pair(data->size(), false);
+				};
+
+				type.m_associative_insert_key_value = [](void* container, void* key, void* value) -> std::pair<size_t, bool>
 				{
 					T* data{ static_cast<T*>(container) };
 					auto insert{ data->insert(std::make_pair(*static_cast<typename T::key_type*>(key), *static_cast<typename T::mapped_type*>(value))) };
@@ -535,7 +549,10 @@ namespace reflectpp
 						size_t size{ 0 };
 
 						for (auto& it : *static_cast<T*>(container))
+						{
+							(void)it;
 							++size;
+						}
 
 						return size;
 					};

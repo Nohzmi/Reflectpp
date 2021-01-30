@@ -15,7 +15,7 @@ using json = nlohmann::json;
 
 namespace reflectpp
 {
-	serializer::serializer(const char* path) REFLECTPP_NOEXCEPT
+	serializer::serializer(const char*) REFLECTPP_NOEXCEPT
 	{
 		m_path = "temp.json";// (std::string(path) + ".json").c_str();//TODO clean
 	}
@@ -23,7 +23,7 @@ namespace reflectpp
 	void serializer::save(instance object) const REFLECTPP_NOEXCEPT
 	{
 		json j;
-		save_type(*object.m_variant, j);
+		save_type(*object.m_variant, j); // need friend in instance...
 
 		std::ofstream out(m_path);
 		out << std::setw(4) << j;

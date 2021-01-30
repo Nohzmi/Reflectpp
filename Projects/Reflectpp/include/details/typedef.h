@@ -18,7 +18,8 @@ namespace reflectpp
 		using AssociativeEqualRange = std::pair<size_t, size_t> (*)(void*, void*);
 		using AssociativeErase = size_t (*)(void*, void*);
 		using AssociativeFind = size_t (*)(void*, void*);
-		using AssociativeInsert = std::pair<size_t, bool> (*)(void*, void*, void*);
+		using AssociativeInsertKey = std::pair<size_t, bool>(*)(void*, void*);
+		using AssociativeInsertKeyValue = std::pair<size_t, bool> (*)(void*, void*, void*);
 		using AssociativeSize = size_t(*)(void*);
 		using Constructor = void* (*)();
 		using Copy = void* (*)(void*);

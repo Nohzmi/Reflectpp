@@ -50,10 +50,8 @@ int main()
 	std::cout << std::endl;
 
 	Derived object = Derived();
-	variant var = type::get<Derived>().get_property("DerivedValue2").get_value(object);
-
-	float get_as_float = var.get_value<float>();
-	double gat_as_double = var.get_value<double>();
+	//variant var = type::get<Derived>().get_property("DerivedValue2").get_value(object);
+	variant var = variant(object.DerivedValue2);
 
 	variant_sequencial_view variant_sequence = var.create_sequential_view();
 	variant_sequence.set_size(2);

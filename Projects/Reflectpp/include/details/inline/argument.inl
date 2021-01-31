@@ -2,7 +2,7 @@
 
 namespace reflectpp
 {
-	template<typename T, typename U>
+	template<typename T, typename>
 	REFLECTPP_INLINE argument::argument(T&& object) REFLECTPP_NOEXCEPT :
 		m_is_owner{ true },
 		m_variant{ new variant(object) }

@@ -282,6 +282,15 @@ namespace reflectpp
 			}
 			else
 			{
+				auto associative_data{ get_associative_container_data(T()) };
+				auto associative_dataz{ get_associative_container_data(std::set<int>()) };
+
+				/*if (sequence_data.m_begin == nullptr || sequence_data.m_end == nullptr)
+				{
+					REFLECTPP_LOG("begin or end function not linked to custom sequence container");
+					return nullptr;
+				}*/
+
 				type.m_associative_at = [](void* container, size_t index) -> std::pair<void*, void*>
 				{
 					T* data{ static_cast<T*>(container) };
@@ -424,19 +433,29 @@ namespace reflectpp
 			}
 			else
 			{
-				auto sequence_data{ get_sequence_container_data(T()) };///
+				auto sequence_data{ get_sequence_container_data(T()) };
+
+				if (sequence_data.m_begin == nullptr || sequence_data.m_end == nullptr)
+				{
+					REFLECTPP_LOG("begin or end function not linked to custom sequence container");
+					return nullptr;
+				}
+
+				using class_type = typename decltype(sequence_data)::class_type;
+				using iterator = typename decltype(sequence_data)::iterator;
+				using value_type = typename decltype(sequence_data)::value_type;
 
 				if (sequence_data.m_at != nullptr)
 				{
 					type.m_sequence_assign = [](void* container, size_t index, void* value)
 					{
-						auto obj{ static_cast<T*>(container) };
-						get_sequence_container_data(*obj).m_at(obj, index) = *static_cast<typename T::value_type*>(value);
+						auto obj{ static_cast<class_type*>(container) };
+						get_sequence_container_data(*obj).m_at(obj, index) = *static_cast<value_type*>(value);
 					};
 
 					type.m_sequence_at = [](void* container, size_t index) -> void*
 					{
-						auto obj{ static_cast<T*>(container) };
+						auto obj{ static_cast<class_type*>(container) };
 						return static_cast<void*>(&get_sequence_container_data(*obj).m_at(obj, index));
 					};
 				}
@@ -446,11 +465,11 @@ namespace reflectpp
 					{
 						size_t i{ 0 };
 
-						for (auto& it : *static_cast<T*>(container))
+						for (auto& it : *static_cast<class_type*>(container))
 						{
 							if (i == index)
 							{
-								it = *static_cast<typename T::value_type*>(value);
+								it = *static_cast<value_type*>(value);
 								break;
 							}
 
@@ -462,7 +481,7 @@ namespace reflectpp
 					{
 						size_t i{ 0 };
 
-						for (auto& it : *static_cast<T*>(container))
+						for (auto& it : *static_cast<class_type*>(container))
 						{
 							if (i == index)
 								return static_cast<void*>(&it);
@@ -478,7 +497,7 @@ namespace reflectpp
 				{
 					type.m_sequence_clear = [](void* container)
 					{
-						auto obj{ static_cast<T*>(container) };
+						auto obj{ static_cast<class_type*>(container) };
 						get_sequence_container_data(*obj).m_clear(obj);
 					};
 				}
@@ -487,7 +506,7 @@ namespace reflectpp
 				{
 					type.m_sequence_erase = [](void* container, size_t index)
 					{
-						auto obj{ static_cast<T*>(container) };
+						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_sequence_container_data(*obj) };
 						size_t i{ 0 };
 
@@ -506,8 +525,8 @@ namespace reflectpp
 				{
 					type.m_sequence_insert = [](void* container, size_t index, void* value)
 					{
-						auto obj{ static_cast<T*>(container) };
-						auto val{ static_cast<typename T::value_type*>(value) };
+						auto obj{ static_cast<class_type*>(container) };
+						auto val{ static_cast<value_type*>(value) };
 						auto data{ get_sequence_container_data(*obj) };
 						size_t i{ 0 };
 
@@ -529,7 +548,7 @@ namespace reflectpp
 				{
 					type.m_sequence_resize = [](void* container, size_t size)
 					{
-						auto obj{ static_cast<T*>(container) };
+						auto obj{ static_cast<class_type*>(container) };
 						get_sequence_container_data(*obj).m_resize(obj, size);
 					};
 				}
@@ -538,7 +557,7 @@ namespace reflectpp
 				{
 					type.m_sequence_size = [](void* container) -> size_t
 					{
-						auto obj{ static_cast<T*>(container) };
+						auto obj{ static_cast<class_type*>(container) };
 						return get_sequence_container_data(*obj).m_size(obj);
 					};
 				}
@@ -548,7 +567,7 @@ namespace reflectpp
 					{
 						size_t size{ 0 };
 
-						for (auto& it : *static_cast<T*>(container))
+						for (auto& it : *static_cast<class_type*>(container))
 						{
 							(void)it;
 							++size;
@@ -559,8 +578,8 @@ namespace reflectpp
 				}
 
 				type.m_is_sequence_container = true;
-				type.m_iterator_type = get_type_impl<T::iterator>();
-				type.m_value_type = get_type_impl<T::value_type>();
+				type.m_iterator_type = get_type_impl<iterator>();
+				type.m_value_type = get_type_impl<value_type>();
 
 				return add_type_impl(&type);
 			}

@@ -42,7 +42,7 @@ namespace reflectpp
 		* Create an instance from an object
 		* @param object
 		*/
-		template<typename T, typename U = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<instance, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
+		template<typename T, typename = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<instance, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
 		REFLECTPP_INLINE instance(T& object) REFLECTPP_NOEXCEPT;
 
 		/**

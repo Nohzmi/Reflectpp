@@ -2,7 +2,7 @@
 
 namespace reflectpp
 {
-	template<typename T, typename U>
+	template<typename T, typename>
 	REFLECTPP_INLINE variant::variant(T&& object) REFLECTPP_NOEXCEPT
 	{
 		m_data.m_is_owner = !std::is_reference_v<T>;

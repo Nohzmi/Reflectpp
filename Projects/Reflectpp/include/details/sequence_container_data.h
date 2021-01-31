@@ -12,24 +12,35 @@ namespace reflectpp
 {
 	namespace details
 	{
-		template<typename T>
+		template<typename Container = void, typename Iterator = void, typename Value = void>
 		struct sequence_container_data final
 		{
-			using iterator = typename T::iterator;
-			using value_type = typename T::value_type;
+			using class_type = Container;
+			using iterator = Iterator;
+			using value_type = Value;
 
-			value_type& (*m_at)(T* container, size_t pos) { nullptr };
-			iterator (*m_begin)(T* container) { nullptr };
-			void (*m_clear)(T* container) { nullptr };
-			iterator (*m_end)(T* container) { nullptr };
-			iterator (*m_erase)(T* container, iterator pos) { nullptr };
-			iterator (*m_insert)(T* container, iterator pos, const value_type& value) { nullptr };
-			void (*m_resize)(T* container, size_t count) { nullptr };
-			size_t (*m_size)(T* container) { nullptr };
+			value_type& (*m_at)(class_type* container, size_t pos) { nullptr };
+			iterator (*m_begin)(class_type* container) { nullptr };
+			void (*m_clear)(class_type* container) { nullptr };
+			iterator (*m_end)(class_type* container) { nullptr };
+			iterator (*m_erase)(class_type* container, iterator pos) { nullptr };
+			iterator (*m_insert)(class_type* container, iterator pos, const value_type& value) { nullptr };
+			void (*m_resize)(class_type* container, size_t count) { nullptr };
+			size_t (*m_size)(class_type* container) { nullptr };
+		};
+
+		template<typename Container, typename Iterator>
+		struct sequence_container_data<Container, Iterator, void> final
+		{
+		};
+
+		template<typename Container>
+		struct sequence_container_data<Container, void, void> final
+		{
 		};
 
 		template<>
-		struct sequence_container_data<void> final
+		struct sequence_container_data<void, void, void> final
 		{
 		};
 	}

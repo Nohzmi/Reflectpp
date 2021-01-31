@@ -14,6 +14,7 @@
 /*  Function requirements:                                                                               */
 /*    begin: iterator (*)(T* container)                                                                  */
 /*    end: iterator (*)(T* container)                                                                    */
+/*    size: size_t (*)(T* container)                                                                     */
 /*                                                                                                       */
 /*  Function optional:                                                                                   */
 /*    clear: void (*)(T* container)                                                                      */
@@ -22,12 +23,11 @@
 /*    find: iterator (*)(T* container, const key_type& key)                                              */
 /*    insert: std::pair<iterator, bool> (*)(T* container, const key_type& key)                           */
 /*    insert: std::pair<iterator, bool> (*)(T* container, const key_type& key, const value_type& value)  */
-/*    size: size_t (*)(T* container)                                                                     */
 /*                                                                                                       */
 /*  Member type requirements:                                                                            */
 /*    iterator                                                                                           */
 /*    key_type                                                                                           */
-/*    mapped_type                                                                                        */
+/*    value_type                                                                                         */
 /*                                                                                                       */
 /*********************************************************************************************************/
 

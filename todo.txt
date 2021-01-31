@@ -6,9 +6,10 @@ Réparer le sample en x86: recompile gl3w
 Gestion des enums
 Optimisation de la serialization (éviter copy -> ça évite les new de variant)
 Ajouter des include pour l'utilisateur et un include qui inclue tout ? (register.h -> forward.h par exemple)
-Tester tout les conteneur stl (associatif et sequenciel)
-Ajouter des logs ?
+Tester tout les conteneur stl (associatif et sequenciel) **
+Ajouter des logs ? *
+Essayer avec des const char* pour éprouver mon système
 
 Temporaire:
 aulink vld to binaries ?
-rename typedef, pointer sequence
+rename typedef, pointer sequence ***

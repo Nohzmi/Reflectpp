@@ -14,6 +14,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <set>
 
 class Derived : public Base
 {

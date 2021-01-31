@@ -160,9 +160,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\details\inline\registry.inl">
-      <Filter>include\details\inline</Filter>
-    </None>
     <None Include="include\details\inline\factory.inl">
       <Filter>include\details\inline</Filter>
     </None>
@@ -182,6 +179,9 @@
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\argument.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\registry.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

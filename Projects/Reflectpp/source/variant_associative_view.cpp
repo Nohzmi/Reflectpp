@@ -176,19 +176,19 @@ namespace reflectpp
 
 	std::pair<variant_associative_view::iterator, bool> variant_associative_view::insert(argument key) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_associative_insert_key == nullptr || key.get_type() != get_key_type())
+		if (!is_valid() || m_data.m_type->m_associative_insert == nullptr || key.get_type() != get_key_type())
 			return std::make_pair(iterator(), false);
 
-		auto it{ m_data.m_type->m_associative_insert_key(m_data.m_value, key.get_raw_data()) };
+		auto it{ m_data.m_type->m_associative_insert(m_data.m_value, key.get_raw_data(), nullptr) };
 		return std::make_pair(iterator(it.first, this), it.second);
 	}
 
 	std::pair<variant_associative_view::iterator, bool> variant_associative_view::insert(argument key, argument value) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_associative_insert_key_value == nullptr || key.get_type() != get_key_type() || value.get_type() != get_value_type())
+		if (!is_valid() || m_data.m_type->m_associative_insert == nullptr || key.get_type() != get_key_type() || value.get_type() != get_value_type())
 			return std::make_pair(iterator(), false);
 
-		auto it{ m_data.m_type->m_associative_insert_key_value(m_data.m_value, key.get_raw_data(), value.get_raw_data()) };
+		auto it{ m_data.m_type->m_associative_insert(m_data.m_value, key.get_raw_data(), value.get_raw_data()) };
 		return std::make_pair(iterator(it.first, this), it.second);
 	}
 

@@ -8,7 +8,6 @@
 
 #pragma once
 #include <memory>
-#include <unordered_map>
 
 #include "details/factory_data.h"
 #include "details/hasher.hpp"

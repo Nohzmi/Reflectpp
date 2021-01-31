@@ -283,141 +283,161 @@ namespace reflectpp
 			else
 			{
 				auto associative_data{ get_associative_container_data(T()) };
-				auto associative_dataz{ get_associative_container_data(std::set<int>()) };
 
-				/*if (sequence_data.m_begin == nullptr || sequence_data.m_end == nullptr)
+				if (associative_data.m_begin == nullptr || associative_data.m_end == nullptr || associative_data.m_size == nullptr)
 				{
-					REFLECTPP_LOG("begin or end function not linked to custom sequence container");
+					REFLECTPP_LOG("begin, end or size function not linked to custom associative container");
 					return nullptr;
-				}*/
+				}
+
+				using class_type = typename decltype(associative_data)::class_type;
+				using iterator = typename decltype(associative_data)::iterator;
+				using key_type = typename decltype(associative_data)::key_type;
 
 				type.m_associative_at = [](void* container, size_t index) -> std::pair<void*, void*>
 				{
-					T* data{ static_cast<T*>(container) };
+					auto obj{ static_cast<class_type*>(container) };
+					auto data{ get_associative_container_data(*obj) };
 
-					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
+					for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
 					{
 						if (i == index)
 						{
-							if constexpr (is_map<T>::value || is_multimap<T>::value)
+							if constexpr (has_value_type<class_type>::value)
 							{
-								void* a = (void*)(&(it->first));/////////////////////////////////////////////////////////////////////////////
-								void* b = (void*)(&(it->second));
-								return std::make_pair(a, b);
-								//return std::make_pair<void*, void*>(reinterpret_cast<void*>(&(it->first)), reinterpret_cast<void*>(&(it->second))); evité si possible reinterpret_cast
+								//TODO
+								return std::make_pair((void*)(&(it->first)), (void*)(&(it->second)));
+								//return std::make_pair(static_cast<void*>(&(it->first)), static_cast<void*>(&(it->second)));
 							}
-							else if constexpr (is_multiset<T>::value || is_set<T>::value)
+							else
 							{
-								return std::make_pair(static_cast<void*>(&(*it)), nullptr);
+								return std::make_pair(static_cast<void*>(const_cast<key_type*>(&(*it))), nullptr);
 							}
 						}
 					}
 
-					return std::pair<void*, void*>();
+					return std::make_pair(nullptr, nullptr);
 				};
 
-				type.m_associative_clear = [](void* container)
+				if (associative_data.m_clear != nullptr)
 				{
-					static_cast<T*>(container)->clear();
-				};
-
-				type.m_associative_equal_range = [](void* container, void* key) -> std::pair<size_t, size_t>
-				{
-					T* data{ static_cast<T*>(container) };
-					auto range{ data->equal_range(*static_cast<typename T::key_type*>(key)) };
-
-					if (range.first == range.second)
+					type.m_sequence_clear = [](void* container)
 					{
-						if (range.first == data->begin())
-						{
-							return std::make_pair(0, 0);
-						}
-						else if (range.first == data->end())
-						{
-							size_t size{ data->size() };
-							return std::make_pair(size, size);
-						}
-					}
+						auto obj{ static_cast<class_type*>(container) };
+						get_associative_container_data(*obj).m_clear(obj);
+					};
+				}
 
-					std::pair<size_t, size_t> size_range{ 0, 0 };
-					std::pair<bool, bool> stop{ false, false };
-
-					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
+				if (associative_data.m_equal_range != nullptr)
+				{
+					type.m_associative_equal_range = [](void* container, void* key)->std::pair<size_t, size_t>
 					{
-						if (it == range.first)
+						auto obj{ static_cast<class_type*>(container) };
+						auto data{ get_associative_container_data(*obj) };
+						auto range{ data.m_equal_range(obj, *static_cast<key_type*>(key)) };
+
+						if (range.first == range.second)
 						{
-							size_range.first = i;
-							stop.first = true;
+							if (range.first == data.m_begin(obj))
+							{
+								return std::make_pair(0, 0);
+							}
+							else if (range.first == data.m_end(obj))
+							{
+								size_t size{ data.m_size(obj) };
+								return std::make_pair(size, size);
+							}
 						}
-						else if (it == range.second)
+
+						std::pair<size_t, size_t> size_range{ 0, 0 };
+						std::pair<bool, bool> stop{ false, false };
+
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
 						{
-							size_range.second = i;
-							stop.second = true;
+							if (it == range.first)
+							{
+								size_range.first = i;
+								stop.first = true;
+							}
+							else if (it == range.second)
+							{
+								size_range.second = i;
+								stop.second = true;
+							}
+
+							if (stop.first && stop.second)
+								break;
 						}
 
-						if (stop.first && stop.second)
-							break;
-					}
+						return size_range;
+					};
+				}
 
-					return size_range;
-				};
-
-				type.m_associative_erase = [](void* container, void* key) -> size_t
+				if (associative_data.m_erase != nullptr)
 				{
-					return static_cast<T*>(container)->erase(*static_cast<typename T::key_type*>(key));
-				};
+					type.m_associative_erase = [](void* container, void* key) -> size_t
+					{
+						auto obj{ static_cast<class_type*>(container) };
+						return get_associative_container_data(*obj).m_erase(obj, *static_cast<key_type*>(key));
+					};
+				}
 
-				type.m_associative_find = [](void* container, void* key) -> size_t
+				if (associative_data.m_find != nullptr)
 				{
-					T* data{ static_cast<T*>(container) };
-					auto find{ data->find(*static_cast<typename T::key_type*>(key)) };
+					type.m_associative_find = [](void* container, void* key) -> size_t
+					{
+						auto obj{ static_cast<class_type*>(container) };
+						auto data{ get_associative_container_data(*obj) };
+						auto find{ data.m_find(obj, *static_cast<key_type*>(key)) };
 
-					if (find == data->end())
-						return data->size();
+						if (find == data.m_begin(obj))
+							return data.m_size(obj);
 
-					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
-						if (it == find)
-							return i;
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
+							if (it == find)
+								return i;
 
-					return data->size();
-				};
+						return data.m_size(obj);
+					};
+				}
 
-				type.m_associative_insert_key = [](void* container, void* key) -> std::pair<size_t, bool>
+				if (associative_data.m_insert != nullptr)
 				{
-					T* data{ static_cast<T*>(container) };
-					auto insert{ data->insert(std::make_pair(*static_cast<typename T::key_type*>(key), typename T::mapped_type())) };
+					type.m_associative_insert = [](void* container, void* key, void* value) -> std::pair<size_t, bool>
+					{
+						auto obj{ static_cast<class_type*>(container) };
+						auto data{ get_associative_container_data(*obj) };
+						std::pair<iterator, bool> insert;
 
-					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
-						if (it == insert.first)
-							return std::make_pair(i, true);
+						if constexpr (has_value_type<class_type>::value)
+						{
+							using value_type = typename decltype(data)::value_type;
+							insert = data.m_insert(obj, *static_cast<key_type*>(key), value != nullptr ? *static_cast<value_type*>(value) : value_type());
+						}
+						else
+						{
+							insert = data.m_insert(obj, *static_cast<key_type*>(key));
+						}
 
-					return std::make_pair(data->size(), false);
-				};
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
+							if (it == insert.first)
+								return std::make_pair(i, true);
 
-				type.m_associative_insert_key_value = [](void* container, void* key, void* value) -> std::pair<size_t, bool>
-				{
-					T* data{ static_cast<T*>(container) };
-					auto insert{ data->insert(std::make_pair(*static_cast<typename T::key_type*>(key), *static_cast<typename T::mapped_type*>(value))) };
-
-					for (auto [it, i] = std::tuple{ data->begin(), 0 }; it != data->end(); ++it, ++i)
-						if (it == insert.first)
-							return std::make_pair(i, true);
-
-					return std::make_pair(data->size(), false);
-				};
+						return std::make_pair(data.m_size(obj), false);
+					};
+				}
 
 				type.m_associative_size = [](void* container) -> size_t
 				{
-					return static_cast<T*>(container)->size();
+					auto obj{ static_cast<class_type*>(container) };
+					return get_associative_container_data(*obj).m_size(obj);
 				};
 
 				type.m_is_associative_container = true;
-				type.m_key_type = get_type_impl<T::key_type>();
+				type.m_key_type = get_type_impl<key_type>();
 
-				if constexpr (is_map<T>::value || is_multimap<T>::value)
-				{
-					type.m_value_type = get_type_impl<T::mapped_type>();
-				}
+				if constexpr (has_value_type<class_type>::value)
+					type.m_value_type = get_type_impl<typename decltype(associative_data)::value_type>();
 
 				return add_type_impl(&type);
 			}
@@ -463,31 +483,27 @@ namespace reflectpp
 				{
 					type.m_sequence_assign = [](void* container, size_t index, void* value)
 					{
-						size_t i{ 0 };
+						auto obj{ static_cast<class_type*>(container) };
+						auto data{ get_sequence_container_data(*obj) };
 
-						for (auto& it : *static_cast<class_type*>(container))
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
 						{
 							if (i == index)
 							{
-								it = *static_cast<value_type*>(value);
+								*it = *static_cast<value_type*>(value);
 								break;
 							}
-
-							++i;
 						}
 					};
 
 					type.m_sequence_at = [](void* container, size_t index) -> void*
 					{
-						size_t i{ 0 };
+						auto obj{ static_cast<class_type*>(container) };
+						auto data{ get_sequence_container_data(*obj) };
 
-						for (auto& it : *static_cast<class_type*>(container))
-						{
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
 							if (i == index)
-								return static_cast<void*>(&it);
-
-							++i;
-						}
+								return static_cast<void*>(&(*it));
 
 						return nullptr;
 					};
@@ -508,9 +524,8 @@ namespace reflectpp
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_sequence_container_data(*obj) };
-						size_t i{ 0 };
 
-						for (auto it = data.m_begin(obj); it != data.m_end(obj); ++it, ++i)
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
 						{
 							if (i == index)
 							{

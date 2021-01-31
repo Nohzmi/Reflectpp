@@ -12,43 +12,53 @@ namespace reflectpp
 {
 	namespace details
 	{
-		template<typename T, typename Key, typename Value = void>
+		template<typename Container = void, typename Iterator = void, typename Key = void, typename Value = void>
 		struct associative_container_data final
 		{
-			using iterator = typename T::iterator;
+			using class_type = Container;
+			using iterator = Iterator;
 			using key_type = Key;
 			using value_type = Value;
 
-			iterator (*m_begin)(T* container) { nullptr };
-			void (*m_clear)(T* container) { nullptr };
-			iterator (*m_end)(T* container) { nullptr };
-			std::pair<iterator, iterator> (*m_equal_range)(T* container, const key_type& key) { nullptr };
-			size_t(*m_erase)(T* container, const key_type& key) { nullptr };
-			iterator (*m_find)(T* container, const key_type& key) { nullptr };
-			const bool m_has_value_type{ true };
-			std::pair<iterator, bool> (*m_insert)(T* container, const key_type& key, const value_type& value) { nullptr };
-			size_t (*m_size)(T* container) { nullptr };
+			iterator (*m_begin)(class_type* container) { nullptr };
+			void (*m_clear)(class_type* container) { nullptr };
+			iterator (*m_end)(class_type* container) { nullptr };
+			std::pair<iterator, iterator> (*m_equal_range)(class_type* container, const key_type& key) { nullptr };
+			size_t(*m_erase)(class_type* container, const key_type& key) { nullptr };
+			iterator (*m_find)(class_type* container, const key_type& key) { nullptr };
+			std::pair<iterator, bool> (*m_insert)(class_type* container, const key_type& key, const value_type& value) { nullptr };
+			size_t (*m_size)(class_type* container) { nullptr };
 		};
 
-		template<typename T, typename Key>
-		struct associative_container_data<T, Key, void> final
+		template<typename Container, typename Iterator, typename Key>
+		struct associative_container_data<Container, Iterator, Key, void> final
 		{
-			using iterator = typename T::iterator;
+			using class_type = Container;
+			using iterator = Iterator;
 			using key_type = Key;
 
-			iterator (*m_begin)(T* container) { nullptr };
-			void (*m_clear)(T* container) { nullptr };
-			iterator (*m_end)(T* container) { nullptr };
-			std::pair<iterator, iterator> (*m_equal_range)(T* container, const key_type& key) { nullptr };
-			size_t (*m_erase)(T* container, const key_type& key) { nullptr };
-			const bool m_has_value_type{ false };
-			iterator (*m_find)(T* container, const key_type& key) { nullptr };
-			std::pair<iterator, bool> (*m_insert)(T* container, const key_type& key) { nullptr };
-			size_t (*m_size)(T* container) { nullptr };
+			iterator (*m_begin)(class_type* container) { nullptr };
+			void (*m_clear)(class_type* container) { nullptr };
+			iterator (*m_end)(class_type* container) { nullptr };
+			std::pair<iterator, iterator> (*m_equal_range)(class_type* container, const key_type& key) { nullptr };
+			size_t (*m_erase)(class_type* container, const key_type& key) { nullptr };
+			iterator (*m_find)(class_type* container, const key_type& key) { nullptr };
+			std::pair<iterator, bool> (*m_insert)(class_type* container, const key_type& key) { nullptr };
+			size_t (*m_size)(class_type* container) { nullptr };
+		};
+
+		template<typename Container, typename Iterator>
+		struct associative_container_data<Container, Iterator, void, void> final
+		{
+		};
+
+		template<typename Container>
+		struct associative_container_data<Container, void, void, void> final
+		{
 		};
 
 		template<>
-		struct associative_container_data<void, void, void> final
+		struct associative_container_data<void, void, void, void> final
 		{
 		};
 	}

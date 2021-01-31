@@ -23,6 +23,7 @@ namespace reflectpp
 			AssociativeEqualRange m_associative_equal_range{ nullptr };
 			AssociativeErase m_associative_erase{ nullptr };
 			AssociativeFind m_associative_find{ nullptr };
+			AssociativeInsert m_associative_insert{ nullptr };
 			AssociativeInsertKey m_associative_insert_key{ nullptr };
 			AssociativeInsertKeyValue m_associative_insert_key_value{ nullptr };
 			AssociativeSize m_associative_size{ nullptr };

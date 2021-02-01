@@ -33,6 +33,6 @@ namespace reflectpp
 {
 	namespace details
 	{
-		// See example in "details/sequence_container.hpp"
+		// See examples in "details/sequence_container.hpp"
 	}
 }

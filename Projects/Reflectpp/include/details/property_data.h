@@ -7,8 +7,9 @@
 */
 
 #pragma once
+#include <functional>
+
 #include "details/forward.h"
-#include "details/typedef.h"
 
 namespace reflectpp
 {
@@ -16,11 +17,11 @@ namespace reflectpp
 	{
 		struct property_data final
 		{
-			Getter m_getter{ nullptr };
+			std::function<void* (void*, bool&)> m_getter{ nullptr };
 			size_t m_id{ 0 };
 			const char* m_name{ "" };
 			type_data* m_property_type{ nullptr };
-			Setter m_setter{ nullptr };
+			std::function<void (void*, void*)> m_setter{ nullptr };
 			size_t m_specifiers{ 0 };
 			type_data* m_type{ nullptr };
 		};

@@ -35,6 +35,6 @@ namespace reflectpp
 {
 	namespace details
 	{
-		// See example in "details/associative_container.hpp"
+		// See examples in "details/associative_container.hpp"
 	}
 }

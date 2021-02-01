@@ -23,14 +23,13 @@
     <ClInclude Include="include\custom_associative_container.hpp" />
     <ClInclude Include="include\details\associative_container.hpp" />
     <ClInclude Include="include\details\associative_container_data.h" />
+    <ClInclude Include="include\details\sequence_container_data.h" />
     <ClInclude Include="include\details\register_traits.h" />
     <ClInclude Include="include\details\sequence_container.hpp" />
-    <ClInclude Include="include\details\sequence_container_data.h" />
     <ClInclude Include="include\details\specifiers.h" />
     <ClInclude Include="include\details\forward.h" />
     <ClInclude Include="include\details\log.hpp" />
     <ClInclude Include="include\details\factory_data.h" />
-    <ClInclude Include="include\details\typedef.h" />
     <ClInclude Include="include\details\hasher.hpp" />
     <ClInclude Include="include\details\macros.h" />
     <ClInclude Include="include\details\platform.h" />

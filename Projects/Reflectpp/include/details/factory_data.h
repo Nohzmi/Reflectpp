@@ -7,7 +7,6 @@
 */
 
 #pragma once
-#include "details/typedef.h"
 
 namespace reflectpp
 {
@@ -15,9 +14,9 @@ namespace reflectpp
 	{
 		struct factory_data final
 		{
-			Constructor m_constructor{ nullptr };
-			Copy m_copy{ nullptr };
-			Destructor m_destructor{ nullptr };
+			void* (*m_constructor)() { nullptr };
+			void* (*m_copy)(void*) { nullptr };
+			void (*m_destructor)(void*) { nullptr };
 		};
 	}
 }

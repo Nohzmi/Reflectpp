@@ -3,16 +3,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <map>
-#include <type.h>
-#include <factory.h>
-#include <type_info.h>
-#include <variant.h>
-#include <property.h>
-#include <serializer.h>
-#include <instance.h>
-#include <variant_associative_view.h>
-#include <variant_sequencial_view.h>
-#include <argument.h>
+#include <reflectpp.h>
 #include <vld/vld.h>
 
 #include "intern.h"
@@ -90,10 +81,14 @@ int main()
 	variant_associative.insert('a', 1.f);
 	variant_associative.insert('b', 2.f);
 	variant_associative.insert('c', 3.f);
+	//variant_associative.insert('a');
+	//variant_associative.insert('b');
+	//variant_associative.insert('c');
 
 	auto insert = variant_associative.insert('a', 5.f);
-	std::cout << "insertion: " << insert.second << ", { " << insert.first.get_key().get_value<char>()
-		<< ", " << insert.first.get_value().get_value<float>() << " }" << std::endl << std::endl;
+	char key = insert.first.get_key().is_valid() ? insert.first.get_key().get_value<char>() : '0';
+	float value = insert.first.get_value().is_valid() ? insert.first.get_value().get_value<float>() : -1;
+	std::cout << "insertion: " << insert.second << ", { " << key << ", " << value << " }" << std::endl << std::endl;
 
 	auto equal_range = variant_associative.equal_range('b');
 	const char* range_start = equal_range.first == variant_associative.begin() ? "begin" : (equal_range.first == variant_associative.end() ? "end" : "it");
@@ -106,11 +101,15 @@ int main()
 	std::cout << "find: " << (findc != variant_associative.end()) << std::endl << std::endl;
 
 	std::cout << "erase: " << variant_associative.erase('z') << std::endl;
-	std::cout << "erase: " << variant_associative.erase('b') << std::endl << std::endl;
+	std::cout << "erase: " << variant_associative.erase('c') << std::endl << std::endl;
 
 	std::cout << "size: " << variant_associative.get_size() << std::endl;
 	for (auto it : variant_associative)
-		std::cout << "{ " << it.first.get_value<char>() << ", " << it.second.get_value<float>() << " } ";
+	{
+		char key0 = it.first.is_valid() ? it.first.get_value<char>() : '0';
+		float value0 = it.second.is_valid() ? it.second.get_value<float>() : -1;
+		std::cout << "{ " << key0 << ", " << value0 << " } ";
+	}
 	std::cout << std::endl << std::endl;
 
 	std::cout << "is_empty: " << variant_associative.is_empty() << std::endl;
@@ -135,8 +134,8 @@ int main()
 	variant var6 = variant(6);
 	variant var7 = variant(std::move(intval));
 
-	serializer s("test");
-	s.load(object);
+	//serializer s("test");
+	//s.load(object);
 
 	//auto testsdfgh = reflectpp::details::implement_at<std::vector<int>>::value;
 

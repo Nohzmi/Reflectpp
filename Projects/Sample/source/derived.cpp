@@ -9,6 +9,5 @@ REGISTRATION
 	.property("DerivedValue0", &Derived::DerivedValue0)
 	.property("DerivedValue1", &Derived::DerivedValue1)
 	.property("DerivedValue2", &Derived::DerivedValue2)
-	.property("DerivedValue3", &Derived::DerivedValue3)
-	.property("DerivedValue4", &Derived::DerivedValue4);
+	.property("DerivedValue3", &Derived::DerivedValue3);
 }

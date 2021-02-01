@@ -120,6 +120,9 @@
     <ClInclude Include="include\custom_associative_container.hpp">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\reflectpp.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">

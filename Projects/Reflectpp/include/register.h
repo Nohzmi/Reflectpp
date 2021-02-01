@@ -7,6 +7,7 @@
 */
 
 #pragma once
+#include "details/forward.h"
 #include "details/hasher.hpp"
 #include "details/register_traits.h"
 

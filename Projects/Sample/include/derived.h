@@ -13,8 +13,12 @@
 #include <array>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <list>
+#include <forward_list>
 #include <set>
+#include <unordered_set>
+#include <deque>
 
 class Derived : public Base
 {
@@ -24,7 +28,6 @@ public:
 
 	float DerivedValue0;
 	Intern DerivedValue1;
-	std::vector<const char *> DerivedValue2;
+	std::vector<float> DerivedValue2;
 	std::map<char, float> DerivedValue3;
-	std::list<float> DerivedValue4;
 };

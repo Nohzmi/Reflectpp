@@ -44,6 +44,7 @@
     <ClInclude Include="include\factory.h" />
     <ClInclude Include="include\instance.h" />
     <ClInclude Include="include\property.h" />
+    <ClInclude Include="include\reflectpp.h" />
     <ClInclude Include="include\register.h" />
     <ClInclude Include="include\registration.h" />
     <ClInclude Include="include\custom_sequence_container.hpp" />

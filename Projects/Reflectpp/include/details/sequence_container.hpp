@@ -145,12 +145,28 @@ namespace reflectpp
 
 			data.m_erase = [](class_type* container, iterator pos) -> iterator
 			{
-				return container->erase_after(pos);
+				for (auto it = container->before_begin(); it != container->end(); ++it)
+				{
+					auto next = it;
+
+					if (++next == pos)
+						return container->erase_after(it);
+				}
+
+				return container->end();
 			};
 
 			data.m_insert = [](class_type* container, iterator pos, const value_type& value) -> iterator
 			{
-				return container->insert_after(pos, value);
+				for (auto it = container->before_begin(); it != container->end(); ++it)
+				{
+					auto next = it;
+
+					if (++next == pos)
+						return container->insert_after(it, value);
+				}
+
+				return container->end();
 			};
 
 			data.m_resize = [](class_type* container, size_t count)

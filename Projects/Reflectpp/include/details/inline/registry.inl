@@ -299,7 +299,7 @@ namespace reflectpp
 					auto obj{ static_cast<class_type*>(container) };
 					auto data{ get_associative_container_data(*obj) };
 
-					for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
+					for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 					{
 						if (i == index)
 						{
@@ -352,7 +352,7 @@ namespace reflectpp
 						std::pair<size_t, size_t> size_range{ 0, 0 };
 						std::pair<bool, bool> stop{ false, false };
 
-						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 						{
 							if (it == range.first)
 							{
@@ -393,7 +393,7 @@ namespace reflectpp
 						if (find == data.m_begin(obj))
 							return data.m_size(obj);
 
-						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 							if (it == find)
 								return i;
 
@@ -419,9 +419,9 @@ namespace reflectpp
 							insert = data.m_insert(obj, *static_cast<key_type*>(key));
 						}
 
-						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 							if (it == insert.first)
-								return std::make_pair(i, true);
+								return std::make_pair(i, insert.second);
 
 						return std::make_pair(data.m_size(obj), false);
 					};
@@ -486,7 +486,7 @@ namespace reflectpp
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_sequence_container_data(*obj) };
 
-						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 						{
 							if (i == index)
 							{
@@ -501,7 +501,7 @@ namespace reflectpp
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_sequence_container_data(*obj) };
 
-						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 							if (i == index)
 								return static_cast<void*>(&(*it));
 
@@ -525,7 +525,7 @@ namespace reflectpp
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_sequence_container_data(*obj) };
 
-						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0 }; it != data.m_end(obj); ++it, ++i)
+						for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 						{
 							if (i == index)
 							{
@@ -543,6 +543,7 @@ namespace reflectpp
 						auto obj{ static_cast<class_type*>(container) };
 						auto val{ static_cast<value_type*>(value) };
 						auto data{ get_sequence_container_data(*obj) };
+						bool has_insert{ false };
 						size_t i{ 0 };
 
 						for (auto it = data.m_begin(obj); it != data.m_end(obj); ++it, ++i)
@@ -550,11 +551,12 @@ namespace reflectpp
 							if (i == index)
 							{
 								data.m_insert(obj, it, *val);
+								has_insert = true;
 								break;
 							}
 						}
 
-						if (i == index)
+						if (!has_insert && i == index)
 							data.m_insert(obj, data.m_end(obj), *val);
 					};
 				}

@@ -1,13 +1,10 @@
 Taches:
 Revoir serializer (enlever le friend de instance, vérifier les auto& si possible, les auto)
 Comparer fonctions et commentaire avec rttr (variant view notamment)
-Essayer la lib dans un projet extern: #pragma warning (registry.inl) et ddl interface
 Gestion des enums
 Optimisation de la serialization (éviter copy -> ça évite les new de variant)
-Ajouter des include pour l'utilisateur et un include qui inclue tout ? (register.h -> forward.h par exemple)
-Tester tout les conteneur stl (associatif et sequenciel) **
 Ajouter des logs ? *
-Essayer avec des const char* pour éprouver mon système
+Attention à la diférence map/set pour la serialization
 
 Temporaire:
 aulink vld to binaries ?

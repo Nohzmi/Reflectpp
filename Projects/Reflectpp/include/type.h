@@ -119,7 +119,7 @@ namespace reflectpp
 		type_info get_type_info() const REFLECTPP_NOEXCEPT;
 
 		/*
-		* Returns whether or not this type is a sequencial container
+		* Returns whether or not this type is a sequential container
 		*/
 		bool is_sequential_container() const REFLECTPP_NOEXCEPT;
 

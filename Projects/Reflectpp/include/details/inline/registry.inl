@@ -273,15 +273,24 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE type_data* registry::get_associative_container_impl(type_data& type) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE associative_view_data* registry::get_associative_view_impl() REFLECTPP_NOEXCEPT
 		{
-			if constexpr (std::is_pointer_v<T::value_type>)
+			if constexpr (!is_associative_container<T>::value)
+			{
+				return nullptr;
+			}
+			else if constexpr (std::is_pointer_v<T::value_type>)
 			{
 				REFLECTPP_LOG("pointer not supported");
 				return nullptr;
 			}
 			else
 			{
+				associative_view_data* addr{ get_associative_view_impl(type_id<T>()) };
+
+				if (addr != nullptr)
+					return addr;
+
 				auto associative_data{ get_associative_container_data(T()) };
 
 				if (associative_data.m_begin == nullptr || associative_data.m_end == nullptr || associative_data.m_size == nullptr)
@@ -294,7 +303,13 @@ namespace reflectpp
 				using iterator = typename decltype(associative_data)::iterator;
 				using key_type = typename decltype(associative_data)::key_type;
 
-				type.m_associative_at = [](void* container, size_t index) -> std::pair<void*, void*>
+				associative_view_data associative_view;
+				associative_view.m_key_type = get_type_impl<key_type>();
+
+				if constexpr (has_value_type<class_type>::value)
+					associative_view.m_value_type = get_type_impl<typename decltype(associative_data)::value_type>();
+
+				associative_view.m_associative_at = [](void* container, size_t index) -> std::pair<void*, void*>
 				{
 					auto obj{ static_cast<class_type*>(container) };
 					auto data{ get_associative_container_data(*obj) };
@@ -321,7 +336,7 @@ namespace reflectpp
 
 				if (associative_data.m_clear != nullptr)
 				{
-					type.m_sequence_clear = [](void* container)
+					associative_view.m_associative_clear = [](void* container)
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						get_associative_container_data(*obj).m_clear(obj);
@@ -330,7 +345,7 @@ namespace reflectpp
 
 				if (associative_data.m_equal_range != nullptr)
 				{
-					type.m_associative_equal_range = [](void* container, void* key)->std::pair<size_t, size_t>
+					associative_view.m_associative_equal_range = [](void* container, void* key)->std::pair<size_t, size_t>
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_associative_container_data(*obj) };
@@ -375,7 +390,7 @@ namespace reflectpp
 
 				if (associative_data.m_erase != nullptr)
 				{
-					type.m_associative_erase = [](void* container, void* key) -> size_t
+					associative_view.m_associative_erase = [](void* container, void* key) -> size_t
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						return get_associative_container_data(*obj).m_erase(obj, *static_cast<key_type*>(key));
@@ -384,7 +399,7 @@ namespace reflectpp
 
 				if (associative_data.m_find != nullptr)
 				{
-					type.m_associative_find = [](void* container, void* key) -> size_t
+					associative_view.m_associative_find = [](void* container, void* key) -> size_t
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_associative_container_data(*obj) };
@@ -403,7 +418,7 @@ namespace reflectpp
 
 				if (associative_data.m_insert != nullptr)
 				{
-					type.m_associative_insert = [](void* container, void* key, void* value) -> std::pair<size_t, bool>
+					associative_view.m_associative_insert = [](void* container, void* key, void* value) -> std::pair<size_t, bool>
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_associative_container_data(*obj) };
@@ -427,32 +442,35 @@ namespace reflectpp
 					};
 				}
 
-				type.m_associative_size = [](void* container) -> size_t
+				associative_view.m_associative_size = [](void* container) -> size_t
 				{
 					auto obj{ static_cast<class_type*>(container) };
 					return get_associative_container_data(*obj).m_size(obj);
 				};
 
-				type.m_is_associative_container = true;
-				type.m_key_type = get_type_impl<key_type>();
-
-				if constexpr (has_value_type<class_type>::value)
-					type.m_value_type = get_type_impl<typename decltype(associative_data)::value_type>();
-
-				return add_type_impl(&type);
+				return add_associative_view_impl(type_id<T>(), &associative_view);
 			}
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE type_data* registry::get_sequence_container_impl(type_data& type) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE sequential_view_data* registry::get_sequential_view_impl() REFLECTPP_NOEXCEPT
 		{
-			if constexpr (std::is_pointer_v<T::value_type>)
+			if constexpr (!is_sequence_container<T>::value)
+			{
+				return nullptr;
+			}
+			else if constexpr (std::is_pointer_v<T::value_type>)
 			{
 				REFLECTPP_LOG("pointer not supported");
 				return nullptr;
 			}
 			else
 			{
+				sequential_view_data* addr{ get_sequential_view_impl(type_id<T>()) };
+
+				if (addr != nullptr)
+					return addr;
+
 				auto sequence_data{ get_sequence_container_data(T()) };
 
 				if (sequence_data.m_begin == nullptr || sequence_data.m_end == nullptr)
@@ -462,18 +480,20 @@ namespace reflectpp
 				}
 
 				using class_type = typename decltype(sequence_data)::class_type;
-				using iterator = typename decltype(sequence_data)::iterator;
 				using value_type = typename decltype(sequence_data)::value_type;
+
+				sequential_view_data sequential_view;
+				sequential_view.m_value_type = get_type_impl<value_type>();
 
 				if (sequence_data.m_at != nullptr)
 				{
-					type.m_sequence_assign = [](void* container, size_t index, void* value)
+					sequential_view.m_sequence_assign = [](void* container, size_t index, void* value)
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						get_sequence_container_data(*obj).m_at(obj, index) = *static_cast<value_type*>(value);
 					};
 
-					type.m_sequence_at = [](void* container, size_t index) -> void*
+					sequential_view.m_sequence_at = [](void* container, size_t index) -> void*
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						return static_cast<void*>(&get_sequence_container_data(*obj).m_at(obj, index));
@@ -481,7 +501,7 @@ namespace reflectpp
 				}
 				else
 				{
-					type.m_sequence_assign = [](void* container, size_t index, void* value)
+					sequential_view.m_sequence_assign = [](void* container, size_t index, void* value)
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_sequence_container_data(*obj) };
@@ -496,7 +516,7 @@ namespace reflectpp
 						}
 					};
 
-					type.m_sequence_at = [](void* container, size_t index) -> void*
+					sequential_view.m_sequence_at = [](void* container, size_t index) -> void*
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_sequence_container_data(*obj) };
@@ -511,7 +531,7 @@ namespace reflectpp
 
 				if (sequence_data.m_clear != nullptr)
 				{
-					type.m_sequence_clear = [](void* container)
+					sequential_view.m_sequence_clear = [](void* container)
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						get_sequence_container_data(*obj).m_clear(obj);
@@ -520,7 +540,7 @@ namespace reflectpp
 
 				if (sequence_data.m_erase != nullptr)
 				{
-					type.m_sequence_erase = [](void* container, size_t index)
+					sequential_view.m_sequence_erase = [](void* container, size_t index)
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						auto data{ get_sequence_container_data(*obj) };
@@ -538,7 +558,7 @@ namespace reflectpp
 
 				if (sequence_data.m_insert != nullptr)
 				{
-					type.m_sequence_insert = [](void* container, size_t index, void* value)
+					sequential_view.m_sequence_insert = [](void* container, size_t index, void* value)
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						auto val{ static_cast<value_type*>(value) };
@@ -563,7 +583,7 @@ namespace reflectpp
 
 				if (sequence_data.m_resize != nullptr)
 				{
-					type.m_sequence_resize = [](void* container, size_t size)
+					sequential_view.m_sequence_resize = [](void* container, size_t size)
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						get_sequence_container_data(*obj).m_resize(obj, size);
@@ -572,7 +592,7 @@ namespace reflectpp
 
 				if (sequence_data.m_size != nullptr)
 				{
-					type.m_sequence_size = [](void* container) -> size_t
+					sequential_view.m_sequence_size = [](void* container) -> size_t
 					{
 						auto obj{ static_cast<class_type*>(container) };
 						return get_sequence_container_data(*obj).m_size(obj);
@@ -580,7 +600,7 @@ namespace reflectpp
 				}
 				else
 				{
-					type.m_sequence_size = [](void* container) -> size_t
+					sequential_view.m_sequence_size = [](void* container) -> size_t
 					{
 						size_t size{ 0 };
 
@@ -594,11 +614,7 @@ namespace reflectpp
 					};
 				}
 
-				type.m_is_sequence_container = true;
-				type.m_iterator_type = get_type_impl<iterator>();
-				type.m_value_type = get_type_impl<value_type>();
-
-				return add_type_impl(&type);
+				return add_sequential_view_impl(type_id<T>(), &sequential_view);
 			}
 		}
 
@@ -611,22 +627,13 @@ namespace reflectpp
 				return addr;
 
 			type_data type;
+			type.m_associative_view = get_associative_view_impl<T>();
 			type.m_factory = get_factory<T>();
+			type.m_sequential_view = get_sequential_view_impl<T>();
 			type.m_size = sizeof(T);
 			type.m_type_info = get_type_info<T>();
 
-			if constexpr (is_sequence_container<T>::value)
-			{
-				return get_sequence_container_impl<T>(type);
-			}
-			else if constexpr (is_associative_container<T>::value)
-			{
-				return get_associative_container_impl<T>(type);
-			}
-			else
-			{
-				return add_type_impl(&type);
-			}
+			return add_type_impl(&type);
 		}
 	}
 }

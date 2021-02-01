@@ -11,6 +11,3 @@ Sample
 Autre
 	Revoir les commentaire et comparer avec rttr
 	Ajout de logs
-
-Temporaire:
-rename typedef, pointer sequence ***

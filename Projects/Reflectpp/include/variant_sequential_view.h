@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 /**
-* @file variant_sequencial_view.h
+* @file variant_sequential_view.h
 * @author Nohzmi
 * @version 1.0
 */
@@ -22,13 +22,13 @@ namespace reflectpp
 	* Allows to store sequence containers of any type \n
 	* Sequence container: vector, list, ...etc
 	*/
-	class REFLECTPP_API variant_sequencial_view final
+	class REFLECTPP_API variant_sequential_view final
 	{
 	public:
 
 		class REFLECTPP_API iterator
 		{
-			friend variant_sequencial_view;
+			friend variant_sequential_view;
 
 		public:
 
@@ -38,7 +38,7 @@ namespace reflectpp
 			iterator(iterator&&) REFLECTPP_NOEXCEPT = default;
 			iterator& operator=(const iterator&) = default;
 			iterator& operator=(iterator&&) REFLECTPP_NOEXCEPT = default;
-			explicit iterator(size_t index, variant_sequencial_view* variant) REFLECTPP_NOEXCEPT;
+			explicit iterator(size_t index, variant_sequential_view* variant) REFLECTPP_NOEXCEPT;
 
 			bool operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT;
 			bool operator!=(const iterator& rhs) const REFLECTPP_NOEXCEPT;
@@ -56,16 +56,16 @@ namespace reflectpp
 		private:
 
 			size_t m_index{ 0 };
-			variant_sequencial_view* m_variant{ nullptr };
+			variant_sequential_view* m_variant{ nullptr };
 		};
 
-		variant_sequencial_view() = default;
-		~variant_sequencial_view() = default;
-		variant_sequencial_view(const variant_sequencial_view&) = default;
-		variant_sequencial_view(variant_sequencial_view&&) REFLECTPP_NOEXCEPT = default;
-		variant_sequencial_view& operator=(const variant_sequencial_view&) = default;
-		variant_sequencial_view& operator=(variant_sequencial_view&&) REFLECTPP_NOEXCEPT = default;
-		explicit variant_sequencial_view(const details::variant_data& data) REFLECTPP_NOEXCEPT;
+		variant_sequential_view() = default;
+		~variant_sequential_view() = default;
+		variant_sequential_view(const variant_sequential_view&) = default;
+		variant_sequential_view(variant_sequential_view&&) REFLECTPP_NOEXCEPT = default;
+		variant_sequential_view& operator=(const variant_sequential_view&) = default;
+		variant_sequential_view& operator=(variant_sequential_view&&) REFLECTPP_NOEXCEPT = default;
+		explicit variant_sequential_view(const details::variant_data& data) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored value is valid

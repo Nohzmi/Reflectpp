@@ -115,7 +115,7 @@ namespace reflectpp
 
 	bool type::is_sequential_container() const REFLECTPP_NOEXCEPT
 	{
-		return m_data->m_is_sequence_container;
+		return m_data->m_sequential_view != nullptr;
 	}
 
 	bool type::is_valid() const REFLECTPP_NOEXCEPT

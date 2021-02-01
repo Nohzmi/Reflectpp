@@ -4,7 +4,7 @@
 
 #include "type.h"
 #include "variant_associative_view.h"
-#include "variant_sequencial_view.h"
+#include "variant_sequential_view.h"
 
 namespace reflectpp
 {
@@ -89,9 +89,9 @@ namespace reflectpp
 		return is_associative_container() ? variant_associative_view({ false, m_data.m_type, m_data.m_value }) : variant_associative_view();
 	}
 
-	variant_sequencial_view variant::create_sequential_view() const REFLECTPP_NOEXCEPT
+	variant_sequential_view variant::create_sequential_view() const REFLECTPP_NOEXCEPT
 	{
-		return is_sequential_container() ? variant_sequencial_view({ false, m_data.m_type, m_data.m_value }) : variant_sequencial_view();
+		return is_sequential_container() ? variant_sequential_view({ false, m_data.m_type, m_data.m_value }) : variant_sequential_view();
 	}
 
 	void* variant::get_raw_data() REFLECTPP_NOEXCEPT
@@ -106,12 +106,12 @@ namespace reflectpp
 
 	bool variant::is_associative_container() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() ? m_data.m_type->m_is_associative_container : false;
+		return is_valid() ? m_data.m_type->m_associative_view != nullptr : false;
 	}
 
 	bool variant::is_sequential_container() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() ? m_data.m_type->m_is_sequence_container : false;
+		return is_valid() ? m_data.m_type->m_sequential_view != nullptr : false;
 	}
 
 	bool variant::is_valid() const REFLECTPP_NOEXCEPT

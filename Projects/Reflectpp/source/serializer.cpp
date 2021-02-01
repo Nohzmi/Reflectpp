@@ -9,7 +9,7 @@
 #include "property.h"
 #include "type.h"
 #include "variant_associative_view.h"
-#include "variant_sequencial_view.h"
+#include "variant_sequential_view.h"
 
 using json = nlohmann::json;
 

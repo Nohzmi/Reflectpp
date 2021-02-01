@@ -51,9 +51,6 @@
     <ClInclude Include="include\argument.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\variant_sequencial_view.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\details\hasher.hpp">
       <Filter>include\details</Filter>
     </ClInclude>
@@ -120,6 +117,15 @@
     <ClInclude Include="include\details\sequence_container.hpp">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\details\sequential_view_data.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\variant_sequential_view.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\associative_view_data.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -152,10 +158,10 @@
     <ClCompile Include="source\type_info.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\variant_sequencial_view.cpp">
+    <ClCompile Include="source\variant_associative_view.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\variant_associative_view.cpp">
+    <ClCompile Include="source\variant_sequential_view.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

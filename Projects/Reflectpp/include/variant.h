@@ -70,7 +70,7 @@ namespace reflectpp
 		/**
 		* Creates a variant_sequential_view from the containing value
 		*/
-		variant_sequencial_view create_sequential_view() const REFLECTPP_NOEXCEPT;
+		variant_sequential_view create_sequential_view() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the raw value of this variant \n
@@ -103,7 +103,7 @@ namespace reflectpp
 		bool is_associative_container() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns whether or not this type is a sequencial container
+		* Returns whether or not this type is a sequential container
 		*/
 		bool is_sequential_container() const REFLECTPP_NOEXCEPT;
 

@@ -9,11 +9,13 @@
 #pragma once
 #include <memory>
 
+#include "details/associative_view_data.h"
 #include "details/factory_data.h"
 #include "details/hasher.hpp"
 #include "details/log.hpp"
 #include "details/platform.h"
 #include "details/property_data.h"
+#include "details/sequential_view_data.h"
 #include "details/specifiers.h"
 #include "details/type_data.h"
 #include "details/type_info_data.h"
@@ -63,25 +65,31 @@ namespace reflectpp
 		private:
 
 			template<typename T>
-			REFLECTPP_INLINE type_data* get_associative_container_impl(type_data& type) REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE associative_view_data* get_associative_view_impl() REFLECTPP_NOEXCEPT;
 			template<typename T>
-			REFLECTPP_INLINE type_data* get_sequence_container_impl(type_data& type) REFLECTPP_NOEXCEPT;
+			REFLECTPP_INLINE sequential_view_data* get_sequential_view_impl() REFLECTPP_NOEXCEPT;
 			template<typename T>
 			REFLECTPP_INLINE type_data* get_type_impl() REFLECTPP_NOEXCEPT;
 
+			associative_view_data* add_associative_view_impl(size_t id, associative_view_data* associative_view) REFLECTPP_NOEXCEPT;
 			void add_base_impl(type_data* type, type_data* base) REFLECTPP_NOEXCEPT;
 			factory_data* add_factory_impl(size_t id, factory_data* factory) REFLECTPP_NOEXCEPT;
 			void add_property_impl(type_data* type, property_data* property) REFLECTPP_NOEXCEPT;
+			sequential_view_data* add_sequential_view_impl(size_t id, sequential_view_data* sequential_view) REFLECTPP_NOEXCEPT;
 			type_data* add_type_impl(type_data* type) REFLECTPP_NOEXCEPT;
 			type_info_data* add_type_info_impl(type_info_data* type_info) REFLECTPP_NOEXCEPT;
 			bool cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT;
+			associative_view_data* get_associative_view_impl(size_t id) const REFLECTPP_NOEXCEPT;
 			factory_data* get_factory_impl(size_t id) const REFLECTPP_NOEXCEPT;
+			sequential_view_data* get_sequential_view_impl(size_t id) const REFLECTPP_NOEXCEPT;
 			type_data* get_type_impl(size_t id) const REFLECTPP_NOEXCEPT;
 			type_info_data* get_type_info_impl(size_t id) const REFLECTPP_NOEXCEPT;
 			property_data* get_property_impl(size_t id) const REFLECTPP_NOEXCEPT;
 
+			std::unordered_map<size_t, std::unique_ptr<associative_view_data>> m_associative_views;
 			std::unordered_map<size_t, std::unique_ptr<factory_data>> m_factories;
 			std::vector<std::unique_ptr<property_data>> m_properties;
+			std::unordered_map<size_t, std::unique_ptr<sequential_view_data>> m_sequential_views;
 			std::vector<std::unique_ptr<type_info_data>> m_type_infos;
 			std::vector<std::unique_ptr<type_data>> m_types;
 

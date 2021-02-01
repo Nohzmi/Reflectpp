@@ -47,7 +47,7 @@ int main()
 	instance intance00 = object;
 	instance intance02 = intance00;
 
-	variant_sequencial_view variant_sequence = var.create_sequential_view();
+	variant_sequential_view variant_sequence = var.create_sequential_view();
 	variant_sequence.set_size(2);
 	variant_sequence.set_value(0, 0.f);
 	variant_sequence.set_value(1, 1.f);

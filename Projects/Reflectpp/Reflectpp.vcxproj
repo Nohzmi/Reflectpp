@@ -23,9 +23,11 @@
     <ClInclude Include="include\custom_associative_container.hpp" />
     <ClInclude Include="include\details\associative_container.hpp" />
     <ClInclude Include="include\details\associative_container_data.h" />
+    <ClInclude Include="include\details\associative_view_data.h" />
     <ClInclude Include="include\details\sequence_container_data.h" />
     <ClInclude Include="include\details\register_traits.h" />
     <ClInclude Include="include\details\sequence_container.hpp" />
+    <ClInclude Include="include\details\sequential_view_data.h" />
     <ClInclude Include="include\details\specifiers.h" />
     <ClInclude Include="include\details\forward.h" />
     <ClInclude Include="include\details\log.hpp" />
@@ -52,7 +54,7 @@
     <ClInclude Include="include\type_info.h" />
     <ClInclude Include="include\variant.h" />
     <ClInclude Include="include\variant_associative_view.h" />
-    <ClInclude Include="include\variant_sequencial_view.h" />
+    <ClInclude Include="include\variant_sequential_view.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\argument.cpp" />
@@ -66,7 +68,7 @@
     <ClCompile Include="source\type_info.cpp" />
     <ClCompile Include="source\variant.cpp" />
     <ClCompile Include="source\variant_associative_view.cpp" />
-    <ClCompile Include="source\variant_sequencial_view.cpp" />
+    <ClCompile Include="source\variant_sequential_view.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\details\inline\argument.inl" />

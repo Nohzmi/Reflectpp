@@ -12,8 +12,10 @@ namespace reflectpp
 {
 	namespace details
 	{
+		struct associative_view_data;
 		struct factory_data;
 		struct property_data;
+		struct sequential_view_data;
 		struct type_data;
 		struct type_info_data;
 		struct variant_data;
@@ -29,5 +31,5 @@ namespace reflectpp
 	class type_info;
 	class variant;
 	class variant_associative_view;
-	class variant_sequencial_view;
+	class variant_sequential_view;
 }

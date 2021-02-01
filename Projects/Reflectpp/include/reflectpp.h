@@ -18,4 +18,4 @@
 #include <type_info.h>
 #include <variant.h>
 #include <variant_associative_view.h>
-#include <variant_sequencial_view.h>
+#include <variant_sequential_view.h>

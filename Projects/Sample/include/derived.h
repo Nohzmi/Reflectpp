@@ -24,7 +24,7 @@ public:
 
 	float DerivedValue0;
 	Intern DerivedValue1;
-	std::vector<float> DerivedValue2;
+	std::vector<const char *> DerivedValue2;
 	std::map<char, float> DerivedValue3;
 	std::list<float> DerivedValue4;
 };

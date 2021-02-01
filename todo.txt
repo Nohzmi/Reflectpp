@@ -2,7 +2,6 @@ Taches:
 Revoir serializer (enlever le friend de instance, vérifier les auto& si possible, les auto)
 Comparer fonctions et commentaire avec rttr (variant view notamment)
 Essayer la lib dans un projet extern: #pragma warning (registry.inl) et ddl interface
-Réparer le sample en x86: recompile gl3w
 Gestion des enums
 Optimisation de la serialization (éviter copy -> ça évite les new de variant)
 Ajouter des include pour l'utilisateur et un include qui inclue tout ? (register.h -> forward.h par exemple)

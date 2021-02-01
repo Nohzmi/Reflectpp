@@ -24,9 +24,10 @@ namespace reflectpp
 		template <class ...Args>
 		REFLECTPP_INLINE void _assert(const char* file, int line, const char* format, Args... args) REFLECTPP_NOEXCEPT
 		{
-			printf("Log: ");
+			printf("");
+			printf("\033[33mLog: ");
 			printf(format, args...);
-			printf(" [%s:%d]\n", file, line);
+			printf(" [%s:%d]\033[0m\n", file, line);
 		}
 	}
 }

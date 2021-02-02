@@ -51,7 +51,7 @@ namespace reflectpp
 
 		/**
 		* Returns the raw value of this argument \n
-		* Not recommended to use, please use get_type() instead
+		* Not recommended to use, please use get_value() instead
 		*/
 		void* get_raw_data() REFLECTPP_NOEXCEPT;
 

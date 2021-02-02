@@ -19,4 +19,16 @@ namespace reflectpp
 	{
 		return type(details::registry::get_instance().get_type(std::forward<T>(object)));
 	}
+
+	template<typename T>
+	REFLECTPP_INLINE bool type::is_base_of() REFLECTPP_NOEXCEPT
+	{
+		return is_base_of(get<T>());
+	}
+
+	template<typename T>
+	REFLECTPP_INLINE bool type::is_derived_of() REFLECTPP_NOEXCEPT
+	{
+		return is_derived_of(get<T>());
+	}
 }

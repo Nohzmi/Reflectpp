@@ -11,7 +11,7 @@ namespace reflectpp
 
 	bool type_info::operator==(const type_info& rhs) const REFLECTPP_NOEXCEPT
 	{
-		return m_data == rhs.m_data;
+		return is_valid() && rhs.is_valid() ? m_data == rhs.m_data : false;
 	}
 
 	bool type_info::operator!=(const type_info& rhs) const REFLECTPP_NOEXCEPT

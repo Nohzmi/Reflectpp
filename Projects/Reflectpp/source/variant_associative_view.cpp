@@ -15,7 +15,7 @@ namespace reflectpp
 
 	bool variant_associative_view::iterator::operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT
 	{
-		return m_index == rhs.m_index && m_variant == rhs.m_variant;
+		return m_variant != nullptr && rhs.m_variant != nullptr ? m_index == rhs.m_index && m_variant == rhs.m_variant : false;
 	}
 
 	bool variant_associative_view::iterator::operator!=(const iterator& rhs) const REFLECTPP_NOEXCEPT
@@ -195,6 +195,11 @@ namespace reflectpp
 	bool variant_associative_view::is_empty() const REFLECTPP_NOEXCEPT
 	{
 		return get_size() == 0;
+	}
+
+	bool variant_associative_view::is_key_only_type() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data.m_type->m_associative_view->m_value_type == nullptr : false;
 	}
 
 	bool variant_associative_view::is_valid() const REFLECTPP_NOEXCEPT

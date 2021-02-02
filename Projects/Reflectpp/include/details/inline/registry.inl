@@ -629,6 +629,7 @@ namespace reflectpp
 			type_data type;
 			type.m_associative_view = get_associative_view_impl<T>();
 			type.m_factory = get_factory<T>();
+			type.m_is_arithmetic = std::is_arithmetic_v<T>;
 			type.m_sequential_view = get_sequential_view_impl<T>();
 			type.m_size = sizeof(T);
 			type.m_type_info = get_type_info<T>();

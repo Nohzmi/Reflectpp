@@ -32,8 +32,8 @@ void register_function() REFLECTPP_NOEXCEPT
 namespace reflectpp
 {
 	/**
-	* Allow to register a type in reflection \n
-	* and his base types and properties too
+	* Allow to register information in reflection \n
+	* Like class, properties, ... etc
 	*/
 	class REFLECTPP_API registration final
 	{

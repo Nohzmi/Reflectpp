@@ -1,4 +1,5 @@
 Enumeration
+	get_enumeration()/is_enumeration() in property and type
 Serialization
 	Rework pour que ça fonctionne
 	Attention à la diférence map/set pour la serialization
@@ -9,5 +10,4 @@ Serialization
 Sample
 	Mise à jour du sample
 Autre
-	Revoir les commentaire et comparer avec rttr
 	Ajout de logs

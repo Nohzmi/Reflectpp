@@ -89,6 +89,7 @@ namespace reflectpp
 
 		/**
 		* Removes the element at the position pos
+		* Return iterator following the removed element
 		* @param pos
 		*/
 		iterator erase(const iterator& pos) REFLECTPP_NOEXCEPT;
@@ -116,6 +117,7 @@ namespace reflectpp
 
 		/**
 		* Insert a value into the container
+		* Return an iterator to the inserted element, otherwise an invalid iterator, when the insertion was not possible
 		* @param pos
 		* @param value
 		*/
@@ -146,7 +148,7 @@ namespace reflectpp
 
 		/**
 		* Set the content of the the argument at the specified index into the underlying sequential container
-		* Returns whether or not the size could be set
+		* Returns whether or not the value could be set
 		* @param index
 		* @param value
 		*/

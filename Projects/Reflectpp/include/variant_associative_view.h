@@ -104,6 +104,7 @@ namespace reflectpp
 
 		/**
 		* Finds an element with specific key
+		* Returns The element with key equivalent to key. If no element is found an end iterator is returned
 		* @param key
 		*/
 		iterator find(argument key) REFLECTPP_NOEXCEPT;
@@ -147,6 +148,11 @@ namespace reflectpp
 		* Returns whether or not the container has elements
 		*/
 		bool is_empty() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not the container stores only keys
+		*/
+		bool is_key_only_type() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored a value is valid

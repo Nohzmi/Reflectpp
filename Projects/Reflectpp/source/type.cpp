@@ -16,7 +16,7 @@ namespace reflectpp
 
 	bool type::operator==(const type& rhs) const REFLECTPP_NOEXCEPT
 	{
-		return m_data == rhs.m_data;
+		return is_valid() && rhs.is_valid() ? m_data == rhs.m_data : false;
 	}
 
 	bool type::operator!=(const type& rhs) const REFLECTPP_NOEXCEPT
@@ -32,6 +32,17 @@ namespace reflectpp
 	variant type::create() const REFLECTPP_NOEXCEPT
 	{
 		return variant({ true, m_data, m_data->m_factory->m_constructor() });
+	}
+
+	bool type::destroy(variant& var) const REFLECTPP_NOEXCEPT
+	{
+		if (is_valid() && var.get_type().get_id() == m_data->m_type_info->m_id)
+		{
+			var.clear();
+			return true;
+		}
+
+		return false;
 	}
 
 	std::vector<type> type::get_base_classes() const REFLECTPP_NOEXCEPT
@@ -113,9 +124,48 @@ namespace reflectpp
 		return is_valid() ? type_info(m_data->m_type_info) : type_info();
 	}
 
+	bool type::is_arithmetic() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data->m_is_arithmetic : false;
+	}
+
+	bool type::is_base_of(const type& other) const REFLECTPP_NOEXCEPT
+	{
+		if (!is_valid() || !other.is_valid())
+			return false;
+
+		for (auto& it : get_derived_classes())
+			if (it.m_data == other.m_data)
+				return true;
+
+		return false;
+	}
+
+	bool type::is_class() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? !m_data->m_is_arithmetic : false;
+	}
+
+	bool type::is_derived_of(const type& other) const REFLECTPP_NOEXCEPT
+	{
+		if (!is_valid() || !other.is_valid())
+			return false;
+
+		for (auto& it : get_base_classes())
+			if (it.m_data == other.m_data)
+				return true;
+
+		return false;
+	}
+
+	bool type::is_associative_container() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data->m_associative_view != nullptr : false;
+	}
+
 	bool type::is_sequential_container() const REFLECTPP_NOEXCEPT
 	{
-		return m_data->m_sequential_view != nullptr;
+		return is_valid() ? m_data->m_sequential_view != nullptr : false;
 	}
 
 	bool type::is_valid() const REFLECTPP_NOEXCEPT

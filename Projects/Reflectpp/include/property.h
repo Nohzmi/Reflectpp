@@ -88,10 +88,11 @@ namespace reflectpp
 
 		/**
 		* Set the value of the property of the given object
+		* Returns whether or not the operation was successful
 		* @param object
 		* @param arg
 		*/
-		void set_value(instance object, argument arg) const REFLECTPP_NOEXCEPT;
+		bool set_value(instance object, argument arg) const REFLECTPP_NOEXCEPT;
 
 	private:
 

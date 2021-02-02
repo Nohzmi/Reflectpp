@@ -15,7 +15,7 @@ namespace reflectpp
 
 	bool variant_sequential_view::iterator::operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT
 	{
-		return m_index == rhs.m_index && m_variant == rhs.m_variant;
+		return m_variant != nullptr && rhs.m_variant != nullptr ? m_index == rhs.m_index && m_variant == rhs.m_variant : false;
 	}
 
 	bool variant_sequential_view::iterator::operator!=(const iterator& rhs) const REFLECTPP_NOEXCEPT

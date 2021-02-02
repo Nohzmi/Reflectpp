@@ -55,9 +55,16 @@ namespace reflectpp
 		REFLECTPP_INLINE static T cast(U* object) REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns a variant of this type
+		* Creates an instance of the current type
 		*/
 		variant create() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Destroys the contained object in the variant
+		* Return whether of not the destructor of the object could be invoked
+		* @param var
+		*/
+		bool destroy(variant& var) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns requested type representation
@@ -117,6 +124,45 @@ namespace reflectpp
 		* Returns type info of this type
 		*/
 		type_info get_type_info() const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type represents an arithmetic type
+		*/
+		bool is_arithmetic() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not this type is the base class from the given type
+		*/
+		template<typename T>
+		REFLECTPP_INLINE bool is_base_of() REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type is the base class from the given type
+		* @param other
+		*/
+		bool is_base_of(const type& other) const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type represents a class
+		*/
+		bool is_class() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not this type is derived from the given type
+		*/
+		template<typename T>
+		REFLECTPP_INLINE bool is_derived_of() REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type is derived from the given type
+		* @param other
+		*/
+		bool is_derived_of(const type& other) const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type is an associative container
+		*/
+		bool is_associative_container() const REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this type is a sequential container

@@ -114,6 +114,7 @@ int main()
 
 	std::cout << "is_empty: " << variant_associative.is_empty() << std::endl;
 	std::cout << "is_valid: " << variant_associative.is_valid() << std::endl;
+	std::cout << "is_key_only_type: " << variant_associative.is_key_only_type() << std::endl;
 	std::cout << std::endl;
 
 	/*variant_associative.clear();

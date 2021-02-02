@@ -19,8 +19,8 @@
 namespace reflectpp
 {
 	/**
-	* Generic factory class used in reflection \n
-	* Independent of the reflection
+	* Class that allow serialization throught the implemented reflection \n
+	* Serialize data in .json file
 	*/
 	class REFLECTPP_API serializer final
 	{
@@ -34,7 +34,7 @@ namespace reflectpp
 		serializer& operator=(serializer&&) REFLECTPP_NOEXCEPT = default;
 
 		/**
-		* Create a variant from a object
+		* Create a serializer with path file, "default otherwise
 		* @param path
 		*/
 		serializer(const char* path) REFLECTPP_NOEXCEPT;

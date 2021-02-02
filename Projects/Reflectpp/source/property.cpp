@@ -15,7 +15,7 @@ namespace reflectpp
 
 	bool property::operator==(const property& rhs) const REFLECTPP_NOEXCEPT
 	{
-		return m_data == rhs.m_data;
+		return is_valid() && rhs.is_valid() ? m_data == rhs.m_data : false;
 	}
 
 	bool property::operator!=(const property& rhs) const REFLECTPP_NOEXCEPT
@@ -69,9 +69,14 @@ namespace reflectpp
 		return m_data != nullptr;
 	}
 
-	void property::set_value(instance object, argument arg) const REFLECTPP_NOEXCEPT
+	bool property::set_value(instance object, argument arg) const REFLECTPP_NOEXCEPT
 	{
 		if (is_valid() && object.is_valid() && object.get_type() == get_declaring_type() && arg.get_type() == get_type())
+		{
 			m_data->m_setter(object.get_raw_data(), arg.get_raw_data());
+			return true;
+		}
+
+		return false;
 	}
 }

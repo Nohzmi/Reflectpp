@@ -24,7 +24,7 @@ namespace reflectpp
 			void (*m_clear)(class_type* container) { nullptr };
 			iterator (*m_end)(class_type* container) { nullptr };
 			std::pair<iterator, iterator> (*m_equal_range)(class_type* container, const key_type& key) { nullptr };
-			size_t(*m_erase)(class_type* container, const key_type& key) { nullptr };
+			size_t (*m_erase)(class_type* container, const key_type& key) { nullptr };
 			iterator (*m_find)(class_type* container, const key_type& key) { nullptr };
 			std::pair<iterator, bool> (*m_insert)(class_type* container, const key_type& key, const value_type& value) { nullptr };
 			size_t (*m_size)(class_type* container) { nullptr };

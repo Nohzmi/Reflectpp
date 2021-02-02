@@ -20,6 +20,7 @@ namespace reflectpp
 			associative_view_data* m_associative_view{ nullptr };
 			std::vector<type_data*> m_base_types;
 			std::vector<type_data*> m_derived_types;
+			enumeration_data* m_enumeration{ nullptr };
 			factory_data* m_factory{ nullptr };
 			size_t m_hierarchy_id{ 0 };
 			bool m_is_arithmetic{ false };

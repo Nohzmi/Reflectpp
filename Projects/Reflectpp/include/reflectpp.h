@@ -9,6 +9,7 @@
 #pragma once
 
 #include <argument.h>
+#include <enumeration.h>
 #include <factory.h>
 #include <instance.h>
 #include <property.h>

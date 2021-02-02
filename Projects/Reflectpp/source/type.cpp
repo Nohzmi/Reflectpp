@@ -2,6 +2,7 @@
 
 #include "type.h"
 
+#include "enumeration.h"
 #include "factory.h"
 #include "property.h"
 #include "type_info.h"
@@ -71,6 +72,11 @@ namespace reflectpp
 		return derived_types;
 	}
 
+	enumeration type::get_enumeration() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? enumeration(m_data) : enumeration();
+	}
+
 	factory type::get_factory() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? factory(m_data->m_factory) : factory();
@@ -129,6 +135,11 @@ namespace reflectpp
 		return is_valid() ? m_data->m_is_arithmetic : false;
 	}
 
+	bool type::is_associative_container() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data->m_associative_view != nullptr : false;
+	}
+
 	bool type::is_base_of(const type& other) const REFLECTPP_NOEXCEPT
 	{
 		if (!is_valid() || !other.is_valid())
@@ -158,9 +169,9 @@ namespace reflectpp
 		return false;
 	}
 
-	bool type::is_associative_container() const REFLECTPP_NOEXCEPT
+	bool type::is_enumeration() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() ? m_data->m_associative_view != nullptr : false;
+		return is_valid() ? m_data->m_enumeration != nullptr : false;
 	}
 
 	bool type::is_sequential_container() const REFLECTPP_NOEXCEPT

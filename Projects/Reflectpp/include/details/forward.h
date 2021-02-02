@@ -13,8 +13,10 @@ namespace reflectpp
 	namespace details
 	{
 		struct associative_view_data;
+		struct enumeration_data;
 		struct factory_data;
 		struct property_data;
+		class registry;
 		struct sequential_view_data;
 		struct type_data;
 		struct type_info_data;
@@ -22,6 +24,7 @@ namespace reflectpp
 	}
 
 	class argument;
+	class enumeration;
 	class factory;
 	class instance;
 	class property;

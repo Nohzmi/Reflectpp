@@ -90,6 +90,11 @@ namespace reflectpp
 		std::vector<type> get_derived_classes() const REFLECTPP_NOEXCEPT;
 
 		/**
+		* Returns the enumerator if this type is an enum type
+		*/
+		enumeration get_enumeration() const REFLECTPP_NOEXCEPT;
+
+		/**
 		* Returns factory of this type
 		*/
 		factory get_factory() const REFLECTPP_NOEXCEPT;
@@ -130,6 +135,11 @@ namespace reflectpp
 		*/
 		bool is_arithmetic() const REFLECTPP_NOEXCEPT;
 
+		/*
+		* Returns whether or not this type is an associative container
+		*/
+		bool is_associative_container() const REFLECTPP_NOEXCEPT;
+
 		/**
 		* Returns whether or not this type is the base class from the given type
 		*/
@@ -160,9 +170,9 @@ namespace reflectpp
 		bool is_derived_of(const type& other) const REFLECTPP_NOEXCEPT;
 
 		/*
-		* Returns whether or not this type is an associative container
+		* Returns whether or not the given type represents an enumeration
 		*/
-		bool is_associative_container() const REFLECTPP_NOEXCEPT;
+		bool is_enumeration() const REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this type is a sequential container

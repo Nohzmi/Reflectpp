@@ -126,6 +126,12 @@
     <ClInclude Include="include\details\associative_view_data.h">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\enumeration.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\enumeration_data.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -162,6 +168,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\variant_sequential_view.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enumeration.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

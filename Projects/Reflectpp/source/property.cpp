@@ -30,7 +30,7 @@ namespace reflectpp
 
 	type property::get_declaring_type() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() ? type(m_data->m_type) : type();
+		return is_valid() ? type(m_data->m_declaring_type) : type();
 	}
 
 	size_t property::get_id() const REFLECTPP_NOEXCEPT
@@ -50,7 +50,7 @@ namespace reflectpp
 
 	type property::get_type() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() ? type(m_data->m_property_type) : type();
+		return is_valid() ? type(m_data->m_type) : type();
 	}
 
 	variant property::get_value(instance object) const REFLECTPP_NOEXCEPT
@@ -61,7 +61,7 @@ namespace reflectpp
 		bool is_owner{ false };
 		void* value{ m_data->m_getter(object.get_raw_data(), is_owner) };
 
-		return variant({ is_owner, m_data->m_property_type, value });
+		return variant({ is_owner, m_data->m_type, value });
 	}
 
 	bool property::is_valid() const REFLECTPP_NOEXCEPT

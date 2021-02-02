@@ -17,10 +17,10 @@ namespace reflectpp
 	{
 		struct property_data final
 		{
+			type_data* m_declaring_type{ nullptr };
 			std::function<void* (void*, bool&)> m_getter{ nullptr };
 			size_t m_id{ 0 };
 			const char* m_name{ "" };
-			type_data* m_property_type{ nullptr };
 			std::function<void (void*, void*)> m_setter{ nullptr };
 			size_t m_specifiers{ 0 };
 			type_data* m_type{ nullptr };

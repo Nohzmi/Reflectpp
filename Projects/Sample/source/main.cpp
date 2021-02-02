@@ -130,17 +130,10 @@ int main()
 	std::cout << "//***** other test *****//" << std::endl;
 	std::cout << std::endl;
 
-	int intval = 5;
-	variant var5 = variant(intval);
-	variant var6 = variant(6);
-	variant var7 = variant(std::move(intval));
+
 
 	//serializer s("test");
 	//s.load(object);
-
-	//auto testsdfgh = reflectpp::details::implement_at<std::vector<int>>::value;
-
-	//void* funcPtr = (void*)(TestFunc::someFunc);
 
 	return EXIT_SUCCESS;
 }

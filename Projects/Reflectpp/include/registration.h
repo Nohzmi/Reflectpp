@@ -55,9 +55,17 @@ namespace reflectpp
 
 		/**
 		* Register a type in reflection
+		* please use REFLECT(T) in the header of your class
 		*/
 		template<typename T>
 		REFLECTPP_INLINE static registration class_() REFLECTPP_NOEXCEPT;
+
+		/**
+		* Register an enumeration in reflection
+		* @param name
+		*/
+		template<typename T>
+		REFLECTPP_INLINE static registration enumeration(const char* name) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Register a property of the current type
@@ -77,6 +85,14 @@ namespace reflectpp
 		*/
 		template<typename T, typename PropertyT>
 		REFLECTPP_INLINE registration property(const char* name, PropertyT(T::* getter)() const, void(T::* setter)(PropertyT), size_t specifiers = Exposed | Serialized) REFLECTPP_NOEXCEPT;
+
+		/**
+		* Register a value of the enumeration
+		* @param name
+		* @param value
+		*/
+		template<typename EnumT>
+		REFLECTPP_INLINE registration value(const char* name, EnumT value) REFLECTPP_NOEXCEPT;
 
 	private:
 

@@ -16,14 +16,11 @@ namespace reflectpp
 			return m_instance;
 		}
 
-		associative_view_data* registry::add_associative_view_impl(size_t id, associative_view_data* associative_view) REFLECTPP_NOEXCEPT
+		associative_view_data* registry::add_associative_view_impl(size_t id) REFLECTPP_NOEXCEPT
 		{
-			for (auto& it : m_associative_views)
-				if (it.first == id)
-					return nullptr;
-
-			m_associative_views.emplace(id, new associative_view_data(*associative_view));
-			return m_associative_views.at(id).get();
+			auto value{ new associative_view_data() };
+			m_associative_views.emplace(id, value);
+			return value;
 		}
 
 		void registry::add_base_impl(type_data* type, type_data* base) REFLECTPP_NOEXCEPT
@@ -65,14 +62,18 @@ namespace reflectpp
 			type->m_properties.insert(type->m_properties.cbegin(), base->m_properties.cbegin(), base->m_properties.cend());
 		}
 
-		factory_data* registry::add_factory_impl(size_t id, factory_data* factory) REFLECTPP_NOEXCEPT
+		enumeration_data* registry::add_enumeration_impl(size_t id) REFLECTPP_NOEXCEPT
 		{
-			for (auto& it : m_factories)
-				if (it.first == id)
-					return nullptr;
+			auto value{ new enumeration_data() };
+			m_enumerations.emplace(id, value);
+			return value;
+		}
 
-			m_factories.emplace(id, new factory_data(*factory));
-			return m_factories.at(id).get();
+		factory_data* registry::add_factory_impl(size_t id) REFLECTPP_NOEXCEPT
+		{
+			auto value{ new factory_data() };
+			m_factories.emplace(id, value);
+			return value;
 		}
 
 		void registry::add_property_impl(type_data* type, property_data* property) REFLECTPP_NOEXCEPT
@@ -90,14 +91,11 @@ namespace reflectpp
 			type->m_properties.emplace_back(m_properties.back().get());
 		}
 
-		sequential_view_data* registry::add_sequential_view_impl(size_t id, sequential_view_data* sequential_view) REFLECTPP_NOEXCEPT
+		sequential_view_data* registry::add_sequential_view_impl(size_t id) REFLECTPP_NOEXCEPT
 		{
-			for (auto& it : m_sequential_views)
-				if (it.first == id)
-					return nullptr;
-
-			m_sequential_views.emplace(id, new sequential_view_data(*sequential_view));
-			return m_sequential_views.at(id).get();
+			auto value{ new sequential_view_data() };
+			m_sequential_views.emplace(id, value);
+			return value;
 		}
 
 		type_data* registry::add_type_impl(type_data* type) REFLECTPP_NOEXCEPT
@@ -110,14 +108,11 @@ namespace reflectpp
 			return m_types.back().get();
 		}
 
-		type_info_data* registry::add_type_info_impl(type_info_data* type_info) REFLECTPP_NOEXCEPT
+		type_info_data* registry::add_type_info_impl(size_t id) REFLECTPP_NOEXCEPT
 		{
-			for (auto& it : m_type_infos)
-				if (it.get()->m_id == type_info->m_id)
-					return nullptr;
-
-			m_type_infos.emplace_back(new type_info_data(*type_info));
-			return m_type_infos.back().get();
+			auto value{ new type_info_data() };
+			m_type_infos.emplace(id, value);
+			return value;
 		}
 
 		bool registry::cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT
@@ -144,6 +139,15 @@ namespace reflectpp
 		associative_view_data* registry::get_associative_view_impl(size_t id) const REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_associative_views)
+				if (it.first == id)
+					return it.second.get();
+
+			return nullptr;
+		}
+
+		enumeration_data* registry::get_enumeration_impl(size_t id) const REFLECTPP_NOEXCEPT
+		{
+			for (auto& it : m_enumerations)
 				if (it.first == id)
 					return it.second.get();
 
@@ -180,8 +184,8 @@ namespace reflectpp
 		type_info_data* registry::get_type_info_impl(size_t id) const REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_type_infos)
-				if (it->m_id == id)
-					return it.get();
+				if (it.second->m_id == id)
+					return it.second.get();
 
 			return nullptr;
 		}

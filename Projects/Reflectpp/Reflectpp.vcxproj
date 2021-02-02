@@ -24,11 +24,15 @@
     <ClInclude Include="include\details\associative_container.hpp" />
     <ClInclude Include="include\details\associative_container_data.h" />
     <ClInclude Include="include\details\associative_view_data.h" />
+    <ClInclude Include="include\details\associative_view_lambda.h" />
     <ClInclude Include="include\details\enumeration_data.h" />
+    <ClInclude Include="include\details\factory_lambda.h" />
+    <ClInclude Include="include\details\property_lambda.h" />
     <ClInclude Include="include\details\sequence_container_data.h" />
     <ClInclude Include="include\details\register_traits.h" />
     <ClInclude Include="include\details\sequence_container.hpp" />
     <ClInclude Include="include\details\sequential_view_data.h" />
+    <ClInclude Include="include\details\sequential_view_lambda.h" />
     <ClInclude Include="include\details\specifiers.h" />
     <ClInclude Include="include\details\forward.h" />
     <ClInclude Include="include\details\log.hpp" />
@@ -75,10 +79,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="include\details\inline\argument.inl" />
+    <None Include="include\details\inline\associative_view_lambda.inl" />
     <None Include="include\details\inline\factory.inl" />
+    <None Include="include\details\inline\factory_lambda.inl" />
     <None Include="include\details\inline\instance.inl" />
+    <None Include="include\details\inline\property_lambda.inl" />
     <None Include="include\details\inline\registration.inl" />
     <None Include="include\details\inline\registry.inl" />
+    <None Include="include\details\inline\sequential_view_lambda.inl" />
     <None Include="include\details\inline\type.inl" />
     <None Include="include\details\inline\type_info.inl" />
     <None Include="include\details\inline\variant.inl" />

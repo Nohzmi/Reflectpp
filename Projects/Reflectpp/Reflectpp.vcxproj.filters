@@ -132,6 +132,18 @@
     <ClInclude Include="include\details\enumeration_data.h">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\details\factory_lambda.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\sequential_view_lambda.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\associative_view_lambda.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\property_lambda.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -197,6 +209,18 @@
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\registry.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\factory_lambda.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\associative_view_lambda.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\sequential_view_lambda.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\property_lambda.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

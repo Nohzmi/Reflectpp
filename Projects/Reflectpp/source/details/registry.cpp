@@ -16,13 +16,6 @@ namespace reflectpp
 			return m_instance;
 		}
 
-		associative_view_data* registry::add_associative_view_impl(size_t id) REFLECTPP_NOEXCEPT
-		{
-			auto value{ new associative_view_data() };
-			m_associative_views.emplace(id, value);
-			return value;
-		}
-
 		void registry::add_base_impl(type_data* type, type_data* base) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : type->m_base_types)
@@ -64,55 +57,43 @@ namespace reflectpp
 
 		enumeration_data* registry::add_enumeration_impl(size_t id) REFLECTPP_NOEXCEPT
 		{
-			auto value{ new enumeration_data() };
-			m_enumerations.emplace(id, value);
-			return value;
+			auto data{ new enumeration_data() };
+			m_enumerations.emplace(id, data);
+			return data;
 		}
 
-		factory_data* registry::add_factory_impl(size_t id) REFLECTPP_NOEXCEPT
-		{
-			auto value{ new factory_data() };
-			m_factories.emplace(id, value);
-			return value;
-		}
-
-		void registry::add_property_impl(type_data* type, property_data* property) REFLECTPP_NOEXCEPT
+		property_data* registry::add_property_impl(type_data* type, size_t id) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : type->m_properties)
 			{
-				if (it->m_id == property->m_id)
+				if (it->m_id == id)
 				{
-					REFLECTPP_LOG("%s already registered", property->m_name);
-					return;
+					REFLECTPP_LOG("property already registered");
+					return nullptr;
 				}
 			}
 
-			m_properties.emplace_back(new property_data(*property));
-			type->m_properties.emplace_back(m_properties.back().get());
+			auto data{ new property_data() };
+			m_properties.emplace_back(data);
+			type->m_properties.emplace_back(data);
+			return data;
 		}
 
-		sequential_view_data* registry::add_sequential_view_impl(size_t id) REFLECTPP_NOEXCEPT
-		{
-			auto value{ new sequential_view_data() };
-			m_sequential_views.emplace(id, value);
-			return value;
-		}
-
-		type_data* registry::add_type_impl(type_data* type) REFLECTPP_NOEXCEPT
+		type_data* registry::add_type_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_types)
-				if (it.get()->m_type_info->m_id == type->m_type_info->m_id)
-					return nullptr;
+			{
+				if (it.first == id)
+				{
+					created = false;
+					return it.second.get();
+				}
+			}
 
-			m_types.emplace_back(new type_data(*type));
-			return m_types.back().get();
-		}
-
-		type_info_data* registry::add_type_info_impl(size_t id) REFLECTPP_NOEXCEPT
-		{
-			auto value{ new type_info_data() };
-			m_type_infos.emplace(id, value);
-			return value;
+			created = true;
+			auto data{ new type_data() };
+			m_types.emplace(id, data);
+			return data;
 		}
 
 		bool registry::cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT
@@ -136,58 +117,83 @@ namespace reflectpp
 			return isBaseOf(object, type, isBaseOf);
 		}
 
-		associative_view_data* registry::get_associative_view_impl(size_t id) const REFLECTPP_NOEXCEPT
+		associative_view_data* registry::get_associative_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_associative_views)
+			{
 				if (it.first == id)
+				{
+					created = false;
 					return it.second.get();
+				}
+			}
 
-			return nullptr;
+			created = true;
+			auto data{ new associative_view_data() };
+			m_associative_views.emplace(id, data);
+			return data;
 		}
 
-		enumeration_data* registry::get_enumeration_impl(size_t id) const REFLECTPP_NOEXCEPT
-		{
-			for (auto& it : m_enumerations)
-				if (it.first == id)
-					return it.second.get();
-
-			return nullptr;
-		}
-
-		factory_data* registry::get_factory_impl(size_t id) const REFLECTPP_NOEXCEPT
+		factory_data* registry::get_factory_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_factories)
+			{
 				if (it.first == id)
+				{
+					created = false;
 					return it.second.get();
+				}
+			}
 
-			return nullptr;
+			created = true;
+			auto data{ new factory_data() };
+			m_factories.emplace(id, data);
+			return data;
 		}
 
-		sequential_view_data* registry::get_sequential_view_impl(size_t id) const REFLECTPP_NOEXCEPT
+		sequential_view_data* registry::get_sequential_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
 		{
-			for (auto& it : m_sequential_views)
-				if (it.first == id)
-					return it.second.get();
 
-			return nullptr;
+			for (auto& it : m_sequential_views)
+			{
+				if (it.first == id)
+				{
+					created = false;
+					return it.second.get();
+				}
+			}
+
+			created = true;
+			auto data{ new sequential_view_data() };
+			m_sequential_views.emplace(id, data);
+			return data;
 		}
 
 		type_data* registry::get_type_impl(size_t id) const REFLECTPP_NOEXCEPT
 		{
-			for (auto& it : m_types)
-				if (it->m_type_info->m_id == id)
-					return it.get();
+			auto it{ m_types.find(id) };
+
+			if (it != m_types.end())
+				return it->second.get();
 
 			return nullptr;
 		}
 
-		type_info_data* registry::get_type_info_impl(size_t id) const REFLECTPP_NOEXCEPT
+		type_info_data* registry::get_type_info_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_type_infos)
-				if (it.second->m_id == id)
+			{
+				if (it.first == id)
+				{
+					created = false;
 					return it.second.get();
+				}
+			}
 
-			return nullptr;
+			created = true;
+			auto data{ new type_info_data() };
+			m_type_infos.emplace(id, data);
+			return data;
 		}
 
 		property_data* registry::get_property_impl(size_t id) const REFLECTPP_NOEXCEPT

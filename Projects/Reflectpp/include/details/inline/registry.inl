@@ -37,7 +37,6 @@ namespace reflectpp
 				if (type != nullptr)
 				{
 					type->m_enumeration = add_enumeration_impl(type_id<T>());
-					//type->m_enumeration->m_declaring_type TODO
 					type->m_enumeration->m_name = name;
 					type->m_enumeration->m_underlying_type = add_type_impl<std::underlying_type_t<T>>();
 				}
@@ -63,7 +62,7 @@ namespace reflectpp
 
 				size_t id{ hash(name) };
 				size_t offset = (size_t)(char*)&((T*)nullptr->*addr);
-				auto data{ add_property_impl(type, id) };
+				auto data{ add_property_impl(type, id, name) };
 
 				if (data != nullptr)
 				{
@@ -88,7 +87,7 @@ namespace reflectpp
 			}
 
 			size_t id{ hash(name) };
-			auto data{ add_property_impl(type, id) };
+			auto data{ add_property_impl(type, id, name) };
 
 			if (data != nullptr)
 			{
@@ -124,11 +123,7 @@ namespace reflectpp
 		template<typename EnumT>
 		REFLECTPP_INLINE void registry::add_value(type_data* type, const char* name, EnumT value) REFLECTPP_NOEXCEPT
 		{
-			if (type->m_enumeration == nullptr || name == nullptr)
-				return;
-
-			type->m_enumeration->m_names.emplace_back(name);
-			type->m_enumeration->m_values.emplace_back(static_cast<size_t>(value));
+			add_value_impl(type->m_enumeration, name, type->m_enumeration->m_underlying_type->m_factory->m_copy(static_cast<void*>(&value)));
 		}
 
 		template<typename T, typename U>
@@ -267,6 +262,25 @@ namespace reflectpp
 		}
 
 		template<typename T>
+		REFLECTPP_INLINE type_data* registry::add_type_impl() REFLECTPP_NOEXCEPT
+		{
+			bool created{ false };
+			auto data{ add_type_impl(type_id<T>(), created) };
+
+			if (created)
+			{
+				data->m_associative_view = get_associative_view_impl<T>();
+				data->m_factory = get_factory<T>();
+				data->m_is_arithmetic = std::is_arithmetic_v<T>;
+				data->m_sequential_view = get_sequential_view_impl<T>();
+				data->m_size = sizeof(T);
+				data->m_type_info = get_type_info<T>();
+			}
+
+			return data;
+		}
+
+		template<typename T>
 		REFLECTPP_INLINE associative_view_data* registry::get_associative_view_impl() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_associative_container<T>::value)
@@ -355,25 +369,6 @@ namespace reflectpp
 
 				return data;
 			}
-		}
-
-		template<typename T>
-		REFLECTPP_INLINE type_data* registry::add_type_impl() REFLECTPP_NOEXCEPT
-		{
-			bool created{ false };
-			auto data{ add_type_impl(type_id<T>(), created) };
-
-			if (created)
-			{
-				data->m_associative_view = get_associative_view_impl<T>();
-				data->m_factory = get_factory<T>();
-				data->m_is_arithmetic = std::is_arithmetic_v<T>;
-				data->m_sequential_view = get_sequential_view_impl<T>();
-				data->m_size = sizeof(T);
-				data->m_type_info = get_type_info<T>();
-			}
-
-			return data;
 		}
 	}
 }

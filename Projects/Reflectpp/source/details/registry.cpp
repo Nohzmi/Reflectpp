@@ -9,14 +9,20 @@ namespace reflectpp
 		registry registry::m_instance;
 
 		registry::registry() = default;
-		registry::~registry() = default;
+
+		registry::~registry()
+		{
+			for (auto& it : m_enumerations)
+				for (auto& ptr : it.second->m_values)
+					it.second->m_underlying_type->m_factory->m_destructor(ptr);
+		}
 
 		registry& registry::get_instance() REFLECTPP_NOEXCEPT
 		{
 			return m_instance;
 		}
 
-		void registry::add_base_impl(type_data* type, type_data* base) REFLECTPP_NOEXCEPT
+		void registry::add_base_impl(type_data* type, type_data* base) const REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : type->m_base_types)
 			{
@@ -62,13 +68,13 @@ namespace reflectpp
 			return data;
 		}
 
-		property_data* registry::add_property_impl(type_data* type, size_t id) REFLECTPP_NOEXCEPT
+		property_data* registry::add_property_impl(type_data* type, size_t id, const char* name) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : type->m_properties)
 			{
 				if (it->m_id == id)
 				{
-					REFLECTPP_LOG("property already registered");
+					REFLECTPP_LOG("%s already registered", name);
 					return nullptr;
 				}
 			}
@@ -94,6 +100,12 @@ namespace reflectpp
 			auto data{ new type_data() };
 			m_types.emplace(id, data);
 			return data;
+		}
+
+		void registry::add_value_impl(enumeration_data* enumeration, const char* name, void* value) const REFLECTPP_NOEXCEPT
+		{
+			enumeration->m_names.emplace_back(name);
+			enumeration->m_values.emplace_back(value);
 		}
 
 		bool registry::cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT

@@ -42,7 +42,10 @@ namespace reflectpp
 			return [](void* object)
 			{
 				if constexpr (std::is_destructible_v<T>)
+				{
 					delete static_cast<T*>(object);
+					object = nullptr;
+				}
 			};
 		}
 	}

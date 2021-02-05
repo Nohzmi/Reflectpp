@@ -14,16 +14,6 @@
 
 using namespace reflectpp;
 
-class TestFunc
-{
-public:
-
-	int someFunc()
-	{
-		return 5;
-	}
-};
-
 int main()
 {
 	//******************//

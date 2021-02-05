@@ -61,7 +61,7 @@ namespace reflectpp
 			return values;
 
 		for (auto& it : m_data->m_enumeration->m_values)
-			values.emplace_back(variant({true, m_data->m_enumeration->m_underlying_type, new size_t(it)}));
+			values.emplace_back(variant({ false, m_data->m_enumeration->m_underlying_type, it }));
 
 		return values;
 	}
@@ -78,7 +78,7 @@ namespace reflectpp
 
 		for (int i = 0; i < m_data->m_enumeration->m_names.size(); ++i)
 			if (std::string(m_data->m_enumeration->m_names[i]) == std::string(name))
-				return variant({ true, m_data->m_enumeration->m_underlying_type, new size_t(m_data->m_enumeration->m_values[i]) });
+				return variant({ false, m_data->m_enumeration->m_underlying_type, m_data->m_enumeration->m_values[i] });
 
 		return variant();
 	}
@@ -88,9 +88,9 @@ namespace reflectpp
 		if (!is_valid() || value.get_type() != get_type())
 			return "";
 
-		for (int i = 0; i < m_data->m_enumeration->m_values.size(); ++i)
+		/*for (int i = 0; i < m_data->m_enumeration->m_values.size(); ++i)
 			if (m_data->m_enumeration->m_values[i] == value.get_value<size_t>())
-				return m_data->m_enumeration->m_names[i];
+				return m_data->m_enumeration->m_names[i];*/
 
 		return "";
 	}

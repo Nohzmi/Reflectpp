@@ -10,12 +10,12 @@
 #include <register.h>
 #include "intern.h"
 
-enum class E_Alignment
+enum class E_Alignment : size_t
 {
-	AlignLeft = 0x0001,
-	AlignRight = 0x0002,
-	AlignHCenter = 0x0004,
-	AlignJustify = 0x0008
+	AlignLeft /*= 0x0001*/,
+	AlignRight /*= 0x0002*/,
+	AlignHCenter /*= 0x0004*/,
+	AlignJustify /*= 0x0008*/
 };
 
 class Base

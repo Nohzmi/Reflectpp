@@ -39,7 +39,7 @@ namespace reflectpp
 	{
 	public:
 
-		registration() = delete;
+		registration() = default;
 		~registration() = default;
 		registration(const registration&) = default;
 		registration(registration&&) REFLECTPP_NOEXCEPT = default;

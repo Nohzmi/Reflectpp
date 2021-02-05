@@ -72,16 +72,17 @@ namespace reflectpp
 		private:
 
 			template<typename T>
+			REFLECTPP_INLINE type_data* add_type_impl() REFLECTPP_NOEXCEPT;
+			template<typename T>
 			REFLECTPP_INLINE associative_view_data* get_associative_view_impl() REFLECTPP_NOEXCEPT;
 			template<typename T>
 			REFLECTPP_INLINE sequential_view_data* get_sequential_view_impl() REFLECTPP_NOEXCEPT;
-			template<typename T>
-			REFLECTPP_INLINE type_data* add_type_impl() REFLECTPP_NOEXCEPT;
 
-			void add_base_impl(type_data* type, type_data* base) REFLECTPP_NOEXCEPT;
+			void add_base_impl(type_data* type, type_data* base) const REFLECTPP_NOEXCEPT;
 			enumeration_data* add_enumeration_impl(size_t id) REFLECTPP_NOEXCEPT;
-			property_data* add_property_impl(type_data* type, size_t id) REFLECTPP_NOEXCEPT;
+			property_data* add_property_impl(type_data* type, size_t id, const char* name) REFLECTPP_NOEXCEPT;
 			type_data* add_type_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
+			void add_value_impl(enumeration_data* enumeration, const char* name, void* value) const REFLECTPP_NOEXCEPT;
 			bool cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT;
 			associative_view_data* get_associative_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
 			factory_data* get_factory_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;

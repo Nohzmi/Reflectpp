@@ -17,11 +17,10 @@ namespace reflectpp
 	{
 		struct enumeration_data final
 		{
-			type_data* m_declaring_type{ nullptr };
 			const char* m_name;
 			std::vector<const char*> m_names;
 			type_data* m_underlying_type{ nullptr };
-			std::vector<size_t> m_values;
+			std::vector<void*> m_values;
 		};
 	}
 }

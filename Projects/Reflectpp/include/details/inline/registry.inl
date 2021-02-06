@@ -127,39 +127,6 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE bool registry::can_cast(type_data* type) REFLECTPP_NOEXCEPT
-		{
-			if constexpr (!std::is_pointer_v<T>)
-			{
-				static_assert(false, "try to cast to a non pointer type");
-				return false;
-			}
-			else if constexpr (!is_valid_type<std::remove_pointer_t<T>>::value)
-			{
-				REFLECTPP_LOG("invalid type");
-				return false;
-			}
-			else
-			{
-				return can_cast_impl(type, get_type<std::remove_pointer_t<T>>());
-			}
-		}
-
-		template<typename T, typename U>
-		REFLECTPP_INLINE std::remove_pointer_t<T>* registry::cast(U* object) REFLECTPP_NOEXCEPT
-		{
-			if constexpr (!is_valid_type<U>::value)
-			{
-				REFLECTPP_LOG("invalid object type");
-				return nullptr;
-			}
-			else
-			{
-				return can_cast_impl<T>(get_type(object)) ? reinterpret_cast<T>(object) : nullptr;
-			}
-		}
-
-		template<typename T>
 		REFLECTPP_INLINE factory_data* registry::get_factory() REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!is_valid_type<T>::value)
@@ -220,6 +187,18 @@ namespace reflectpp
 			else if constexpr (std::is_arithmetic_v<decay<T>> || is_associative_container<decay<T>>::value || is_sequence_container<decay<T>>::value)
 			{
 				return add_type_impl<decay<T>>();
+			}
+			else if (std::is_enum_v<decay<T>>)
+			{
+				type_data* type{ get_type_impl(type_id<T>()) };
+
+				if (type == nullptr)
+				{
+					REFLECTPP_LOG("unregistered type");
+					return nullptr;
+				}
+
+				return type;
 			}
 			else if constexpr (!is_registered<decay<T>>::value)
 			{
@@ -389,6 +368,7 @@ namespace reflectpp
 			if (created)
 			{
 				data->m_can_convert_to_bool = std::is_convertible_v<T, bool>;
+				data->m_can_convert_to_char = std::is_convertible_v<T, char>;
 				data->m_can_convert_to_double = std::is_convertible_v<T, double>;
 				data->m_can_convert_to_float = std::is_convertible_v<T, float>;
 				data->m_can_convert_to_int = std::is_convertible_v<T, int>;
@@ -402,6 +382,7 @@ namespace reflectpp
 				data->m_can_convert_to_uint64 = std::is_convertible_v<T, uint64_t>;
 				data->m_compare = get_compare<T>();
 				data->m_convert_to_bool = get_convert<T, bool>();
+				data->m_convert_to_char = get_convert<T, char>();
 				data->m_convert_to_double = get_convert<T, double>();
 				data->m_convert_to_float = get_convert<T, float>();
 				data->m_convert_to_int = get_convert<T, int>();

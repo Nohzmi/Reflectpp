@@ -41,19 +41,20 @@ namespace reflectpp
 			iterator& operator=(iterator&&) REFLECTPP_NOEXCEPT = default;
 			explicit iterator(size_t index, variant_associative_view* variant) REFLECTPP_NOEXCEPT;
 
-			bool operator==(const iterator & rhs) const REFLECTPP_NOEXCEPT;
-			bool operator!=(const iterator & rhs) const REFLECTPP_NOEXCEPT;
-			iterator& operator++() REFLECTPP_NOEXCEPT;
-			iterator operator++(int) REFLECTPP_NOEXCEPT;
-			iterator& operator--() REFLECTPP_NOEXCEPT;
-			iterator operator--(int) REFLECTPP_NOEXCEPT;
-			iterator& operator+=(size_t i) REFLECTPP_NOEXCEPT;
-			iterator operator+(size_t i) REFLECTPP_NOEXCEPT;
-			iterator& operator-=(size_t i) REFLECTPP_NOEXCEPT;
-			iterator operator-(size_t i) REFLECTPP_NOEXCEPT;
-			std::pair<variant, variant> operator*() const REFLECTPP_NOEXCEPT;
 			variant get_key() const REFLECTPP_NOEXCEPT;
 			variant get_value() const REFLECTPP_NOEXCEPT;
+			bool operator!=(const iterator & rhs) const REFLECTPP_NOEXCEPT;
+			std::pair<variant, variant> operator*() const REFLECTPP_NOEXCEPT;
+			iterator operator+(size_t i) REFLECTPP_NOEXCEPT;
+			iterator& operator++() REFLECTPP_NOEXCEPT;
+			iterator operator++(int) REFLECTPP_NOEXCEPT;
+			iterator& operator+=(size_t i) REFLECTPP_NOEXCEPT;
+			iterator operator-(size_t i) REFLECTPP_NOEXCEPT;
+			iterator& operator--() REFLECTPP_NOEXCEPT;
+			iterator operator--(int) REFLECTPP_NOEXCEPT;
+			iterator& operator-=(size_t i) REFLECTPP_NOEXCEPT;
+			bool operator==(const iterator & rhs) const REFLECTPP_NOEXCEPT;
+			
 
 		private:
 
@@ -68,11 +69,6 @@ namespace reflectpp
 		variant_associative_view& operator=(const variant_associative_view&) = default;
 		variant_associative_view& operator=(variant_associative_view&&) REFLECTPP_NOEXCEPT = default;
 		explicit variant_associative_view(const details::variant_data& data) REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns whether or not the stored a value is valid
-		*/
-		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns an iterator to the first element of the container
@@ -158,6 +154,11 @@ namespace reflectpp
 		* Returns whether or not the stored a value is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not the stored a value is valid
+		*/
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 	private:
 

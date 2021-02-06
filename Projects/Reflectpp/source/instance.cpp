@@ -29,7 +29,6 @@ namespace reflectpp
 		move.m_variant = nullptr;
 	}
 
-
 	instance& instance::operator=(const instance& copy)
 	{
 		m_is_owner = copy.m_variant != nullptr;
@@ -49,25 +48,25 @@ namespace reflectpp
 		return *this;
 	}
 
+	instance::operator variant*() const REFLECTPP_NOEXCEPT
+	{
+		return m_variant;
+	}
+
 	instance::instance(const variant& var) REFLECTPP_NOEXCEPT :
 		m_is_owner{ false },
 		m_variant{ const_cast<variant*>(&var) }
 	{
 	}
 
-	instance::operator bool() const REFLECTPP_NOEXCEPT
-	{
-		return is_valid();
-	}
-
-	void* instance::get_raw_data() REFLECTPP_NOEXCEPT
-	{
-		return m_variant != nullptr ? m_variant->get_raw_data() : nullptr;
-	}
-
 	type instance::get_type() const REFLECTPP_NOEXCEPT
 	{
 		return m_variant != nullptr ? m_variant->get_type() : type();
+	}
+
+	instance::operator bool() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid();
 	}
 
 	bool instance::is_valid() const REFLECTPP_NOEXCEPT

@@ -1,10 +1,7 @@
-Enumeration
-	get_enumeration()/is_enumeration() in property and type
 Serialization
 	Rework pour que ça fonctionne
 	Attention à la diférence map/set pour la serialization
 	Optimization en évitant les copy ce qui évite les new de variant (penser au std::move)
-	Enlever le friend de instance (si possible)
 	Vérifier les "for (auto&" à mettre quand c'est possible
 	Vérifier les auto
 Sample
@@ -12,4 +9,4 @@ Sample
 Autre
 	Ajout de logs
 	Ajouter les fonctions statiques de rttr
-	Conversion en std::string
+	Conversion des enums

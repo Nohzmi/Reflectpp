@@ -153,6 +153,12 @@
     <ClInclude Include="include\details\utility_type_traits.h">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\details\reflectpp_cast_helper.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\reflectpp_cast.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -194,6 +200,9 @@
     <ClCompile Include="source\enumeration.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\details\reflectpp_cast_helper.cpp">
+      <Filter>source\details</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\details\inline\factory.inl">
@@ -233,6 +242,12 @@
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\utility_lambda.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\reflectpp_cast_helper.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\reflectpp_cast.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

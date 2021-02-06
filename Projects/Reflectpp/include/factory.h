@@ -32,11 +32,6 @@ namespace reflectpp
 		factory& operator=(factory&&) REFLECTPP_NOEXCEPT = default;
 		explicit factory(details::factory_data* data) REFLECTPP_NOEXCEPT;
 
-		/*
-		* Returns whether or not this factory is valid
-		*/
-		explicit operator bool() const REFLECTPP_NOEXCEPT;
-
 		/**
 		* Returns a pointer on created object
 		*/
@@ -64,6 +59,11 @@ namespace reflectpp
 		* Returns whether or not this factory is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this factory is valid
+		*/
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 	private:
 

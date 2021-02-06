@@ -13,21 +13,6 @@ namespace reflectpp
 	{
 	}
 
-	bool enumeration::operator==(const enumeration& rhs) const REFLECTPP_NOEXCEPT
-	{
-		return is_valid() && rhs.is_valid() ? m_data == rhs.m_data : false;
-	}
-
-	bool enumeration::operator!=(const enumeration& rhs) const REFLECTPP_NOEXCEPT
-	{
-		return !(*this == rhs);
-	}
-
-	enumeration::operator bool() const REFLECTPP_NOEXCEPT
-	{
-		return is_valid();
-	}
-
 	const char* enumeration::get_name() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? m_data->m_enumeration->m_name : nullptr;
@@ -78,16 +63,36 @@ namespace reflectpp
 		return variant();
 	}
 
+	bool enumeration::operator!=(const enumeration& rhs) const REFLECTPP_NOEXCEPT
+	{
+		return !(*this == rhs);
+	}
+
+	bool enumeration::operator==(const enumeration& rhs) const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() && rhs.is_valid() ? m_data == rhs.m_data : false;
+	}
+
+	enumeration::operator bool() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid();
+	}
+
 	const char* enumeration::value_to_name(argument value) const REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || value.get_type() != get_type())
+		if (!is_valid())
 			return "";
 
-		/*for (int i = 0; i < m_data->m_enumeration->m_values.size(); ++i)
-			if (m_data->m_enumeration->m_values[i] == value.get_value<size_t>())
-				return m_data->m_enumeration->m_names[i];*/
-				
-		//TODO revoir compare des variants + assomplir les argument/instance (instance try_convert ?)
+		auto value_var{ static_cast<variant*>(value) };
+
+		if (value_var == nullptr || !value_var->is_valid() || !value_var->convert(get_type()))
+			return "";
+
+		void* value_ptr{ static_cast<details::variant_data*>(*value_var)->m_value };
+
+		for (int i = 0; i < m_data->m_enumeration->m_values.size(); ++i)
+			if (m_data->m_utility->m_compare(m_data->m_enumeration->m_values[i], value_ptr))
+				return m_data->m_enumeration->m_names[i];
 
 		return "";
 	}

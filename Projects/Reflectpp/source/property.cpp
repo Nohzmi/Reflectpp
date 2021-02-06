@@ -13,21 +13,6 @@ namespace reflectpp
 	{
 	}
 
-	bool property::operator==(const property& rhs) const REFLECTPP_NOEXCEPT
-	{
-		return is_valid() && rhs.is_valid() ? m_data == rhs.m_data : false;
-	}
-
-	bool property::operator!=(const property& rhs) const REFLECTPP_NOEXCEPT
-	{
-		return !(*this == rhs);
-	}
-
-	property::operator bool() const REFLECTPP_NOEXCEPT
-	{
-		return is_valid();
-	}
-
 	type property::get_declaring_type() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? type(m_data->m_declaring_type) : type();
@@ -55,11 +40,17 @@ namespace reflectpp
 
 	variant property::get_value(instance object) const REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || !object.is_valid() || object.get_type() != get_declaring_type())
+		if (!is_valid())
+			return variant();
+
+		auto object_var{ static_cast<variant*>(object) };
+
+		if (object_var == nullptr || !object_var->is_valid() || !object_var->convert(get_declaring_type()))
 			return variant();
 
 		bool is_owner{ false };
-		void* value{ m_data->m_getter(object.get_raw_data(), is_owner) };
+		void* object_ptr{ static_cast<details::variant_data*>(*object_var)->m_value };
+		void* value{ m_data->m_getter(object_ptr, is_owner) };
 
 		return variant({ is_owner, m_data->m_type, value });
 	}
@@ -69,14 +60,39 @@ namespace reflectpp
 		return m_data != nullptr;
 	}
 
+	property::operator bool() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid();
+	}
+
+	bool property::operator!=(const property& rhs) const REFLECTPP_NOEXCEPT
+	{
+		return !(*this == rhs);
+	}
+
+	bool property::operator==(const property& rhs) const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() && rhs.is_valid() ? m_data == rhs.m_data : false;
+	}
+
 	bool property::set_value(instance object, argument arg) const REFLECTPP_NOEXCEPT
 	{
-		if (is_valid() && object.is_valid() && object.get_type() == get_declaring_type() && arg.get_type() == get_type())
-		{
-			m_data->m_setter(object.get_raw_data(), arg.get_raw_data());
-			return true;
-		}
+		if (!is_valid())
+			return false;
 
-		return false;
+		auto object_var{ static_cast<variant*>(object) };
+		auto arg_var{ static_cast<variant*>(arg) };
+
+		if (object_var == nullptr || !object_var->is_valid() || !object_var->convert(get_declaring_type()))
+			return false;
+
+		if (arg_var == nullptr || !arg_var->is_valid() || !arg_var->convert(get_type()))
+			return false;
+
+		void* object_ptr{ static_cast<details::variant_data*>(*object_var)->m_value };
+		void* arg_ptr{ static_cast<details::variant_data*>(*arg_var)->m_value };
+
+		m_data->m_setter(object_ptr, arg_ptr);
+		return true;
 	}
 }

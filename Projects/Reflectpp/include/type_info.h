@@ -33,23 +33,6 @@ namespace reflectpp
 		explicit type_info(details::type_info_data* data) REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns whether or not two types are the same
-		* @param rhs
-		*/
-		bool operator==(const type_info& rhs) const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns whether or not two types are the same
-		* @param rhs
-		*/
-		bool operator!=(const type_info& rhs) const REFLECTPP_NOEXCEPT;
-
-		/*
-		* Returns whether or not this type info is valid
-		*/
-		explicit operator bool() const REFLECTPP_NOEXCEPT;
-
-		/**
 		* Get type info of the requested type
 		*/
 		template<typename T>
@@ -69,6 +52,23 @@ namespace reflectpp
 		* Returns whether or not this type info is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type info is valid
+		*/
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two types are the same
+		* @param rhs
+		*/
+		bool operator!=(const type_info& rhs) const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two types are the same
+		* @param rhs
+		*/
+		bool operator==(const type_info& rhs) const REFLECTPP_NOEXCEPT;
 
 	private:
 

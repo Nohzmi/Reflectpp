@@ -9,11 +9,6 @@ namespace reflectpp
 	{
 	}
 
-	factory::operator bool() const REFLECTPP_NOEXCEPT
-	{
-		return is_valid();
-	}
-
 	void* factory::construct() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? m_data->m_constructor() : nullptr;
@@ -33,5 +28,10 @@ namespace reflectpp
 	bool factory::is_valid() const REFLECTPP_NOEXCEPT
 	{
 		return m_data != nullptr;
+	}
+
+	factory::operator bool() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid();
 	}
 }

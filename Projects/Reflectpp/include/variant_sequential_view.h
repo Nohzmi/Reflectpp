@@ -40,18 +40,18 @@ namespace reflectpp
 			iterator& operator=(iterator&&) REFLECTPP_NOEXCEPT = default;
 			explicit iterator(size_t index, variant_sequential_view* variant) REFLECTPP_NOEXCEPT;
 
-			bool operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT;
+			variant get_data() const REFLECTPP_NOEXCEPT;
 			bool operator!=(const iterator& rhs) const REFLECTPP_NOEXCEPT;
+			variant operator*() const REFLECTPP_NOEXCEPT;
+			iterator operator+(size_t i) REFLECTPP_NOEXCEPT;
 			iterator& operator++() REFLECTPP_NOEXCEPT;
 			iterator operator++(int) REFLECTPP_NOEXCEPT;
+			iterator& operator+=(size_t i) REFLECTPP_NOEXCEPT;
+			iterator operator-(size_t i) REFLECTPP_NOEXCEPT;
 			iterator& operator--() REFLECTPP_NOEXCEPT;
 			iterator operator--(int) REFLECTPP_NOEXCEPT;
-			iterator& operator+=(size_t i) REFLECTPP_NOEXCEPT;
-			iterator operator+(size_t i) REFLECTPP_NOEXCEPT;
 			iterator& operator-=(size_t i) REFLECTPP_NOEXCEPT;
-			iterator operator-(size_t i) REFLECTPP_NOEXCEPT;
-			variant operator*() const REFLECTPP_NOEXCEPT;
-			variant get_data() const REFLECTPP_NOEXCEPT;
+			bool operator==(const iterator& rhs) const REFLECTPP_NOEXCEPT;
 
 		private:
 
@@ -66,11 +66,6 @@ namespace reflectpp
 		variant_sequential_view& operator=(const variant_sequential_view&) = default;
 		variant_sequential_view& operator=(variant_sequential_view&&) REFLECTPP_NOEXCEPT = default;
 		explicit variant_sequential_view(const details::variant_data& data) REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns whether or not the stored value is valid
-		*/
-		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns an iterator to the first element of the container
@@ -138,6 +133,11 @@ namespace reflectpp
 		* Returns whether or not the stored value is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not the stored value is valid
+		*/
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Sets the size of the sequential container \n

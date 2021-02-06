@@ -28,6 +28,7 @@
     <ClInclude Include="include\details\enumeration_data.h" />
     <ClInclude Include="include\details\factory_lambda.h" />
     <ClInclude Include="include\details\property_lambda.h" />
+    <ClInclude Include="include\details\reflectpp_cast_helper.h" />
     <ClInclude Include="include\details\sequence_container_data.h" />
     <ClInclude Include="include\details\register_traits.h" />
     <ClInclude Include="include\details\sequence_container.hpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="include\instance.h" />
     <ClInclude Include="include\property.h" />
     <ClInclude Include="include\reflectpp.h" />
+    <ClInclude Include="include\reflectpp_cast.h" />
     <ClInclude Include="include\register.h" />
     <ClInclude Include="include\registration.h" />
     <ClInclude Include="include\custom_sequence_container.hpp" />
@@ -67,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\argument.cpp" />
+    <ClCompile Include="source\details\reflectpp_cast_helper.cpp" />
     <ClCompile Include="source\details\registry.cpp" />
     <ClCompile Include="source\enumeration.cpp" />
     <ClCompile Include="source\factory.cpp" />
@@ -87,6 +90,8 @@
     <None Include="include\details\inline\factory_lambda.inl" />
     <None Include="include\details\inline\instance.inl" />
     <None Include="include\details\inline\property_lambda.inl" />
+    <None Include="include\details\inline\reflectpp_cast.inl" />
+    <None Include="include\details\inline\reflectpp_cast_helper.inl" />
     <None Include="include\details\inline\registration.inl" />
     <None Include="include\details\inline\registry.inl" />
     <None Include="include\details\inline\sequential_view_lambda.inl" />

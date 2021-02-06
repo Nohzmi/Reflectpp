@@ -7,6 +7,7 @@
 */
 
 #pragma once
+#include "details/reflectpp_cast_helper.h"
 #include "details/registry.h"
 #include "details/variant_data.h"
 
@@ -31,6 +32,7 @@ namespace reflectpp
 		variant& operator=(const variant&);
 		variant& operator=(variant&&) REFLECTPP_NOEXCEPT;
 		explicit variant(const details::variant_data& data) REFLECTPP_NOEXCEPT;
+		explicit operator details::variant_data*() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Create a variant from an object \n
@@ -41,27 +43,16 @@ namespace reflectpp
 		REFLECTPP_INLINE variant(T&& object) REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns whether or not two variant are the same value
-		* @param rhs
-		*/
-		bool operator==(const variant& rhs) const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns whether or not two variant are the same value
-		* @param rhs
-		*/
-		bool operator!=(const variant& rhs) const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns whether or not the stored a value is valid
-		*/
-		explicit operator bool() const REFLECTPP_NOEXCEPT;
-
-		/**
 		* Returns whether or not the contained value can be converted to the given type
 		*/
 		template<typename T>
 		REFLECTPP_INLINE bool can_convert() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not the contained value can be converted to the given type
+		* @param target_type
+		*/
+		bool can_convert(const type& target_type) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Clear the stored value of this variant
@@ -70,12 +61,21 @@ namespace reflectpp
 
 		/**
 		* Converts the containing data to a value of requested type \n
-		* Allow conversion between of all arithmetic types
-		* Allow conversion if cast authorized
-		* Returns whether or not the contained value can be converted to the given type \n
+		* Allow conversion between of all arithmetic types \n
+		* Allow conversion if cast authorized \n
+		* Returns whether or not the contained value can be converted to the given type
 		*/
 		template<typename T>
 		REFLECTPP_INLINE bool convert() REFLECTPP_NOEXCEPT;
+
+		/**
+		* Converts the containing data to a value of requested type \n
+		* Allow conversion between of all arithmetic types \n
+		* Allow conversion if cast authorized \n
+		* Returns whether or not the contained value can be converted to the given type
+		* @param target_type
+		*/
+		bool convert(const type& target_type) REFLECTPP_NOEXCEPT;
 
 		/**
 		* Creates a variant_associative_view from the containing value
@@ -86,12 +86,6 @@ namespace reflectpp
 		* Creates a variant_sequential_view from the containing value
 		*/
 		variant_sequential_view create_sequential_view() const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns the raw value of this variant \n
-		* Not recommended to use, please use get_type() instead
-		*/
-		void* get_raw_data() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value
@@ -132,6 +126,23 @@ namespace reflectpp
 		* Returns whether or not the stored a value is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not the stored a value is valid
+		*/
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two variant are the same value
+		* @param rhs
+		*/
+		bool operator!=(const variant& rhs) const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two variant are the same value
+		* @param rhs
+		*/
+		bool operator==(const variant& rhs) const REFLECTPP_NOEXCEPT;
 
 	private:
 

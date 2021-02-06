@@ -13,6 +13,7 @@
 #include <factory.h>
 #include <instance.h>
 #include <property.h>
+#include <reflectpp_cast.h>
 #include <registration.h>
 #include <serializer.h>
 #include <type.h>

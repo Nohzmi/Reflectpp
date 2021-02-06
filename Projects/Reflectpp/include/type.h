@@ -28,31 +28,9 @@ namespace reflectpp
 		type(type&&) REFLECTPP_NOEXCEPT = default;
 		type& operator=(const type&) = default;
 		type& operator=(type&&) REFLECTPP_NOEXCEPT = default;
+
 		explicit type(details::type_data* data) REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns whether or not two types are the same
-		* @param rhs
-		*/
-		bool operator==(const type& rhs) const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns whether or not two types are the same
-		* @param rhs
-		*/
-		bool operator!=(const type& rhs) const REFLECTPP_NOEXCEPT;
-
-		/*
-		* Returns whether or not this type is valid
-		*/
-		explicit operator bool() const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Allows to cast between class hierarchies up, down and side
-		* @param object
-		*/
-		template<typename T, typename U>
-		REFLECTPP_INLINE static T cast(U* object) REFLECTPP_NOEXCEPT;
+		explicit operator details::type_data*() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Creates an instance of the current type
@@ -183,6 +161,23 @@ namespace reflectpp
 		* Returns whether or not this type is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type is valid
+		*/
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two types are the same
+		* @param rhs
+		*/
+		bool operator!=(const type& rhs) const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two types are the same
+		* @param rhs
+		*/
+		bool operator==(const type& rhs) const REFLECTPP_NOEXCEPT;
 
 	private:
 

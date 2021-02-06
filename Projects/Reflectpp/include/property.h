@@ -34,23 +34,6 @@ namespace reflectpp
 		explicit property(details::property_data* data) REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns whether or not two property are the same
-		* @param rhs
-		*/
-		bool operator==(const property& rhs) const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns whether or not two property are the same
-		* @param rhs
-		*/
-		bool operator!=(const property& rhs) const REFLECTPP_NOEXCEPT;
-
-		/*
-		* Returns whether or not this property info is valid
-		*/
-		explicit operator bool() const REFLECTPP_NOEXCEPT;
-
-		/**
 		* Returns the type of the class or struct that declares this property
 		*/
 		type get_declaring_type() const REFLECTPP_NOEXCEPT;
@@ -85,6 +68,23 @@ namespace reflectpp
 		* Returns whether or not this property is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this property info is valid
+		*/
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two property are the same
+		* @param rhs
+		*/
+		bool operator!=(const property& rhs) const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two property are the same
+		* @param rhs
+		*/
+		bool operator==(const property& rhs) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Set the value of the property of the given object

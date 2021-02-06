@@ -56,10 +56,6 @@ namespace reflectpp
 			template<typename EnumT>
 			REFLECTPP_INLINE void add_value(type_data* type, const char* name, EnumT value) REFLECTPP_NOEXCEPT;
 			template<typename T>
-			REFLECTPP_INLINE bool can_cast(type_data* type) REFLECTPP_NOEXCEPT;
-			template<typename T, typename U>
-			REFLECTPP_INLINE std::remove_pointer_t<T>* cast(U* object) REFLECTPP_NOEXCEPT;
-			template<typename T>
 			REFLECTPP_INLINE factory_data* get_factory() REFLECTPP_NOEXCEPT;
 			template<typename T>
 			REFLECTPP_INLINE type_data* get_type() REFLECTPP_NOEXCEPT;
@@ -86,7 +82,6 @@ namespace reflectpp
 			property_data* add_property_impl(type_data* type, size_t id, const char* name) REFLECTPP_NOEXCEPT;
 			type_data* add_type_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
 			void add_value_impl(enumeration_data* enumeration, const char* name, void* value) const REFLECTPP_NOEXCEPT;
-			bool can_cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT;
 			associative_view_data* get_associative_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
 			factory_data* get_factory_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
 			sequential_view_data* get_sequential_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;

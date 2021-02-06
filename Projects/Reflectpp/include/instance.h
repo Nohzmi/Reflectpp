@@ -21,8 +21,6 @@ namespace reflectpp
 	*/
 	class REFLECTPP_API instance final
 	{
-		friend serializer;
-
 	public:
 
 		instance() = default;
@@ -31,6 +29,7 @@ namespace reflectpp
 		instance(instance&&) REFLECTPP_NOEXCEPT;
 		instance& operator=(const instance&);
 		instance& operator=(instance&&) REFLECTPP_NOEXCEPT;
+		explicit operator variant*() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Creates an instance from a variant
@@ -46,17 +45,6 @@ namespace reflectpp
 		REFLECTPP_INLINE instance(T& object) REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns whether or not the stored a value is valid
-		*/
-		explicit operator bool() const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns the raw value of this instance \n
-		* Not recommended to use
-		*/
-		void* get_raw_data() REFLECTPP_NOEXCEPT;
-
-		/**
 		* Returns the type of the stored value
 		*/
 		type get_type() const REFLECTPP_NOEXCEPT;
@@ -65,6 +53,18 @@ namespace reflectpp
 		* Returns whether or not the stored a value is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not the stored a value is valid
+		*/
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* This function will try to convert the underlying instance to the given type
+		* When the conversion succeeds, a valid pointer will be returned., otherwise a nullptr
+		*/
+		template<typename T>
+		REFLECTPP_INLINE T* try_convert() const REFLECTPP_NOEXCEPT;
 
 	private:
 		

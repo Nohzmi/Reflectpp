@@ -141,16 +141,16 @@ int main()
 		std::cout << std::endl;
 
 		std::cout << "name to value: \"AlignLeftvalue\" -> " << AlignmentEnum.name_to_value("AlignLeft").get_value<size_t>() << std::endl;
-		std::cout << "value to name: 0 -> " << AlignmentEnum.value_to_name(0u) << std::endl;
+		std::cout << "value to name: 0 -> " << AlignmentEnum.value_to_name(0) << std::endl;
 	}
 	std::cout << std::endl;
 
-	Base* ksjqdbfskjf = new Derived();
+	/*Base* ksjqdbfskjf = new Derived();
 	auto float_var = variant(*ksjqdbfskjf);
 	std::cout << "type: " << float_var.get_type().get_name() << ", value:" << std::endl;
 	std::cout << "can convert to double: " << float_var.can_convert<Base*>() << std::endl;
 	float_var.convert<Base*>();
-	std::cout << "type: " << float_var.get_type().get_name() << ", value:"  << std::endl;
+	std::cout << "type: " << float_var.get_type().get_name() << ", value:"  << std::endl;*/
 
 	//serializer s("test");
 	//s.load(object);

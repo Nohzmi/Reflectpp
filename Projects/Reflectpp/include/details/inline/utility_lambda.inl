@@ -9,7 +9,7 @@ namespace reflectpp
 		{
 			return [](void* lhs, void* rhs) -> bool
 			{
-				if constexpr (has_operator_equal<T>::value || is_std_container<T>::value)
+				if constexpr (has_operator_equal<T>::value || is_std_container<T>::value || std::is_enum_v<T>)
 				{
 					return *static_cast<T*>(lhs) == *static_cast<T*>(rhs);
 				}

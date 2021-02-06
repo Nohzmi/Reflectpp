@@ -108,27 +108,6 @@ namespace reflectpp
 			enumeration->m_values.emplace_back(value);
 		}
 
-		bool registry::can_cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT
-		{
-			if (type->m_hierarchy_id != object->m_hierarchy_id)
-				return false;
-
-			auto isBaseOf = [](type_data* object, type_data* type, auto& lambda) -> bool
-			{
-				if (object == type)
-					return true;
-
-				bool res{ false };
-
-				for (auto& it : object->m_base_types)
-					res |= lambda(it, type, lambda);
-
-				return res;
-			};
-
-			return isBaseOf(object, type, isBaseOf);
-		}
-
 		associative_view_data* registry::get_associative_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : m_associative_views)

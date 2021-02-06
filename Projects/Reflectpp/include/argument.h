@@ -29,6 +29,7 @@ namespace reflectpp
 		argument(argument&&) REFLECTPP_NOEXCEPT;
 		argument& operator=(const argument&);
 		argument& operator=(argument&&) REFLECTPP_NOEXCEPT;
+		explicit operator variant*() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Creates an argument from a variant
@@ -48,12 +49,6 @@ namespace reflectpp
 		*/
 		template<typename T, typename = std::enable_if_t<!std::is_same_v<variant, details::decay<T>> && !std::is_same_v<argument, details::decay<T>> && !std::is_pointer_v<std::decay_t<T>>>>
 		REFLECTPP_INLINE argument(T&& object) REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns the raw value of this argument \n
-		* Not recommended to use, please use get_value() instead
-		*/
-		void* get_raw_data() REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value

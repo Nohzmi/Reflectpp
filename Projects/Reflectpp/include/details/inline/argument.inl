@@ -10,12 +10,6 @@ namespace reflectpp
 	}
 
 	template<typename T>
-	REFLECTPP_INLINE T& argument::get_value() const REFLECTPP_NOEXCEPT
-	{
-		return m_variant != nullptr ? m_variant->get_value<T>() : *static_cast<T*>(nullptr);
-	}
-
-	template<typename T>
 	REFLECTPP_INLINE bool argument::is_type() const REFLECTPP_NOEXCEPT
 	{
 		return m_variant != nullptr ? m_variant->is_type<T>() : false;

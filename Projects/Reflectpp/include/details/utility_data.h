@@ -15,6 +15,7 @@ namespace reflectpp
 		struct utility_data final
 		{
 			bool m_can_convert_to_bool { false };
+			bool m_can_convert_to_char{ false };
 			bool m_can_convert_to_double { false };
 			bool m_can_convert_to_float { false };
 			bool m_can_convert_to_int { false };
@@ -28,6 +29,7 @@ namespace reflectpp
 			bool m_can_convert_to_uint64 { false };
 			bool (*m_compare)(void*, void*) { nullptr };
 			void* (*m_convert_to_bool)(void*) { nullptr };
+			void* (*m_convert_to_char)(void*) { nullptr };
 			void* (*m_convert_to_double)(void*) { nullptr };
 			void* (*m_convert_to_float)(void*) { nullptr };
 			void* (*m_convert_to_int)(void*) { nullptr };

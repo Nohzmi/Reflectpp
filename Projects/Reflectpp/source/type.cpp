@@ -15,19 +15,9 @@ namespace reflectpp
 	{
 	}
 
-	bool type::operator==(const type& rhs) const REFLECTPP_NOEXCEPT
+	type::operator details::type_data*() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() && rhs.is_valid() ? m_data == rhs.m_data : false;
-	}
-
-	bool type::operator!=(const type& rhs) const REFLECTPP_NOEXCEPT
-	{
-		return !(*this == rhs);
-	}
-
-	type::operator bool() const REFLECTPP_NOEXCEPT
-	{
-		return is_valid();
+		return m_data;
 	}
 
 	variant type::create() const REFLECTPP_NOEXCEPT
@@ -182,5 +172,20 @@ namespace reflectpp
 	bool type::is_valid() const REFLECTPP_NOEXCEPT
 	{
 		return m_data != nullptr;
+	}
+
+	type::operator bool() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid();
+	}
+
+	bool type::operator!=(const type& rhs) const REFLECTPP_NOEXCEPT
+	{
+		return !(*this == rhs);
+	}
+
+	bool type::operator==(const type& rhs) const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() && rhs.is_valid() ? m_data == rhs.m_data : false;
 	}
 }

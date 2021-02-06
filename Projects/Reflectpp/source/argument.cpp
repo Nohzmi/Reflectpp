@@ -48,6 +48,11 @@ namespace reflectpp
 		return *this;
 	}
 
+	argument::operator variant*() const REFLECTPP_NOEXCEPT
+	{
+		return m_variant;
+	}
+
 	argument::argument(variant& var) REFLECTPP_NOEXCEPT :
 		m_is_owner{ false },
 		m_variant{ &var }
@@ -58,11 +63,6 @@ namespace reflectpp
 		m_is_owner{ false },
 		m_variant{ const_cast<variant*>(&var) }
 	{
-	}
-
-	void* argument::get_raw_data() REFLECTPP_NOEXCEPT
-	{
-		return m_variant != nullptr ? m_variant->get_raw_data() : nullptr;
 	}
 
 	type argument::get_type() const REFLECTPP_NOEXCEPT

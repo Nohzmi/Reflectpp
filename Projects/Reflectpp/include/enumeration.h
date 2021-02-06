@@ -33,23 +33,6 @@ namespace reflectpp
 		explicit enumeration(details::type_data* data) REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns whether or not two enumeration are the same
-		* @param rhs
-		*/
-		bool operator==(const enumeration& rhs) const REFLECTPP_NOEXCEPT;
-
-		/**
-		* Returns whether or not two enumeration are the same
-		* @param rhs
-		*/
-		bool operator!=(const enumeration& rhs) const REFLECTPP_NOEXCEPT;
-
-		/*
-		* Returns whether or not this enumeration is valid
-		*/
-		explicit operator bool() const REFLECTPP_NOEXCEPT;
-
-		/**
 		* Returns the declared name of this enumeration
 		*/
 		const char* get_name() const REFLECTPP_NOEXCEPT;
@@ -83,6 +66,23 @@ namespace reflectpp
 		* Returns the value of the given enumeration name, or an empty variant if the name is not defined
 		*/
 		variant name_to_value(const char* name) const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this enumeration is valid
+		*/
+		explicit operator bool() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two enumeration are the same
+		* @param rhs
+		*/
+		bool operator!=(const enumeration& rhs) const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns whether or not two enumeration are the same
+		* @param rhs
+		*/
+		bool operator==(const enumeration& rhs) const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the name of the given enumeration value, or an empty string if the value is not defined. 

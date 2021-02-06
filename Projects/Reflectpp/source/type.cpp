@@ -49,6 +49,11 @@ namespace reflectpp
 		return base_types;
 	}
 
+	type type::get_by_name(const char* name) REFLECTPP_NOEXCEPT
+	{
+		return type(details::registry::get_instance().get_type_by_name(name));
+	}
+
 	std::vector<type> type::get_derived_classes() const REFLECTPP_NOEXCEPT
 	{
 		std::vector<type> derived_types;
@@ -118,6 +123,16 @@ namespace reflectpp
 	type_info type::get_type_info() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? type_info(m_data->m_type_info) : type_info();
+	}
+
+	std::vector<type> type::get_types() REFLECTPP_NOEXCEPT
+	{
+		std::vector<type> types;
+
+		for (auto& it : details::registry::get_instance().get_types())
+			types.emplace_back(type(it));
+
+		return types;
 	}
 
 	bool type::is_arithmetic() const REFLECTPP_NOEXCEPT

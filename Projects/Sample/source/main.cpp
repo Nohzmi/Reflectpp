@@ -68,8 +68,8 @@ int main()
 
 	var = type::get<Derived>().get_property("DerivedValue3").get_value(object);
 	variant_associative_view variant_associative = var.create_associative_view();
-	variant_associative.insert('a', 1.0);
-	variant_associative.insert('b', 2.0);
+	variant_associative.insert('a', 1.f);
+	variant_associative.insert('b', 2.0); // didn't work without conversion
 	variant_associative.insert('c', 3.0);
 	//variant_associative.insert('a');
 	//variant_associative.insert('b');
@@ -145,12 +145,21 @@ int main()
 	}
 	std::cout << std::endl;
 
-	/*Base* ksjqdbfskjf = new Derived();
+	Base* ksjqdbfskjf = new Derived();
 	auto float_var = variant(*ksjqdbfskjf);
 	std::cout << "type: " << float_var.get_type().get_name() << ", value:" << std::endl;
 	std::cout << "can convert to double: " << float_var.can_convert<Base*>() << std::endl;
 	float_var.convert<Base*>();
-	std::cout << "type: " << float_var.get_type().get_name() << ", value:"  << std::endl;*/
+	std::cout << "type: " << float_var.get_type().get_name() << ", value:" << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "get_type_by_name: Base, getted: " << type::get_by_name("Base").get_name() << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "get all types" << std::endl;
+	for (auto& it : type::get_types())
+		std::cout << "  " << it.get_name() << std::endl;
+	std::cout << std::endl;
 
 	//serializer s("test");
 	//s.load(object);

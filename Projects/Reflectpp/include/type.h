@@ -63,6 +63,11 @@ namespace reflectpp
 		std::vector<type> get_base_classes() const REFLECTPP_NOEXCEPT;
 
 		/**
+		* Returns the type object with the given name
+		*/ 
+		static type get_by_name(const char* name) REFLECTPP_NOEXCEPT;
+
+		/**
 		* Returns derived types of this type
 		*/
 		std::vector<type> get_derived_classes() const REFLECTPP_NOEXCEPT;
@@ -107,6 +112,11 @@ namespace reflectpp
 		* Returns type info of this type
 		*/
 		type_info get_type_info() const REFLECTPP_NOEXCEPT;
+
+		/**
+		* Returns a list of all registered type objects
+		*/
+		static std::vector<type> get_types() REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this type represents an arithmetic type

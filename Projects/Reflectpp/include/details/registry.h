@@ -65,6 +65,8 @@ namespace reflectpp
 			REFLECTPP_INLINE type_info_data* get_type_info() REFLECTPP_NOEXCEPT;
 
 			static registry& get_instance() REFLECTPP_NOEXCEPT;
+			type_data* get_type_by_name(const char* name) const REFLECTPP_NOEXCEPT;
+			std::vector<type_data*> get_types() const REFLECTPP_NOEXCEPT;
 
 		private:
 

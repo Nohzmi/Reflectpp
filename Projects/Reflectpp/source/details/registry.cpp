@@ -22,6 +22,22 @@ namespace reflectpp
 			return m_instance;
 		}
 
+		type_data* registry::get_type_by_name(const char* name) const REFLECTPP_NOEXCEPT
+		{
+			auto it{ m_types.find(hash(name)) };
+			return it != m_types.end() ? it->second.get() : nullptr;
+		}
+
+		std::vector<type_data*> registry::get_types() const REFLECTPP_NOEXCEPT
+		{
+			std::vector<type_data*> types;
+
+			for (auto& it : m_types)
+				types.emplace_back(it.second.get());
+
+			return types;
+		}
+
 		void registry::add_base_impl(type_data* type, type_data* base) const REFLECTPP_NOEXCEPT
 		{
 			for (auto& it : type->m_base_types)

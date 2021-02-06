@@ -8,5 +8,4 @@ Sample
 	Mise à jour du sample
 Autre
 	Ajout de logs
-	Ajouter les fonctions statiques de rttr
 	Conversion des enums

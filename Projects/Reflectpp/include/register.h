@@ -14,7 +14,7 @@
 #define REFLECT(T)																\
 private:																		\
 																				\
-	friend reflectpp::details::is_registered<T>;								\
+	friend reflectpp::details::has_registered<T>;								\
 	friend reflectpp::details::registry;										\
 	friend size_t reflectpp::details::type_id<T>() REFLECTPP_NOEXCEPT;			\
 	friend const char* reflectpp::details::type_name<T>() REFLECTPP_NOEXCEPT;	\

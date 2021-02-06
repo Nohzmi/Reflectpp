@@ -7,9 +7,14 @@ namespace reflectpp
 		template<typename T>
 		REFLECTPP_INLINE void registry::add_base(type_data* type) REFLECTPP_NOEXCEPT
 		{
-			if constexpr (!is_valid_type<T>::value || std::is_arithmetic_v<T>)
+			if constexpr (!is_valid_type<T>::value || is_auto_register_type<T>::value || is_enum_type<T>::value)
 			{
 				REFLECTPP_LOG("invalid type");
+			}
+			else if constexpr (!has_registered<T>::value)
+			{
+				REFLECTPP_LOG("REFLECT(T) macro isn't used");
+				return nullptr;
 			}
 			else
 			{
@@ -104,12 +109,12 @@ namespace reflectpp
 		template<typename T>
 		REFLECTPP_INLINE type_data* registry::add_type() REFLECTPP_NOEXCEPT
 		{
-			if constexpr (!is_valid_type<T>::value || std::is_arithmetic_v<T>)
+			if constexpr (!is_valid_type<T>::value || is_auto_register_type<T>::value || is_enum_type<T>::value)
 			{
 				REFLECTPP_LOG("invalid type");
 				return nullptr;
 			}
-			else if constexpr (!is_registered<T>::value)
+			else if constexpr (!has_registered<T>::value)
 			{
 				REFLECTPP_LOG("REFLECT(T) macro isn't used");
 				return nullptr;
@@ -158,7 +163,7 @@ namespace reflectpp
 				REFLECTPP_LOG("invalid type");
 				return nullptr;
 			}
-			else if constexpr (std::is_arithmetic_v<T> || is_associative_container<T>::value || is_sequence_container<T>::value)
+			else if constexpr (is_auto_register_type<T>::value)
 			{
 				return add_type_impl<T>();
 			}
@@ -184,23 +189,11 @@ namespace reflectpp
 				REFLECTPP_LOG("invalid param");
 				return nullptr;
 			}
-			else if constexpr (std::is_arithmetic_v<decay<T>> || is_associative_container<decay<T>>::value || is_sequence_container<decay<T>>::value)
+			else if constexpr (is_auto_register_type<decay<T>>::value || is_enum_type<decay<T>>::value)
 			{
-				return add_type_impl<decay<T>>();
+				return get_type<decay<T>>();
 			}
-			else if (std::is_enum_v<decay<T>>)
-			{
-				type_data* type{ get_type_impl(type_id<T>()) };
-
-				if (type == nullptr)
-				{
-					REFLECTPP_LOG("unregistered type");
-					return nullptr;
-				}
-
-				return type;
-			}
-			else if constexpr (!is_registered<decay<T>>::value)
+			else if constexpr (!has_registered<decay<T>>::value)
 			{
 				REFLECTPP_LOG("unregistered type");
 				return nullptr;

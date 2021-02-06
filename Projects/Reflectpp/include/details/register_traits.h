@@ -13,7 +13,7 @@ namespace reflectpp
 	namespace details
 	{
 		template <typename T>
-		class is_registered
+		class has_registered
 		{
 		private:
 

@@ -20,6 +20,7 @@ namespace reflectpp
 		struct sequential_view_data;
 		struct type_data;
 		struct type_info_data;
+		struct utility_data;
 		struct variant_data;
 	}
 

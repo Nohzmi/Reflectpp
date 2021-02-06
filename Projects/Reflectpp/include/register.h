@@ -9,7 +9,7 @@
 #pragma once
 #include "details/forward.h"
 #include "details/hasher.hpp"
-#include "details/utilities.hpp"
+#include "details/type_info_helper.hpp"
 
 #define REFLECT(T)																\
 private:																		\

@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <map>
 #include <reflectpp.h>
-#include <vld/vld.h>
+//#include <vld/vld.h>
 
 #include "intern.h"
 #include "base.h"
@@ -120,7 +120,37 @@ int main()
 	std::cout << "//***** other test *****//" << std::endl;
 	std::cout << std::endl;
 
+	auto AlignmentType = reflectpp::type::get<E_Alignment>();
 
+	if (AlignmentType.is_enumeration())
+	{
+		auto AlignmentEnum = AlignmentType.get_enumeration();
+		std::cout << "name: " << AlignmentEnum.get_name() << std::endl;
+		std::cout << "type: " << AlignmentEnum.get_type().get_name() << std::endl;
+		std::cout << "underlying type: " << AlignmentEnum.get_underlying_type().get_name() << std::endl;
+		std::cout << std::endl;
+
+		auto AlignmentNames = AlignmentEnum.get_names();
+		auto AlignmentValues = AlignmentEnum.get_values();
+
+		std::cout << "enum class E_Alignment" << std::endl;
+		for (int i = 0; i < AlignmentNames.size(); ++i)
+		{
+			std::cout << "name: " << AlignmentNames[i] << ", value: " << AlignmentValues[i].get_value<size_t>() << std::endl;
+		}
+		std::cout << std::endl;
+
+		std::cout << "name to value: \"AlignLeftvalue\" -> " << AlignmentEnum.name_to_value("AlignLeft").get_value<size_t>() << std::endl;
+		std::cout << "value to name: 0 -> " << AlignmentEnum.value_to_name(0u) << std::endl;
+	}
+	std::cout << std::endl;
+
+	Base* ksjqdbfskjf = new Derived();
+	auto float_var = variant(*ksjqdbfskjf);
+	std::cout << "type: " << float_var.get_type().get_name() << ", value:" << std::endl;
+	std::cout << "can convert to double: " << float_var.can_convert<Base*>() << std::endl;
+	float_var.convert<Base*>();
+	std::cout << "type: " << float_var.get_type().get_name() << ", value:"  << std::endl;
 
 	//serializer s("test");
 	//s.load(object);

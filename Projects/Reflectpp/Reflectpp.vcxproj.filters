@@ -60,9 +60,6 @@
     <ClInclude Include="include\details\type_traits.h">
       <Filter>include\details</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\utilities.hpp">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\details\property_data.h">
       <Filter>include\details</Filter>
     </ClInclude>
@@ -144,6 +141,18 @@
     <ClInclude Include="include\details\property_lambda.h">
       <Filter>include\details</Filter>
     </ClInclude>
+    <ClInclude Include="include\details\type_info_helper.hpp">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\utility_data.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\utility_lambda.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\utility_type_traits.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -221,6 +230,9 @@
       <Filter>include\details\inline</Filter>
     </None>
     <None Include="include\details\inline\property_lambda.inl">
+      <Filter>include\details\inline</Filter>
+    </None>
+    <None Include="include\details\inline\utility_lambda.inl">
       <Filter>include\details\inline</Filter>
     </None>
   </ItemGroup>

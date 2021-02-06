@@ -7,6 +7,8 @@
 */
 
 #pragma once
+#include <type_traits>
+
 #include "details/macros.h"
 
 namespace reflectpp

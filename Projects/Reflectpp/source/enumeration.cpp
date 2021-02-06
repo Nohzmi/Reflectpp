@@ -28,11 +28,6 @@ namespace reflectpp
 		return is_valid();
 	}
 
-	type enumeration::get_declaring_type() const REFLECTPP_NOEXCEPT
-	{
-		return is_valid() ? type(m_data->m_enumeration->m_declaring_type) : type();
-	}
-
 	const char* enumeration::get_name() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? m_data->m_enumeration->m_name : nullptr;
@@ -91,6 +86,8 @@ namespace reflectpp
 		/*for (int i = 0; i < m_data->m_enumeration->m_values.size(); ++i)
 			if (m_data->m_enumeration->m_values[i] == value.get_value<size_t>())
 				return m_data->m_enumeration->m_names[i];*/
+				
+		//TODO revoir compare des variants + assomplir les argument/instance (instance try_convert ?)
 
 		return "";
 	}

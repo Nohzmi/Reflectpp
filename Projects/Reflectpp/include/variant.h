@@ -58,10 +58,25 @@ namespace reflectpp
 		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
+		* Returns whether or not the contained value can be converted to the given type
+		*/
+		template<typename T>
+		REFLECTPP_INLINE bool can_convert() const REFLECTPP_NOEXCEPT;
+
+		/**
 		* Clear the stored value of this variant
 		*/
 		void clear() REFLECTPP_NOEXCEPT;
-		
+
+		/**
+		* Converts the containing data to a value of requested type \n
+		* Allow conversion between of all arithmetic types
+		* Allow conversion if cast authorized
+		* Returns whether or not the contained value can be converted to the given type \n
+		*/
+		template<typename T>
+		REFLECTPP_INLINE bool convert() REFLECTPP_NOEXCEPT;
+
 		/**
 		* Creates a variant_associative_view from the containing value
 		*/

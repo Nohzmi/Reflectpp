@@ -50,11 +50,6 @@ namespace reflectpp
 		explicit operator bool() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns the type of the class or struct that declares this enumeration 
-		*/
-		type get_declaring_type() const REFLECTPP_NOEXCEPT;
-
-		/**
 		* Returns the declared name of this enumeration
 		*/
 		const char* get_name() const REFLECTPP_NOEXCEPT;

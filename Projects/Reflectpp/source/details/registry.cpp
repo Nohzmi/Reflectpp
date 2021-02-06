@@ -108,7 +108,7 @@ namespace reflectpp
 			enumeration->m_values.emplace_back(value);
 		}
 
-		bool registry::cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT
+		bool registry::can_cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT
 		{
 			if (type->m_hierarchy_id != object->m_hierarchy_id)
 				return false;
@@ -208,13 +208,21 @@ namespace reflectpp
 			return data;
 		}
 
-		property_data* registry::get_property_impl(size_t id) const REFLECTPP_NOEXCEPT
+		utility_data* registry::get_utility_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
 		{
-			for (auto& it : m_properties)
-				if (it->m_id == id)
-					return it.get();
+			for (auto& it : m_utilities)
+			{
+				if (it.first == id)
+				{
+					created = false;
+					return it.second.get();
+				}
+			}
 
-			return nullptr;
+			created = true;
+			auto data{ new utility_data() };
+			m_utilities.emplace(id, data);
+			return data;
 		}
 	}
 }

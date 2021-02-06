@@ -24,15 +24,14 @@
 #include "details/specifiers.h"
 #include "details/type_data.h"
 #include "details/type_info_data.h"
-#include "details/utilities.hpp"
+#include "details/type_info_helper.hpp"
+#include "details/utility_data.h"
+#include "details/utility_lambda.h"
 
 namespace reflectpp
 {
 	namespace details
 	{
-#pragma warning(push)
-#pragma warning(disable: 4251)
-
 		class REFLECTPP_API registry final
 		{
 		public:
@@ -56,6 +55,8 @@ namespace reflectpp
 			REFLECTPP_INLINE type_data* add_type() REFLECTPP_NOEXCEPT;
 			template<typename EnumT>
 			REFLECTPP_INLINE void add_value(type_data* type, const char* name, EnumT value) REFLECTPP_NOEXCEPT;
+			template<typename T>
+			REFLECTPP_INLINE bool can_cast(type_data* type) REFLECTPP_NOEXCEPT;
 			template<typename T, typename U>
 			REFLECTPP_INLINE std::remove_pointer_t<T>* cast(U* object) REFLECTPP_NOEXCEPT;
 			template<typename T>
@@ -77,19 +78,24 @@ namespace reflectpp
 			REFLECTPP_INLINE associative_view_data* get_associative_view_impl() REFLECTPP_NOEXCEPT;
 			template<typename T>
 			REFLECTPP_INLINE sequential_view_data* get_sequential_view_impl() REFLECTPP_NOEXCEPT;
+			template<typename T>
+			REFLECTPP_INLINE utility_data* get_utility_impl() REFLECTPP_NOEXCEPT;
 
 			void add_base_impl(type_data* type, type_data* base) const REFLECTPP_NOEXCEPT;
 			enumeration_data* add_enumeration_impl(size_t id) REFLECTPP_NOEXCEPT;
 			property_data* add_property_impl(type_data* type, size_t id, const char* name) REFLECTPP_NOEXCEPT;
 			type_data* add_type_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
 			void add_value_impl(enumeration_data* enumeration, const char* name, void* value) const REFLECTPP_NOEXCEPT;
-			bool cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT;
+			bool can_cast_impl(type_data* object, type_data* type) const REFLECTPP_NOEXCEPT;
 			associative_view_data* get_associative_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
 			factory_data* get_factory_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
 			sequential_view_data* get_sequential_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
 			type_data* get_type_impl(size_t id) const REFLECTPP_NOEXCEPT;
 			type_info_data* get_type_info_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
-			property_data* get_property_impl(size_t id) const REFLECTPP_NOEXCEPT;
+			utility_data* get_utility_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
+
+#pragma warning(push)
+#pragma warning(disable: 4251)
 
 			std::unordered_map<size_t, std::unique_ptr<associative_view_data>> m_associative_views;
 			std::unordered_map<size_t, std::unique_ptr<enumeration_data>> m_enumerations;
@@ -98,11 +104,12 @@ namespace reflectpp
 			std::unordered_map<size_t, std::unique_ptr<sequential_view_data>> m_sequential_views;
 			std::unordered_map<size_t, std::unique_ptr<type_info_data>> m_type_infos;
 			std::unordered_map<size_t, std::unique_ptr<type_data>> m_types;
+			std::unordered_map<size_t, std::unique_ptr<utility_data>> m_utilities;
+
+#pragma warning (pop)
 
 			static registry m_instance;
 		};
-
-#pragma warning (pop)
 	}
 }
 

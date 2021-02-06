@@ -126,28 +126,36 @@ namespace reflectpp
 			add_value_impl(type->m_enumeration, name, type->m_enumeration->m_underlying_type->m_factory->m_copy(static_cast<void*>(&value)));
 		}
 
-		template<typename T, typename U>
-		REFLECTPP_INLINE std::remove_pointer_t<T>* registry::cast(U* object) REFLECTPP_NOEXCEPT
+		template<typename T>
+		REFLECTPP_INLINE bool registry::can_cast(type_data* type) REFLECTPP_NOEXCEPT
 		{
 			if constexpr (!std::is_pointer_v<T>)
 			{
-				REFLECTPP_LOG("not a pointer");
-				return nullptr;
+				static_assert(false, "try to cast to a non pointer type");
+				return false;
 			}
 			else if constexpr (!is_valid_type<std::remove_pointer_t<T>>::value)
 			{
 				REFLECTPP_LOG("invalid type");
-				return nullptr;
+				return false;
 			}
-			else if constexpr (!is_valid_type<U>::value)
+			else
+			{
+				return can_cast_impl(type, get_type<std::remove_pointer_t<T>>());
+			}
+		}
+
+		template<typename T, typename U>
+		REFLECTPP_INLINE std::remove_pointer_t<T>* registry::cast(U* object) REFLECTPP_NOEXCEPT
+		{
+			if constexpr (!is_valid_type<U>::value)
 			{
 				REFLECTPP_LOG("invalid object type");
 				return nullptr;
 			}
 			else
 			{
-				bool can_cast{ cast_impl(get_type(object), get_type<std::remove_pointer_t<T>>()) };
-				return can_cast ? reinterpret_cast<T>(object) : nullptr;
+				return can_cast_impl<T>(get_type(object)) ? reinterpret_cast<T>(object) : nullptr;
 			}
 		}
 
@@ -275,6 +283,7 @@ namespace reflectpp
 				data->m_sequential_view = get_sequential_view_impl<T>();
 				data->m_size = sizeof(T);
 				data->m_type_info = get_type_info<T>();
+				data->m_utility = get_utility_impl<T>();
 			}
 
 			return data;
@@ -369,6 +378,44 @@ namespace reflectpp
 
 				return data;
 			}
+		}
+
+		template<typename T>
+		REFLECTPP_INLINE utility_data* registry::get_utility_impl() REFLECTPP_NOEXCEPT
+		{
+			bool created{ false };
+			auto data{ get_utility_impl(type_id<T>(), created) };
+
+			if (created)
+			{
+				data->m_can_convert_to_bool = std::is_convertible_v<T, bool>;
+				data->m_can_convert_to_double = std::is_convertible_v<T, double>;
+				data->m_can_convert_to_float = std::is_convertible_v<T, float>;
+				data->m_can_convert_to_int = std::is_convertible_v<T, int>;
+				data->m_can_convert_to_int8 = std::is_convertible_v<T, int8_t>;
+				data->m_can_convert_to_int16 = std::is_convertible_v<T, int16_t>;
+				data->m_can_convert_to_int32 = std::is_convertible_v<T, int32_t>;
+				data->m_can_convert_to_int64 = std::is_convertible_v<T, int64_t>;
+				data->m_can_convert_to_uint8 = std::is_convertible_v<T, uint8_t>;
+				data->m_can_convert_to_uint16 = std::is_convertible_v<T, uint16_t>;
+				data->m_can_convert_to_uint32 = std::is_convertible_v<T, uint32_t>;
+				data->m_can_convert_to_uint64 = std::is_convertible_v<T, uint64_t>;
+				data->m_compare = get_compare<T>();
+				data->m_convert_to_bool = get_convert<T, bool>();
+				data->m_convert_to_double = get_convert<T, double>();
+				data->m_convert_to_float = get_convert<T, float>();
+				data->m_convert_to_int = get_convert<T, int>();
+				data->m_convert_to_int8 = get_convert<T, int8_t>();
+				data->m_convert_to_int16 = get_convert<T, int16_t>();
+				data->m_convert_to_int32 = get_convert<T, int32_t>();
+				data->m_convert_to_int64 = get_convert<T, int64_t>();
+				data->m_convert_to_uint8 = get_convert<T, uint8_t>();
+				data->m_convert_to_uint16 = get_convert<T, uint16_t>();
+				data->m_convert_to_uint32 = get_convert<T, uint32_t>();
+				data->m_convert_to_uint64 = get_convert<T, uint64_t>();
+			}
+
+			return data;
 		}
 	}
 }

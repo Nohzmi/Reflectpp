@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 /**
-* @file utilities.hpp
+* @file type_info_helper.hpp
 * @author Nohzmi
 * @version 1.0
 */

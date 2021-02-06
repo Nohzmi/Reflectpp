@@ -21,7 +21,7 @@ namespace reflectpp
 	* @param object
 	*/
 	template<typename T, typename U>
-	REFLECTPP_INLINE T cast(U* object) REFLECTPP_NOEXCEPT;
+	REFLECTPP_INLINE T reflectpp_cast(U* object) REFLECTPP_NOEXCEPT;
 }
 
 #include "details/inline/reflectpp_cast.inl"

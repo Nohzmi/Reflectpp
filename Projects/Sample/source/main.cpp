@@ -68,9 +68,9 @@ int main()
 
 	var = type::get<Derived>().get_property("DerivedValue3").get_value(object);
 	variant_associative_view variant_associative = var.create_associative_view();
-	variant_associative.insert('a', 1.f);
-	variant_associative.insert('b', 2.f);
-	variant_associative.insert('c', 3.f);
+	variant_associative.insert('a', 1.0);
+	variant_associative.insert('b', 2.0);
+	variant_associative.insert('c', 3.0);
 	//variant_associative.insert('a');
 	//variant_associative.insert('b');
 	//variant_associative.insert('c');
@@ -141,7 +141,7 @@ int main()
 		std::cout << std::endl;
 
 		std::cout << "name to value: \"AlignLeftvalue\" -> " << AlignmentEnum.name_to_value("AlignLeft").get_value<size_t>() << std::endl;
-		std::cout << "value to name: 0 -> " << AlignmentEnum.value_to_name(0) << std::endl;
+		std::cout << "value to name: 0 -> " << AlignmentEnum.value_to_name(E_Alignment::AlignLeft) << std::endl;
 	}
 	std::cout << std::endl;
 

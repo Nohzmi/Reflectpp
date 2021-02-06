@@ -68,28 +68,30 @@ namespace reflectpp
 		if (!is_valid())
 			return false;
 
-		if (m_data.m_type == static_cast<details::type_data*>(target_type))
+		auto target_type_data{ static_cast<details::type_data*>(target_type) };
+
+		if (m_data.m_type == target_type_data)
 			return true;
 
 		if (m_data.m_type->m_is_arithmetic)
 		{
-			if (m_data.m_type == details::registry::get_instance().get_type<bool>()) return m_data.m_type->m_utility->m_can_convert_to_bool;
-			else if (m_data.m_type == details::registry::get_instance().get_type<char>()) return m_data.m_type->m_utility->m_can_convert_to_char;
-			else if (m_data.m_type == details::registry::get_instance().get_type<double>()) return m_data.m_type->m_utility->m_can_convert_to_double;
-			else if (m_data.m_type == details::registry::get_instance().get_type<float>()) return m_data.m_type->m_utility->m_can_convert_to_float;
-			else if (m_data.m_type == details::registry::get_instance().get_type<int>()) return m_data.m_type->m_utility->m_can_convert_to_int;
-			else if (m_data.m_type == details::registry::get_instance().get_type<int8_t>()) return m_data.m_type->m_utility->m_can_convert_to_int8;
-			else if (m_data.m_type == details::registry::get_instance().get_type<int16_t>()) return m_data.m_type->m_utility->m_can_convert_to_int16;
-			else if (m_data.m_type == details::registry::get_instance().get_type<int32_t>()) return m_data.m_type->m_utility->m_can_convert_to_int32;
-			else if (m_data.m_type == details::registry::get_instance().get_type<int64_t>()) return m_data.m_type->m_utility->m_can_convert_to_int64;
-			else if (m_data.m_type == details::registry::get_instance().get_type<uint8_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint8;
-			else if (m_data.m_type == details::registry::get_instance().get_type<uint16_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint16;
-			else if (m_data.m_type == details::registry::get_instance().get_type<uint32_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint32;
-			else if (m_data.m_type == details::registry::get_instance().get_type<uint64_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint64;
+			if (target_type_data == details::registry::get_instance().get_type<bool>()) return m_data.m_type->m_utility->m_can_convert_to_bool;
+			else if (target_type_data == details::registry::get_instance().get_type<char>()) return m_data.m_type->m_utility->m_can_convert_to_char;
+			else if (target_type_data == details::registry::get_instance().get_type<double>()) return m_data.m_type->m_utility->m_can_convert_to_double;
+			else if (target_type_data == details::registry::get_instance().get_type<float>()) return m_data.m_type->m_utility->m_can_convert_to_float;
+			else if (target_type_data == details::registry::get_instance().get_type<int>()) return m_data.m_type->m_utility->m_can_convert_to_int;
+			else if (target_type_data == details::registry::get_instance().get_type<int8_t>()) return m_data.m_type->m_utility->m_can_convert_to_int8;
+			else if (target_type_data == details::registry::get_instance().get_type<int16_t>()) return m_data.m_type->m_utility->m_can_convert_to_int16;
+			else if (target_type_data == details::registry::get_instance().get_type<int32_t>()) return m_data.m_type->m_utility->m_can_convert_to_int32;
+			else if (target_type_data == details::registry::get_instance().get_type<int64_t>()) return m_data.m_type->m_utility->m_can_convert_to_int64;
+			else if (target_type_data == details::registry::get_instance().get_type<uint8_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint8;
+			else if (target_type_data == details::registry::get_instance().get_type<uint16_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint16;
+			else if (target_type_data == details::registry::get_instance().get_type<uint32_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint32;
+			else if (target_type_data == details::registry::get_instance().get_type<uint64_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint64;
 			else return false;
 		}
 
-		return is_valid() ? details::can_cast(m_data.m_type, static_cast<details::type_data*>(target_type)) : false;
+		return is_valid() ? details::can_cast(m_data.m_type, target_type_data) : false;
 	}
 
 	void variant::clear() REFLECTPP_NOEXCEPT
@@ -108,26 +110,28 @@ namespace reflectpp
 		if (!is_valid() || !can_convert(target_type))
 			return false;
 
-		if (m_data.m_type == static_cast<details::type_data*>(target_type))
+		auto target_type_data{ static_cast<details::type_data*>(target_type) };
+
+		if (m_data.m_type == target_type_data)
 			return true;
 
 		if (m_data.m_type->m_is_arithmetic)
 		{
 			void* value{ nullptr };
 
-			if (m_data.m_type == details::registry::get_instance().get_type<bool>()) value = m_data.m_type->m_utility->m_convert_to_bool(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<char>()) value = m_data.m_type->m_utility->m_convert_to_char(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<double>()) value = m_data.m_type->m_utility->m_convert_to_double(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<float>()) value = m_data.m_type->m_utility->m_convert_to_float(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<int>()) value = m_data.m_type->m_utility->m_convert_to_int(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<int8_t>()) value = m_data.m_type->m_utility->m_convert_to_int8(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<int16_t>()) value = m_data.m_type->m_utility->m_convert_to_int16(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<int32_t>()) value = m_data.m_type->m_utility->m_convert_to_int32(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<int64_t>()) value = m_data.m_type->m_utility->m_convert_to_int64(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<uint8_t>()) value = m_data.m_type->m_utility->m_convert_to_uint8(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<uint16_t>()) value = m_data.m_type->m_utility->m_convert_to_uint16(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<uint32_t>()) value = m_data.m_type->m_utility->m_convert_to_uint32(m_data.m_value);
-			else if (m_data.m_type == details::registry::get_instance().get_type<uint64_t>()) value = m_data.m_type->m_utility->m_convert_to_uint64(m_data.m_value);
+			if (target_type_data == details::registry::get_instance().get_type<bool>()) value = m_data.m_type->m_utility->m_convert_to_bool(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<char>()) value = m_data.m_type->m_utility->m_convert_to_char(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<double>()) value = m_data.m_type->m_utility->m_convert_to_double(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<float>()) value = m_data.m_type->m_utility->m_convert_to_float(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<int>()) value = m_data.m_type->m_utility->m_convert_to_int(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<int8_t>()) value = m_data.m_type->m_utility->m_convert_to_int8(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<int16_t>()) value = m_data.m_type->m_utility->m_convert_to_int16(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<int32_t>()) value = m_data.m_type->m_utility->m_convert_to_int32(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<int64_t>()) value = m_data.m_type->m_utility->m_convert_to_int64(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<uint8_t>()) value = m_data.m_type->m_utility->m_convert_to_uint8(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<uint16_t>()) value = m_data.m_type->m_utility->m_convert_to_uint16(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<uint32_t>()) value = m_data.m_type->m_utility->m_convert_to_uint32(m_data.m_value);
+			else if (target_type_data == details::registry::get_instance().get_type<uint64_t>()) value = m_data.m_type->m_utility->m_convert_to_uint64(m_data.m_value);
 
 			if (value == nullptr)
 				return false;
@@ -136,12 +140,12 @@ namespace reflectpp
 				clear();
 
 			m_data.m_is_owner = true;
-			m_data.m_type = static_cast<details::type_data*>(target_type);
+			m_data.m_type = target_type_data;
 			m_data.m_value = value;
 		}
 		else
 		{
-			m_data.m_type = static_cast<details::type_data*>(target_type);
+			m_data.m_type = target_type_data;
 		}
 
 		return true;

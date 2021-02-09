@@ -7,5 +7,4 @@ Serialization
 Sample
 	Mise à jour du sample
 Autre
-	Ajout de logs
 	Conversion des enums

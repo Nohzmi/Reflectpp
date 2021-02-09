@@ -65,7 +65,7 @@ namespace reflectpp
 
 	bool variant::can_convert(const type& target_type) const REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid())
+		if (!is_valid() || !target_type.is_valid())
 			return false;
 
 		auto target_type_data{ static_cast<details::type_data*>(target_type) };
@@ -73,7 +73,23 @@ namespace reflectpp
 		if (m_data.m_type == target_type_data)
 			return true;
 
-		if (m_data.m_type->m_is_arithmetic)
+		bool is_enum{ m_data.m_type->m_enumeration != nullptr || target_type_data->m_enumeration != nullptr };
+		bool is_arithmetic{ target_type_data->m_is_arithmetic };
+
+		if (!is_enum && !is_arithmetic)
+			return is_valid() ? details::can_cast(m_data.m_type, target_type_data) : false;
+
+		if (is_enum)
+		{
+			auto enum_type{ m_data.m_type->m_enumeration != nullptr ? m_data.m_type : target_type_data };
+			auto other_type{ m_data.m_type->m_enumeration != nullptr ? target_type_data : m_data.m_type };
+
+			if (other_type != enum_type->m_enumeration->m_underlying_type)
+				return can_convert(type(enum_type->m_enumeration->m_underlying_type));
+
+			return true;
+		}
+		else if (is_arithmetic)
 		{
 			if (target_type_data == details::registry::get_instance().get_type<bool>()) return m_data.m_type->m_utility->m_can_convert_to_bool;
 			else if (target_type_data == details::registry::get_instance().get_type<char>()) return m_data.m_type->m_utility->m_can_convert_to_char;
@@ -88,10 +104,9 @@ namespace reflectpp
 			else if (target_type_data == details::registry::get_instance().get_type<uint16_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint16;
 			else if (target_type_data == details::registry::get_instance().get_type<uint32_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint32;
 			else if (target_type_data == details::registry::get_instance().get_type<uint64_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint64;
-			else return false;
 		}
 
-		return is_valid() ? details::can_cast(m_data.m_type, target_type_data) : false;
+		return false;
 	}
 
 	void variant::clear() REFLECTPP_NOEXCEPT
@@ -107,7 +122,7 @@ namespace reflectpp
 
 	bool variant::convert(const type& target_type) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || !can_convert(target_type))
+		if (!is_valid() || !target_type.is_valid() || !can_convert(target_type))
 			return false;
 
 		auto target_type_data{ static_cast<details::type_data*>(target_type) };
@@ -115,10 +130,26 @@ namespace reflectpp
 		if (m_data.m_type == target_type_data)
 			return true;
 
-		if (m_data.m_type->m_is_arithmetic)
-		{
-			void* value{ nullptr };
+		bool is_enum{ m_data.m_type->m_enumeration != nullptr || target_type_data->m_enumeration != nullptr };
+		bool is_arithmetic{ target_type_data->m_is_arithmetic };
 
+		if (!is_enum && !is_arithmetic)
+			m_data.m_type = target_type_data;
+
+		void* value{ nullptr };
+
+		if (is_enum)
+		{
+			auto enum_type{ m_data.m_type->m_enumeration != nullptr ? m_data.m_type : target_type_data };
+			auto other_type{ m_data.m_type->m_enumeration != nullptr ? target_type_data : m_data.m_type };
+
+			if (other_type != enum_type->m_enumeration->m_underlying_type)
+				convert(type(enum_type->m_enumeration->m_underlying_type));
+
+			value = enum_type->m_enumeration->m_convert_to_underlying_type(m_data.m_value);
+		}
+		else if (is_arithmetic)
+		{
 			if (target_type_data == details::registry::get_instance().get_type<bool>()) value = m_data.m_type->m_utility->m_convert_to_bool(m_data.m_value);
 			else if (target_type_data == details::registry::get_instance().get_type<char>()) value = m_data.m_type->m_utility->m_convert_to_char(m_data.m_value);
 			else if (target_type_data == details::registry::get_instance().get_type<double>()) value = m_data.m_type->m_utility->m_convert_to_double(m_data.m_value);
@@ -132,21 +163,17 @@ namespace reflectpp
 			else if (target_type_data == details::registry::get_instance().get_type<uint16_t>()) value = m_data.m_type->m_utility->m_convert_to_uint16(m_data.m_value);
 			else if (target_type_data == details::registry::get_instance().get_type<uint32_t>()) value = m_data.m_type->m_utility->m_convert_to_uint32(m_data.m_value);
 			else if (target_type_data == details::registry::get_instance().get_type<uint64_t>()) value = m_data.m_type->m_utility->m_convert_to_uint64(m_data.m_value);
-
-			if (value == nullptr)
-				return false;
-
-			if (m_data.m_is_owner)
-				clear();
-
-			m_data.m_is_owner = true;
-			m_data.m_type = target_type_data;
-			m_data.m_value = value;
 		}
-		else
-		{
-			m_data.m_type = target_type_data;
-		}
+
+		if (value == nullptr)
+			return false;
+
+		if (m_data.m_is_owner)
+			clear();
+
+		m_data.m_is_owner = true;
+		m_data.m_type = target_type_data;
+		m_data.m_value = value;
 
 		return true;
 	}

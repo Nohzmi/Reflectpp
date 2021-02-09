@@ -62,6 +62,7 @@ namespace reflectpp
 		/**
 		* Converts the containing data to a value of requested type \n
 		* Allow conversion between of all arithmetic types \n
+		* Allow conversion of enum types to its underlying arithmetic types and vice versa \n
 		* Allow conversion if cast authorized \n
 		* Returns whether or not the contained value can be converted to the given type
 		*/
@@ -71,6 +72,7 @@ namespace reflectpp
 		/**
 		* Converts the containing data to a value of requested type \n
 		* Allow conversion between of all arithmetic types \n
+		* Allow conversion of enum types to its underlying arithmetic types and vice versa \n
 		* Allow conversion if cast authorized \n
 		* Returns whether or not the contained value can be converted to the given type
 		* @param target_type

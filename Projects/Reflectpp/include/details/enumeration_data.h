@@ -17,6 +17,8 @@ namespace reflectpp
 	{
 		struct enumeration_data final
 		{
+			void* (*m_convert_to_type)(void*) { nullptr };
+			void* (*m_convert_to_underlying_type)(void*) { nullptr };
 			const char* m_name;
 			std::vector<const char*> m_names;
 			type_data* m_underlying_type{ nullptr };

@@ -42,6 +42,8 @@ namespace reflectpp
 				if (type != nullptr)
 				{
 					type->m_enumeration = add_enumeration_impl(type_id<T>());
+					type->m_enumeration->m_convert_to_type = get_convert<std::underlying_type_t<T>, T>();
+					type->m_enumeration->m_convert_to_underlying_type = get_convert<T, std::underlying_type_t<T>>();
 					type->m_enumeration->m_name = name;
 					type->m_enumeration->m_underlying_type = add_type_impl<std::underlying_type_t<T>>();
 				}

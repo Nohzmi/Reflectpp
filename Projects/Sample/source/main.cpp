@@ -142,6 +142,7 @@ int main()
 
 		std::cout << "name to value: \"AlignLeftvalue\" -> " << AlignmentEnum.name_to_value("AlignLeft").get_value<size_t>() << std::endl;
 		std::cout << "value to name: 0 -> " << AlignmentEnum.value_to_name(E_Alignment::AlignLeft) << std::endl;
+		std::cout << "value to name: 2 -> " << AlignmentEnum.value_to_name(2) << std::endl;
 	}
 	std::cout << std::endl;
 

@@ -30,4 +30,5 @@ public:
 	Intern DerivedValue1;
 	std::vector<float> DerivedValue2;
 	std::map<char, float> DerivedValue3;
+	std::set<char> DerivedValue4;
 };

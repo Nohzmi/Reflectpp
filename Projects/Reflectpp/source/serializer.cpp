@@ -46,30 +46,80 @@ namespace reflectpp
 
 	void serializer::save_type(const variant& var, json& j) const REFLECTPP_NOEXCEPT
 	{
-		if (var.is_type<char>())
+		if (var.is_type<bool>())
 		{
-			if (!j.is_array()) j = std::string(1, var.get_value<char>());
+			if (!j.is_array()) j = var.get_value<bool>();
+			else j.emplace_back(var.get_value<bool>());
+		}
+		else if (var.is_type<char>())
+		{
+			if (!j.is_array()) j = std::string(1, var.get_value<char>()); // à check
 			else j.emplace_back(std::string(1, var.get_value<char>()));
 		}
-		else if (var.is_type<int>())
+		else if (var.is_type<double>())
 		{
-			if (!j.is_array()) j = var.get_value<int>();
-			else j.emplace_back(var.get_value<int>());
-		}
-		else if (var.is_type<unsigned>())
-		{
-			if (!j.is_array()) j = var.get_value<unsigned>();
-			else j.emplace_back(var.get_value<unsigned>());
+			if (!j.is_array()) j = var.get_value<double>();
+			else j.emplace_back(var.get_value<double>());
 		}
 		else if (var.is_type<float>())
 		{
 			if (!j.is_array()) j = var.get_value<float>();
 			else j.emplace_back(var.get_value<float>());
 		}
-		else if (var.is_type<double>())
+		else if (var.is_type<int8_t>())
 		{
-			if (!j.is_array()) j = var.get_value<double>();
-			else j.emplace_back(var.get_value<double>());
+			if (!j.is_array()) j = var.get_value<int8_t>();
+			else j.emplace_back(var.get_value<int8_t>());
+		}
+		else if (var.is_type<int16_t>())
+		{
+			if (!j.is_array()) j = var.get_value<int16_t>();
+			else j.emplace_back(var.get_value<int16_t>());
+		}
+		else if (var.is_type<int32_t>())
+		{
+			if (!j.is_array()) j = var.get_value<int32_t>();
+			else j.emplace_back(var.get_value<int32_t>());
+		}
+		else if (var.is_type<int64_t>())
+		{
+			if (!j.is_array()) j = var.get_value<int64_t>();
+			else j.emplace_back(var.get_value<int64_t>());
+		}
+		else if (var.is_type<long>())
+		{
+			if (!j.is_array()) j = var.get_value<long>();
+			else j.emplace_back(var.get_value<long>());
+		}
+		else if (var.is_type<long double>())
+		{
+			if (!j.is_array()) j = var.get_value<long double>();
+			else j.emplace_back(var.get_value<long double>());
+		}
+		else if (var.is_type<uint8_t>())
+		{
+			if (!j.is_array()) j = var.get_value<uint8_t>();
+			else j.emplace_back(var.get_value<uint8_t>());
+		}
+		else if (var.is_type<uint16_t>())
+		{
+			if (!j.is_array()) j = var.get_value<uint16_t>();
+			else j.emplace_back(var.get_value<uint16_t>());
+		}
+		else if (var.is_type<uint32_t>())
+		{
+			if (!j.is_array()) j = var.get_value<uint32_t>();
+			else j.emplace_back(var.get_value<uint32_t>());
+		}
+		else if (var.is_type<uint64_t>())
+		{
+			if (!j.is_array()) j = var.get_value<uint64_t>();
+			else j.emplace_back(var.get_value<uint64_t>());
+		}
+		else if (var.is_type<unsigned long>())
+		{
+			if (!j.is_array()) j = var.get_value<unsigned long>();
+			else j.emplace_back(var.get_value<unsigned long>());
 		}
 		else if (var.is_associative_container())
 		{
@@ -92,7 +142,7 @@ namespace reflectpp
 		}
 		else
 		{
-			for (auto it : var.get_type().get_properties())
+			for (auto& it : var.get_type().get_properties())
 			{
 				if ((it.get_specifiers() & specifiers::Serialized) == 0)
 					continue;
@@ -140,7 +190,7 @@ namespace reflectpp
 				auto v{ var.create_associative_view() };
 				v.clear();
 				
-				for (auto it : j)
+				for (auto& it : j)
 				{
 					variant l1;
 					variant l2;
@@ -154,7 +204,7 @@ namespace reflectpp
 				auto v{ var.create_sequential_view() };
 				v.clear();
 
-				for (json it : j) //auto
+				for (auto& it : j)
 				{
 					variant l1 = variant();
 					load_type(l1, it);
@@ -164,7 +214,7 @@ namespace reflectpp
 		}
 		else
 		{
-			for (auto it : var.get_type().get_properties())
+			for (auto& it : var.get_type().get_properties())
 			{
 				if (!j.contains(it.get_name()))
 					continue;

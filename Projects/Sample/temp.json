@@ -4,10 +4,10 @@
         "InternValue0": 0,
         "InternValue1": 0
     },
-    "DerivedValue0": 0.0,
+    "DerivedValue0": 10.0,
     "DerivedValue1": {
-        "InternValue0": 0,
-        "InternValue1": 0
+        "InternValue0": 20,
+        "InternValue1": 21
     },
     "DerivedValue2": [
         0.0,
@@ -21,6 +21,20 @@
         {
             "key": "b",
             "value": 2.0
+        }
+    ],
+    "DerivedValue4": [
+        {
+            "key": "x",
+            "value": null
+        },
+        {
+            "key": "y",
+            "value": null
+        },
+        {
+            "key": "z",
+            "value": null
         }
     ]
 }

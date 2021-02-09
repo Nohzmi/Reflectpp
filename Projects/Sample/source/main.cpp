@@ -69,7 +69,7 @@ int main()
 	var = type::get<Derived>().get_property("DerivedValue3").get_value(object);
 	variant_associative_view variant_associative = var.create_associative_view();
 	variant_associative.insert('a', 1.f);
-	variant_associative.insert('b', 2.0); // didn't work without conversion
+	variant_associative.insert('b', 2.0);
 	variant_associative.insert('c', 3.0);
 	//variant_associative.insert('a');
 	//variant_associative.insert('b');
@@ -168,6 +168,20 @@ int main()
 	for (auto& it : type::get_types())
 		std::cout << "  " << it.get_name() << std::endl;
 	std::cout << std::endl;
+
+	//******************************//
+	//***** serialization test *****//
+
+	std::cout << "//******************************//" << std::endl;
+	std::cout << "//***** serialization test *****//" << std::endl;
+	std::cout << std::endl;
+
+	object.DerivedValue0 = 10.f;
+	object.DerivedValue1.InternValue0 = 20;
+	object.DerivedValue1.InternValue1 = 21;
+	object.DerivedValue4.emplace('x');
+	object.DerivedValue4.emplace('y');
+	object.DerivedValue4.emplace('z');
 
 	serializer s("test");
 	s.save(object);

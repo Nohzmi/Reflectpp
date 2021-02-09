@@ -13,7 +13,7 @@ class Intern
 {
 	REFLECT(Intern)
 
-private:
+public:
 
 	int InternValue0;
 	unsigned InternValue1;

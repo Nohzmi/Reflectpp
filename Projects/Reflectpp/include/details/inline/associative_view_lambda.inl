@@ -137,7 +137,7 @@ namespace reflectpp
 		template<typename Class, typename Iterator, typename Key>
 		REFLECTPP_INLINE auto get_associative_insert() REFLECTPP_NOEXCEPT
 		{
-			return [](void* container, void* key, void* value) -> std::pair<size_t, bool>
+			return [](void* container, void* key, void*) -> std::pair<size_t, bool>
 			{
 				auto obj{ static_cast<Class*>(container) };
 				auto data{ get_associative_container_data(*obj) };

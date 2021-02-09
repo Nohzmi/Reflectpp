@@ -2,7 +2,5 @@ Serialization
 	Rework pour que ça fonctionne
 	Attention à la diférence map/set pour la serialization
 	Optimization en évitant les copy ce qui évite les new de variant (penser au std::move)
-	Vérifier les "for (auto&" à mettre quand c'est possible
-	Vérifier les auto
 Sample
 	Mise à jour du sample

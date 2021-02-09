@@ -7,7 +7,9 @@
 */
 
 #pragma once
+#include <cstdint>
 #include <memory>
+#include <tuple>
 
 #include "details/associative_view_data.h"
 #include "details/associative_view_lambda.h"
@@ -60,6 +62,8 @@ namespace reflectpp
 
 			template<typename EnumT>
 			REFLECTPP_INLINE void add_value(type_data* type, const char* name, EnumT value) REFLECTPP_NOEXCEPT;
+
+			std::vector<type_data*> get_arithmetic_types() REFLECTPP_NOEXCEPT;
 
 			template<typename T>
 			REFLECTPP_INLINE factory_data* get_factory() REFLECTPP_NOEXCEPT;
@@ -123,6 +127,7 @@ namespace reflectpp
 			std::unordered_map<size_t, std::unique_ptr<factory_data>> m_factories;
 			std::vector<std::unique_ptr<property_data>> m_properties;
 			std::unordered_map<size_t, std::unique_ptr<sequential_view_data>> m_sequential_views;
+			std::tuple<bool, char, double, float, int8_t, int16_t, int32_t, int64_t, long, long double, uint8_t, uint16_t, uint32_t, uint64_t, unsigned long> m_arithmetic_tuple;
 			std::unordered_map<size_t, std::unique_ptr<type_info_data>> m_type_infos;
 			std::unordered_map<size_t, std::unique_ptr<type_data>> m_types;
 			std::unordered_map<size_t, std::unique_ptr<utility_data>> m_utilities;

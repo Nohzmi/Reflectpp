@@ -6,5 +6,3 @@ Serialization
 	Vérifier les auto
 Sample
 	Mise à jour du sample
-Autre
-	Conversion des enums

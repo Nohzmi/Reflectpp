@@ -362,33 +362,11 @@ namespace reflectpp
 
 			if (created)
 			{
-				data->m_can_convert_to_bool = std::is_convertible_v<T, bool>;
-				data->m_can_convert_to_char = std::is_convertible_v<T, char>;
-				data->m_can_convert_to_double = std::is_convertible_v<T, double>;
-				data->m_can_convert_to_float = std::is_convertible_v<T, float>;
-				data->m_can_convert_to_int = std::is_convertible_v<T, int>;
-				data->m_can_convert_to_int8 = std::is_convertible_v<T, int8_t>;
-				data->m_can_convert_to_int16 = std::is_convertible_v<T, int16_t>;
-				data->m_can_convert_to_int32 = std::is_convertible_v<T, int32_t>;
-				data->m_can_convert_to_int64 = std::is_convertible_v<T, int64_t>;
-				data->m_can_convert_to_uint8 = std::is_convertible_v<T, uint8_t>;
-				data->m_can_convert_to_uint16 = std::is_convertible_v<T, uint16_t>;
-				data->m_can_convert_to_uint32 = std::is_convertible_v<T, uint32_t>;
-				data->m_can_convert_to_uint64 = std::is_convertible_v<T, uint64_t>;
+				std::apply([&](auto... args){ (data->m_can_convert_from.emplace_back(std::is_convertible_v<decltype(args), T>), ...); }, m_arithmetic_tuple);
+				std::apply([&](auto... args){ (data->m_can_convert_to.emplace_back(std::is_convertible_v<T, decltype(args)>), ...); }, m_arithmetic_tuple);
 				data->m_compare = get_compare<T>();
-				data->m_convert_to_bool = get_convert<T, bool>();
-				data->m_convert_to_char = get_convert<T, char>();
-				data->m_convert_to_double = get_convert<T, double>();
-				data->m_convert_to_float = get_convert<T, float>();
-				data->m_convert_to_int = get_convert<T, int>();
-				data->m_convert_to_int8 = get_convert<T, int8_t>();
-				data->m_convert_to_int16 = get_convert<T, int16_t>();
-				data->m_convert_to_int32 = get_convert<T, int32_t>();
-				data->m_convert_to_int64 = get_convert<T, int64_t>();
-				data->m_convert_to_uint8 = get_convert<T, uint8_t>();
-				data->m_convert_to_uint16 = get_convert<T, uint16_t>();
-				data->m_convert_to_uint32 = get_convert<T, uint32_t>();
-				data->m_convert_to_uint64 = get_convert<T, uint64_t>();
+				std::apply([&](auto... args){ (data->m_convert_from.emplace_back(get_convert<decltype(args), T>()), ...); }, m_arithmetic_tuple);
+				std::apply([&](auto... args){ (data->m_convert_to.emplace_back(get_convert<T, decltype(args)>()), ...); }, m_arithmetic_tuple);
 			}
 
 			return data;

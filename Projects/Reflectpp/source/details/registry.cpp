@@ -17,6 +17,13 @@ namespace reflectpp
 					it.second->m_underlying_type->m_factory->m_destructor(ptr);
 		}
 
+		std::vector<type_data*> registry::get_arithmetic_types() REFLECTPP_NOEXCEPT
+		{
+			std::vector<type_data*> types;
+			std::apply([&](auto... args){ (types.emplace_back(get_type<decltype(args)>()), ...); }, m_arithmetic_tuple);
+			return types;
+		}
+
 		registry& registry::get_instance() REFLECTPP_NOEXCEPT
 		{
 			return m_instance;

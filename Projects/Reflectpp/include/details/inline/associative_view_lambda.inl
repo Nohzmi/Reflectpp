@@ -18,9 +18,7 @@ namespace reflectpp
 					{
 						if constexpr (has_value_type<Class>::value)
 						{
-							//TODO
-							return std::make_pair((void*)(&(it->first)), (void*)(&(it->second)));
-							//return std::make_pair(static_cast<void*>(&(it->first)), static_cast<void*>(&(it->second)));
+							return std::make_pair(static_cast<void*>(const_cast<Key*>(&(it->first))), static_cast<void*>(&(it->second)));
 						}
 						else
 						{

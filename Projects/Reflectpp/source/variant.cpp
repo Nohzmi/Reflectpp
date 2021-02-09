@@ -74,7 +74,7 @@ namespace reflectpp
 			return true;
 
 		bool is_enum{ m_data.m_type->m_enumeration != nullptr || target_type_data->m_enumeration != nullptr };
-		bool is_arithmetic{ target_type_data->m_is_arithmetic };
+		bool is_arithmetic{ m_data.m_type->m_is_arithmetic || target_type_data->m_is_arithmetic };
 
 		if (!is_enum && !is_arithmetic)
 			return is_valid() ? details::can_cast(m_data.m_type, target_type_data) : false;
@@ -91,19 +91,14 @@ namespace reflectpp
 		}
 		else if (is_arithmetic)
 		{
-			if (target_type_data == details::registry::get_instance().get_type<bool>()) return m_data.m_type->m_utility->m_can_convert_to_bool;
-			else if (target_type_data == details::registry::get_instance().get_type<char>()) return m_data.m_type->m_utility->m_can_convert_to_char;
-			else if (target_type_data == details::registry::get_instance().get_type<double>()) return m_data.m_type->m_utility->m_can_convert_to_double;
-			else if (target_type_data == details::registry::get_instance().get_type<float>()) return m_data.m_type->m_utility->m_can_convert_to_float;
-			else if (target_type_data == details::registry::get_instance().get_type<int>()) return m_data.m_type->m_utility->m_can_convert_to_int;
-			else if (target_type_data == details::registry::get_instance().get_type<int8_t>()) return m_data.m_type->m_utility->m_can_convert_to_int8;
-			else if (target_type_data == details::registry::get_instance().get_type<int16_t>()) return m_data.m_type->m_utility->m_can_convert_to_int16;
-			else if (target_type_data == details::registry::get_instance().get_type<int32_t>()) return m_data.m_type->m_utility->m_can_convert_to_int32;
-			else if (target_type_data == details::registry::get_instance().get_type<int64_t>()) return m_data.m_type->m_utility->m_can_convert_to_int64;
-			else if (target_type_data == details::registry::get_instance().get_type<uint8_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint8;
-			else if (target_type_data == details::registry::get_instance().get_type<uint16_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint16;
-			else if (target_type_data == details::registry::get_instance().get_type<uint32_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint32;
-			else if (target_type_data == details::registry::get_instance().get_type<uint64_t>()) return m_data.m_type->m_utility->m_can_convert_to_uint64;
+			bool is_from_operation{ m_data.m_type->m_is_arithmetic && !target_type_data->m_is_arithmetic };
+			auto arithmetic_type{ is_from_operation ? m_data.m_type : target_type_data };
+			auto can_convert_array{ is_from_operation ? target_type_data->m_utility->m_can_convert_from : m_data.m_type->m_utility->m_can_convert_to };
+			auto types{ details::registry::get_instance().get_arithmetic_types() };
+
+			for (auto [it, i] = std::tuple{ types.begin(), 0u }; it != types.end(); ++it, ++i)
+				if (*it == arithmetic_type)
+					return can_convert_array[i];
 		}
 
 		return false;
@@ -131,7 +126,7 @@ namespace reflectpp
 			return true;
 
 		bool is_enum{ m_data.m_type->m_enumeration != nullptr || target_type_data->m_enumeration != nullptr };
-		bool is_arithmetic{ target_type_data->m_is_arithmetic };
+		bool is_arithmetic{ m_data.m_type->m_is_arithmetic || target_type_data->m_is_arithmetic };
 
 		if (!is_enum && !is_arithmetic)
 			m_data.m_type = target_type_data;
@@ -150,19 +145,14 @@ namespace reflectpp
 		}
 		else if (is_arithmetic)
 		{
-			if (target_type_data == details::registry::get_instance().get_type<bool>()) value = m_data.m_type->m_utility->m_convert_to_bool(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<char>()) value = m_data.m_type->m_utility->m_convert_to_char(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<double>()) value = m_data.m_type->m_utility->m_convert_to_double(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<float>()) value = m_data.m_type->m_utility->m_convert_to_float(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<int>()) value = m_data.m_type->m_utility->m_convert_to_int(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<int8_t>()) value = m_data.m_type->m_utility->m_convert_to_int8(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<int16_t>()) value = m_data.m_type->m_utility->m_convert_to_int16(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<int32_t>()) value = m_data.m_type->m_utility->m_convert_to_int32(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<int64_t>()) value = m_data.m_type->m_utility->m_convert_to_int64(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<uint8_t>()) value = m_data.m_type->m_utility->m_convert_to_uint8(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<uint16_t>()) value = m_data.m_type->m_utility->m_convert_to_uint16(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<uint32_t>()) value = m_data.m_type->m_utility->m_convert_to_uint32(m_data.m_value);
-			else if (target_type_data == details::registry::get_instance().get_type<uint64_t>()) value = m_data.m_type->m_utility->m_convert_to_uint64(m_data.m_value);
+			bool is_from_operation{ m_data.m_type->m_is_arithmetic && !target_type_data->m_is_arithmetic };
+			auto arithmetic_type{ is_from_operation ? m_data.m_type : target_type_data };
+			auto convert_array{ is_from_operation ? target_type_data->m_utility->m_convert_from : m_data.m_type->m_utility->m_convert_to };
+			auto types{ details::registry::get_instance().get_arithmetic_types() };
+
+			for (auto [it, i] = std::tuple{ types.begin(), 0u }; it != types.end(); ++it, ++i)
+				if (*it == arithmetic_type)
+					value = convert_array[i](m_data.m_value);
 		}
 
 		if (value == nullptr)

@@ -23,7 +23,8 @@ namespace reflectpp
 	void serializer::save(instance object) const REFLECTPP_NOEXCEPT
 	{
 		json j;
-		save_type(*static_cast<variant*>(object), j);
+		variant* var{ static_cast<variant*>(object) };
+		save_type(*var, j);
 
 		std::ofstream out(m_path);
 		out << std::setw(4) << j;

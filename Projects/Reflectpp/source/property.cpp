@@ -48,8 +48,9 @@ namespace reflectpp
 		if (object_var == nullptr || !object_var->is_valid() || !object_var->convert(get_declaring_type()))
 			return variant();
 
-		bool is_owner{ false };
 		void* object_ptr{ static_cast<details::variant_data*>(*object_var)->m_value };
+
+		bool is_owner{ false };
 		void* value{ m_data->m_getter(object_ptr, is_owner) };
 
 		return variant({ is_owner, m_data->m_type, value });

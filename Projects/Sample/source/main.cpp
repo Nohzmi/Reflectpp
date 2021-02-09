@@ -113,11 +113,11 @@ int main()
 		std::cout << "{ " << it.first.get_value<char>() << ", " << it.second.get_value<float>() << " } ";
 	std::cout << std::endl << std::endl;*/
 
-	//**********************//
-	//***** other test *****//
+	//*********************//
+	//***** enum test *****//
 
-	std::cout << "//**********************//" << std::endl;
-	std::cout << "//***** other test *****//" << std::endl;
+	std::cout << "//*********************//" << std::endl;
+	std::cout << "//***** enum test *****//" << std::endl;
 	std::cout << std::endl;
 
 	auto AlignmentType = reflectpp::type::get<E_Alignment>();
@@ -146,6 +146,13 @@ int main()
 	}
 	std::cout << std::endl;
 
+	//**********************//
+	//***** other test *****//
+
+	std::cout << "//**********************//" << std::endl;
+	std::cout << "//***** other test *****//" << std::endl;
+	std::cout << std::endl;
+
 	Base* ksjqdbfskjf = new Derived();
 	auto float_var = variant(*ksjqdbfskjf);
 	std::cout << "type: " << float_var.get_type().get_name() << ", value:" << std::endl;
@@ -162,8 +169,8 @@ int main()
 		std::cout << "  " << it.get_name() << std::endl;
 	std::cout << std::endl;
 
-	//serializer s("test");
-	//s.load(object);
+	serializer s("test");
+	s.save(object);
 
 	return EXIT_SUCCESS;
 }

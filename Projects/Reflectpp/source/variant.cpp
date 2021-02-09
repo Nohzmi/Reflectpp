@@ -129,7 +129,10 @@ namespace reflectpp
 		bool is_arithmetic{ m_data.m_type->m_is_arithmetic || target_type_data->m_is_arithmetic };
 
 		if (!is_enum && !is_arithmetic)
+		{
 			m_data.m_type = target_type_data;
+			return true;
+		}
 
 		void* value{ nullptr };
 

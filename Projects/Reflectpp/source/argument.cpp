@@ -54,15 +54,19 @@ namespace reflectpp
 	}
 
 	argument::argument(variant& var) REFLECTPP_NOEXCEPT :
-		m_is_owner{ false },
-		m_variant{ &var }
+		m_is_owner{ true },
+		m_variant{ nullptr }
 	{
+		details::variant_data* data{ static_cast<details::variant_data*>(var) };
+		m_variant = new variant({ false, data->m_type, data->m_value });
 	}
 
 	argument::argument(const variant& var) REFLECTPP_NOEXCEPT :
-		m_is_owner{ false },
-		m_variant{ const_cast<variant*>(&var) }
+		m_is_owner{ true },
+		m_variant{ nullptr }
 	{
+		details::variant_data* data{ static_cast<details::variant_data*>(var) };
+		m_variant = new variant({ false, data->m_type, data->m_value });
 	}
 
 	type argument::get_type() const REFLECTPP_NOEXCEPT

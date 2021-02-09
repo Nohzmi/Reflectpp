@@ -55,8 +55,10 @@ namespace reflectpp
 
 	instance::instance(const variant& var) REFLECTPP_NOEXCEPT :
 		m_is_owner{ false },
-		m_variant{ const_cast<variant*>(&var) }
+		m_variant{ nullptr }
 	{
+		details::variant_data* data{ static_cast<details::variant_data*>(var) };
+		m_variant = new variant({ false, data->m_type, data->m_value });
 	}
 
 	type instance::get_type() const REFLECTPP_NOEXCEPT

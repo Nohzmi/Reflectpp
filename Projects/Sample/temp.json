@@ -1,23 +1,26 @@
 {
-    "BaseValue0": null,
-    "BaseValue1": null,
-    "DerivedValue0": 100.0,
+    "BaseValue0": 0.0,
+    "BaseValue1": {
+        "InternValue0": 0,
+        "InternValue1": 0
+    },
+    "DerivedValue0": 0.0,
     "DerivedValue1": {
-        "InternValue0": 50,
-        "InternValue1": 51
+        "InternValue0": 0,
+        "InternValue1": 0
     },
     "DerivedValue2": [
-        12.0,
-        13.0
+        0.0,
+        2.0
     ],
     "DerivedValue3": [
         {
-            "key": "x",
-            "value": 5.0
+            "key": "a",
+            "value": 1.0
         },
         {
-            "key": "y",
-            "value": 6.0
+            "key": "b",
+            "value": 2.0
         }
     ]
 }

@@ -100,8 +100,8 @@ namespace reflectpp
 
 	void variant_sequential_view::clear() REFLECTPP_NOEXCEPT
 	{
-		if (is_valid() && m_data.m_type->m_sequential_view->m_sequence_clear != nullptr)
-			m_data.m_type->m_sequential_view->m_sequence_clear(m_data.m_value);
+		if (is_valid() && m_data.m_type->m_sequential_view->m_clear != nullptr)
+			m_data.m_type->m_sequential_view->m_clear(m_data.m_value);
 	}
 
 	variant_sequential_view::iterator variant_sequential_view::end() const REFLECTPP_NOEXCEPT
@@ -114,19 +114,19 @@ namespace reflectpp
 
 	variant_sequential_view::iterator variant_sequential_view::erase(const iterator& pos) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_sequential_view->m_sequence_erase == nullptr || pos.m_index >= get_size())
+		if (!is_valid() || m_data.m_type->m_sequential_view->m_erase == nullptr || pos.m_index >= get_size())
 			return iterator();
 
-		m_data.m_type->m_sequential_view->m_sequence_erase(m_data.m_value, pos.m_index);
+		m_data.m_type->m_sequential_view->m_erase(m_data.m_value, pos.m_index);
 		return iterator(pos.m_index, this);
 	}
 
 	size_t variant_sequential_view::get_size() const REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_sequential_view->m_sequence_size == nullptr)
+		if (!is_valid() || m_data.m_type->m_sequential_view->m_size == nullptr)
 			return 0;
 
-		return m_data.m_type->m_sequential_view->m_sequence_size(m_data.m_value);
+		return m_data.m_type->m_sequential_view->m_size(m_data.m_value);
 	}
 
 	type variant_sequential_view::get_type() const REFLECTPP_NOEXCEPT
@@ -136,10 +136,10 @@ namespace reflectpp
 
 	variant variant_sequential_view::get_value(size_t index) const REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_sequential_view->m_sequence_at == nullptr || index >= get_size())
+		if (!is_valid() || m_data.m_type->m_sequential_view->m_at == nullptr || index >= get_size())
 			return variant();
 
-		void* value{ m_data.m_type->m_sequential_view->m_sequence_at(m_data.m_value, index) };
+		void* value{ m_data.m_type->m_sequential_view->m_at(m_data.m_value, index) };
 		return variant({ false, m_data.m_type->m_sequential_view->m_value_type, value });
 	}
 
@@ -150,7 +150,7 @@ namespace reflectpp
 
 	variant_sequential_view::iterator variant_sequential_view::insert(const iterator& pos, argument value) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_sequential_view->m_sequence_insert == nullptr || pos.m_index >= get_size() + 1)
+		if (!is_valid() || m_data.m_type->m_sequential_view->m_insert == nullptr || pos.m_index >= get_size() + 1)
 			return iterator();
 
 		auto value_var{ static_cast<variant*>(value) };
@@ -159,14 +159,14 @@ namespace reflectpp
 			return iterator();
 
 		void* value_ptr{ static_cast<details::variant_data*>(*value_var)->m_value };
-		m_data.m_type->m_sequential_view->m_sequence_insert(m_data.m_value, pos.m_index, value_ptr);
+		m_data.m_type->m_sequential_view->m_insert(m_data.m_value, pos.m_index, value_ptr);
 		return iterator(pos.m_index, this);
 	}
 
 	bool variant_sequential_view::is_dynamic() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() && (m_data.m_type->m_sequential_view->m_sequence_clear != nullptr || m_data.m_type->m_sequential_view->m_sequence_erase != nullptr ||
-			m_data.m_type->m_sequential_view->m_sequence_insert != nullptr || m_data.m_type->m_sequential_view->m_sequence_resize != nullptr);
+		return is_valid() && (m_data.m_type->m_sequential_view->m_clear != nullptr || m_data.m_type->m_sequential_view->m_erase != nullptr ||
+			m_data.m_type->m_sequential_view->m_insert != nullptr || m_data.m_type->m_sequential_view->m_resize != nullptr);
 	}
 
 	bool variant_sequential_view::is_empty() const REFLECTPP_NOEXCEPT
@@ -186,16 +186,16 @@ namespace reflectpp
 
 	bool variant_sequential_view::set_size(size_t size) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_sequential_view->m_sequence_resize == nullptr)
+		if (!is_valid() || m_data.m_type->m_sequential_view->m_resize == nullptr)
 			return false;
 
-		m_data.m_type->m_sequential_view->m_sequence_resize(m_data.m_value, size);
+		m_data.m_type->m_sequential_view->m_resize(m_data.m_value, size);
 		return true;
 	}
 
 	bool variant_sequential_view::set_value(size_t index, argument value) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_sequential_view->m_sequence_assign == nullptr || index >= get_size())
+		if (!is_valid() || m_data.m_type->m_sequential_view->m_assign == nullptr || index >= get_size())
 			return false;
 
 		auto value_var{ static_cast<variant*>(value) };
@@ -204,7 +204,7 @@ namespace reflectpp
 			return false;
 
 		void* value_ptr{ static_cast<details::variant_data*>(*value_var)->m_value };
-		m_data.m_type->m_sequential_view->m_sequence_assign(m_data.m_value, index, value_ptr);
+		m_data.m_type->m_sequential_view->m_assign(m_data.m_value, index, value_ptr);
 		return true;
 	}
 }

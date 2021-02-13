@@ -11,6 +11,7 @@
 
 #include "custom_associative_container.h"
 #include "custom_sequence_container.h"
+#include "custom_smart_pointer.h"
 
 namespace reflectpp
 {
@@ -23,7 +24,8 @@ namespace reflectpp
 		struct is_auto_register_type : std::bool_constant<
 			std::is_arithmetic_v<T> ||
 			is_associative_container<T>::value ||
-			is_sequence_container<T>::value>
+			is_sequence_container<T>::value ||
+			is_smart_pointer<T>::value>
 		{};
 
 		template<typename T>

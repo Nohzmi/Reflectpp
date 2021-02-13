@@ -15,13 +15,13 @@ namespace reflectpp
 	{
 		struct sequential_view_data final
 		{
-			void (*m_sequence_assign)(void*, size_t, void*) { nullptr };
-			void* (*m_sequence_at)(void*, size_t) { nullptr };
-			void (*m_sequence_clear)(void*) { nullptr };
-			void (*m_sequence_erase)(void*, size_t) { nullptr };
-			void (*m_sequence_insert)(void*, size_t, void*) { nullptr };
-			void (*m_sequence_resize)(void*, size_t) { nullptr };
-			size_t (*m_sequence_size)(void*) { nullptr };
+			void (*m_assign)(void*, size_t, void*) { nullptr };
+			void* (*m_at)(void*, size_t) { nullptr };
+			void (*m_clear)(void*) { nullptr };
+			void (*m_erase)(void*, size_t) { nullptr };
+			void (*m_insert)(void*, size_t, void*) { nullptr };
+			void (*m_resize)(void*, size_t) { nullptr };
+			size_t (*m_size)(void*) { nullptr };
 			type_data* m_value_type{ nullptr };
 		};
 	}

@@ -108,8 +108,8 @@ namespace reflectpp
 
 	void variant_associative_view::clear() REFLECTPP_NOEXCEPT
 	{
-		if (is_valid() && m_data.m_type->m_associative_view->m_associative_clear != nullptr)
-			m_data.m_type->m_associative_view->m_associative_clear(m_data.m_value);
+		if (is_valid() && m_data.m_type->m_associative_view->m_clear != nullptr)
+			m_data.m_type->m_associative_view->m_clear(m_data.m_value);
 	}
 
 	variant_associative_view::iterator variant_associative_view::end() const REFLECTPP_NOEXCEPT
@@ -122,7 +122,7 @@ namespace reflectpp
 
 	std::pair<variant_associative_view::iterator, variant_associative_view::iterator> variant_associative_view::equal_range(argument key) const REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_associative_view->m_associative_equal_range == nullptr)
+		if (!is_valid() || m_data.m_type->m_associative_view->m_equal_range == nullptr)
 			return std::make_pair(iterator(), iterator());
 
 		auto key_var{ static_cast<variant*>(key) };
@@ -131,7 +131,7 @@ namespace reflectpp
 			return std::make_pair(iterator(), iterator());
 
 		void* key_ptr{ static_cast<details::variant_data*>(*key_var)->m_value };
-		auto range{ m_data.m_type->m_associative_view->m_associative_equal_range(m_data.m_value, key_ptr) };
+		auto range{ m_data.m_type->m_associative_view->m_equal_range(m_data.m_value, key_ptr) };
 		auto first{ iterator(range.first, const_cast<variant_associative_view*>(this)) };
 		auto second{ iterator(range.second, const_cast<variant_associative_view*>(this)) };
 
@@ -140,7 +140,7 @@ namespace reflectpp
 
 	size_t variant_associative_view::erase(argument key) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_associative_view->m_associative_erase == nullptr)
+		if (!is_valid() || m_data.m_type->m_associative_view->m_erase == nullptr)
 			return 0;
 
 		auto key_var{ static_cast<variant*>(key) };
@@ -149,12 +149,12 @@ namespace reflectpp
 			return 0;
 
 		void* key_ptr{ static_cast<details::variant_data*>(*key_var)->m_value };
-		return m_data.m_type->m_associative_view->m_associative_erase(m_data.m_value, key_ptr);
+		return m_data.m_type->m_associative_view->m_erase(m_data.m_value, key_ptr);
 	}
 
 	variant_associative_view::iterator variant_associative_view::find(argument key) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_associative_view->m_associative_find == nullptr)
+		if (!is_valid() || m_data.m_type->m_associative_view->m_find == nullptr)
 			return iterator();
 
 		auto key_var{ static_cast<variant*>(key) };
@@ -163,7 +163,7 @@ namespace reflectpp
 			return iterator();
 
 		void* key_ptr{ static_cast<details::variant_data*>(*key_var)->m_value };
-		size_t index{ m_data.m_type->m_associative_view->m_associative_find(m_data.m_value, key_ptr) };
+		size_t index{ m_data.m_type->m_associative_view->m_find(m_data.m_value, key_ptr) };
 		return iterator(index, this);
 	}
 
@@ -174,10 +174,10 @@ namespace reflectpp
 
 	size_t variant_associative_view::get_size() const REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_associative_view->m_associative_size == nullptr)
+		if (!is_valid() || m_data.m_type->m_associative_view->m_size == nullptr)
 			return 0;
 
-		return m_data.m_type->m_associative_view->m_associative_size(m_data.m_value);
+		return m_data.m_type->m_associative_view->m_size(m_data.m_value);
 	}
 
 	type variant_associative_view::get_type() const REFLECTPP_NOEXCEPT
@@ -192,7 +192,7 @@ namespace reflectpp
 
 	std::pair<variant_associative_view::iterator, bool> variant_associative_view::insert(argument key) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_associative_view->m_associative_insert == nullptr)
+		if (!is_valid() || m_data.m_type->m_associative_view->m_insert == nullptr)
 			return std::make_pair(iterator(), false);
 
 		auto key_var{ static_cast<variant*>(key) };
@@ -201,13 +201,13 @@ namespace reflectpp
 			return std::make_pair(iterator(), false);
 
 		void* key_ptr{ static_cast<details::variant_data*>(*key_var)->m_value };
-		auto it{ m_data.m_type->m_associative_view->m_associative_insert(m_data.m_value, key_ptr, nullptr) };
+		auto it{ m_data.m_type->m_associative_view->m_insert(m_data.m_value, key_ptr, nullptr) };
 		return std::make_pair(iterator(it.first, this), it.second);
 	}
 
 	std::pair<variant_associative_view::iterator, bool> variant_associative_view::insert(argument key, argument value) REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_associative_view->m_associative_insert == nullptr)
+		if (!is_valid() || m_data.m_type->m_associative_view->m_insert == nullptr)
 			return std::make_pair(iterator(), false);
 
 		if (!static_cast<variant*>(value)->is_valid())
@@ -225,7 +225,7 @@ namespace reflectpp
 		void* key_ptr{ static_cast<details::variant_data*>(*key_var)->m_value };
 		void* value_ptr{ static_cast<details::variant_data*>(*value_var)->m_value };
 
-		auto it{ m_data.m_type->m_associative_view->m_associative_insert(m_data.m_value, key_ptr, value_ptr) };
+		auto it{ m_data.m_type->m_associative_view->m_insert(m_data.m_value, key_ptr, value_ptr) };
 		return std::make_pair(iterator(it.first, this), it.second);
 	}
 
@@ -246,10 +246,10 @@ namespace reflectpp
 
 	std::pair<variant, variant> variant_associative_view::get_value(size_t index) const REFLECTPP_NOEXCEPT
 	{
-		if (!is_valid() || m_data.m_type->m_associative_view->m_associative_at == nullptr || index >= get_size())
+		if (!is_valid() || m_data.m_type->m_associative_view->m_at == nullptr || index >= get_size())
 			return std::make_pair(variant(), variant());
 
-		auto at{ m_data.m_type->m_associative_view->m_associative_at(m_data.m_value, index) };
+		auto at{ m_data.m_type->m_associative_view->m_at(m_data.m_value, index) };
 		return std::make_pair(variant({ false, m_data.m_type->m_associative_view->m_key_type, at.first }), variant({false, m_data.m_type->m_associative_view->m_value_type, at.second}));
 	}
 

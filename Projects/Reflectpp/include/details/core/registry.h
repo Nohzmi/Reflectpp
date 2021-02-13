@@ -8,7 +8,6 @@
 
 #pragma once
 #include <cstdint>
-#include <memory>
 #include <tuple>
 
 #include "details/core/hasher.h"
@@ -24,11 +23,13 @@
 #include "details/data/type_data.h"
 #include "details/data/type_info_data.h"
 #include "details/data/utility_data.h"
+#include "details/data/wrapper_data.h"
 #include "details/lambda/associative_view_lambda.h"
 #include "details/lambda/factory_lambda.h"
 #include "details/lambda/property_lambda.h"
 #include "details/lambda/sequential_view_lambda.h"
 #include "details/lambda/utility_lambda.h"
+#include "details/lambda/wrapper_lambda.h"
 
 namespace reflectpp
 {
@@ -119,6 +120,11 @@ namespace reflectpp
 
 			utility_data* get_utility_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
 
+			template<typename T>
+			REFLECTPP_INLINE wrapper_data* get_wrapper_impl() REFLECTPP_NOEXCEPT;
+
+			wrapper_data* get_wrapper_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT;
+
 #pragma warning(push)
 #pragma warning(disable: 4251)
 
@@ -131,6 +137,7 @@ namespace reflectpp
 			std::unordered_map<size_t, std::unique_ptr<type_info_data>> m_type_infos;
 			std::unordered_map<size_t, std::unique_ptr<type_data>> m_types;
 			std::unordered_map<size_t, std::unique_ptr<utility_data>> m_utilities;
+			std::unordered_map<size_t, std::unique_ptr<wrapper_data>> m_wrappers;
 
 #pragma warning (pop)
 

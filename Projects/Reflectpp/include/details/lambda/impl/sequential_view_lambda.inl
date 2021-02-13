@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename Class, typename Value>
-		REFLECTPP_INLINE auto get_sequence_assign() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_assign() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, size_t index, void* value)
 			{
@@ -15,7 +15,7 @@ namespace reflectpp
 		}
 
 		template<typename Class, typename Value>
-		REFLECTPP_INLINE auto get_sequence_assign_impl() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_assign_impl() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, size_t index, void* value)
 			{
@@ -34,7 +34,7 @@ namespace reflectpp
 		}
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_sequence_at() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_at() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, size_t index) -> void*
 			{
@@ -44,7 +44,7 @@ namespace reflectpp
 		}
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_sequence_at_impl() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_at_impl() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, size_t index) -> void*
 			{
@@ -60,7 +60,7 @@ namespace reflectpp
 		}
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_sequence_clear() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_clear() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container)
 			{
@@ -70,7 +70,7 @@ namespace reflectpp
 		}
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_sequence_erase() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_erase() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, size_t index)
 			{
@@ -89,7 +89,7 @@ namespace reflectpp
 		}
 
 		template<typename Class, typename Value>
-		REFLECTPP_INLINE auto get_sequence_insert() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_insert() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, size_t index, void* value)
 			{
@@ -116,7 +116,7 @@ namespace reflectpp
 		}
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_sequence_resize() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_resize() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, size_t size)
 			{
@@ -126,7 +126,7 @@ namespace reflectpp
 		}
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_sequence_size() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_size() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container) -> size_t
 			{
@@ -136,7 +136,7 @@ namespace reflectpp
 		}
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_sequence_size_impl() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequential_view_size_impl() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container) -> size_t
 			{

@@ -22,6 +22,7 @@ namespace reflectpp
 		struct type_info_data;
 		struct utility_data;
 		struct variant_data;
+		struct wrapper_data;
 	}
 
 	class argument;

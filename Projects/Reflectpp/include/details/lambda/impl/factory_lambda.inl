@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		REFLECTPP_INLINE auto get_constructor() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto factory_constructor() REFLECTPP_NOEXCEPT
 		{
 			return []() -> void*
 			{
@@ -21,7 +21,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE auto get_copy_constructor() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto factory_copy_constructor() REFLECTPP_NOEXCEPT
 		{
 			return [](void* object) -> void*
 			{
@@ -37,7 +37,7 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE auto get_destructor() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto factory_destructor() REFLECTPP_NOEXCEPT
 		{
 			return [](void* object)
 			{

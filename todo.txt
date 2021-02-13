@@ -3,6 +3,10 @@ Sample
 	
 Optimization:
 	Essayer les reference wrapper (rttr)
+	
+Temp:
+	enum dans la reflection
+	custom smart ptr (unique_ptr only)
 
 V2:
 	Custom smart_ptr

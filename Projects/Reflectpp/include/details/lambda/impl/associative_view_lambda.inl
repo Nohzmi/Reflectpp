@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename Class, typename Key>
-		REFLECTPP_INLINE auto get_associative_at() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_view_at() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, size_t index) -> std::pair<void*, void*>
 			{
@@ -32,7 +32,7 @@ namespace reflectpp
 		}
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_associative_clear() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_view_clear() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container)
 			{
@@ -42,7 +42,7 @@ namespace reflectpp
 		}
 
 		template<typename Class, typename Key>
-		REFLECTPP_INLINE auto get_associative_equal_range() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_view_equal_range() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, void* key)->std::pair<size_t, size_t>
 			{
@@ -88,7 +88,7 @@ namespace reflectpp
 		}
 
 		template<typename Class, typename Key>
-		REFLECTPP_INLINE auto get_associative_erase() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_view_erase() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, void* key) -> size_t
 			{
@@ -98,7 +98,7 @@ namespace reflectpp
 		}
 
 		template<typename Class, typename Key>
-		REFLECTPP_INLINE auto get_associative_find() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_view_find() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, void* key) -> size_t
 			{
@@ -118,7 +118,7 @@ namespace reflectpp
 		}
 
 		template<typename Class, typename Iterator, typename Key, typename Value>
-		REFLECTPP_INLINE auto get_associative_insert() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_view_insert() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, void* key, void* value) -> std::pair<size_t, bool>
 			{
@@ -135,7 +135,7 @@ namespace reflectpp
 		}
 
 		template<typename Class, typename Iterator, typename Key>
-		REFLECTPP_INLINE auto get_associative_insert() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_view_insert() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container, void* key, void*) -> std::pair<size_t, bool>
 			{
@@ -152,7 +152,7 @@ namespace reflectpp
 		}
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_associative_size() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_view_size() REFLECTPP_NOEXCEPT
 		{
 			return [](void* container) -> size_t
 			{

@@ -15,28 +15,28 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename Class, typename Key>
-		REFLECTPP_INLINE auto get_associative_at() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE auto associative_view_at() REFLECTPP_NOEXCEPT;
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_associative_clear() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE auto associative_view_clear() REFLECTPP_NOEXCEPT;
 
 		template<typename Class, typename Key>
-		REFLECTPP_INLINE auto get_associative_equal_range() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE auto associative_view_equal_range() REFLECTPP_NOEXCEPT;
 
 		template<typename Class, typename Key>
-		REFLECTPP_INLINE auto get_associative_erase() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE auto associative_view_erase() REFLECTPP_NOEXCEPT;
 
 		template<typename Class, typename Key>
-		REFLECTPP_INLINE auto get_associative_find() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE auto associative_view_find() REFLECTPP_NOEXCEPT;
 
 		template<typename Class, typename Iterator, typename Key, typename Value>
-		REFLECTPP_INLINE auto get_associative_insert() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE auto associative_view_insert() REFLECTPP_NOEXCEPT;
 
 		template<typename Class, typename Iterator, typename Key>
-		REFLECTPP_INLINE auto get_associative_insert() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE auto associative_view_insert() REFLECTPP_NOEXCEPT;
 
 		template<typename Class>
-		REFLECTPP_INLINE auto get_associative_size() REFLECTPP_NOEXCEPT;
+		REFLECTPP_INLINE auto associative_view_size() REFLECTPP_NOEXCEPT;
 	}
 }
 

@@ -228,6 +228,24 @@
     <ClInclude Include="include\custom_sequence_container.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\custom_smart_pointer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\smart_pointer.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\smart_pointer_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\smart_pointer_unique_ptr.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\wrapper_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\lambda\wrapper_lambda.h">
+      <Filter>include\details\lambda</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
@@ -375,6 +393,15 @@
     </None>
     <None Include="include\details\custom\impl\sequence_container_basic_string.inl">
       <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\smart_pointer.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\smart_pointer_unique_ptr.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\lambda\impl\wrapper_lambda.inl">
+      <Filter>include\details\lambda\impl</Filter>
     </None>
   </ItemGroup>
 </Project>

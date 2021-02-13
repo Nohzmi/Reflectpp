@@ -4,7 +4,7 @@ namespace reflectpp
 {
 	namespace details
 	{
-		REFLECTPP_INLINE auto get_getter_addr(size_t offset) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto property_getter_addr(size_t offset) REFLECTPP_NOEXCEPT
 		{
 			return [offset](void* object, bool& is_owner) -> void*
 			{
@@ -14,7 +14,7 @@ namespace reflectpp
 		}
 
 		template<typename T, typename PropertyT>
-		REFLECTPP_INLINE auto get_getter_func(PropertyT(T::* getter)() const) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto property_getter_func(PropertyT(T::* getter)() const) REFLECTPP_NOEXCEPT
 		{
 			return [getter](void* object, bool& is_owner) -> void*
 			{
@@ -37,7 +37,7 @@ namespace reflectpp
 		}
 
 		template<typename PropertyT>
-		REFLECTPP_INLINE auto get_setter_addr(size_t offset) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto property_setter_addr(size_t offset) REFLECTPP_NOEXCEPT
 		{
 			return [offset](void* object, void* value)
 			{
@@ -47,7 +47,7 @@ namespace reflectpp
 		}
 
 		template<typename T, typename PropertyT>
-		REFLECTPP_INLINE auto get_setter_func(void(T::* setter)(PropertyT)) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto property_setter_func(void(T::* setter)(PropertyT)) REFLECTPP_NOEXCEPT
 		{
 			return [setter](void* object, void* value)
 			{

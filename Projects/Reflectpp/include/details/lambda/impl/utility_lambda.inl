@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		REFLECTPP_INLINE auto get_compare() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto utility_compare() REFLECTPP_NOEXCEPT
 		{
 			return [](void* lhs, void* rhs) -> bool
 			{
@@ -21,7 +21,7 @@ namespace reflectpp
 		}
 
 		template<typename From, typename To>
-		REFLECTPP_INLINE auto get_convert() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto utility_convert() REFLECTPP_NOEXCEPT
 		{
 			return [](void* object) -> void*
 			{

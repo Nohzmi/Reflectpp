@@ -42,8 +42,8 @@ namespace reflectpp
 				if (type != nullptr)
 				{
 					type->m_enumeration = add_enumeration_impl(type_id<T>());
-					type->m_enumeration->m_convert_to_type = get_convert<std::underlying_type_t<T>, T>();
-					type->m_enumeration->m_convert_to_underlying_type = get_convert<T, std::underlying_type_t<T>>();
+					type->m_enumeration->m_convert_to_type = utility_convert<std::underlying_type_t<T>, T>();
+					type->m_enumeration->m_convert_to_underlying_type = utility_convert<T, std::underlying_type_t<T>>();
 					type->m_enumeration->m_name = name;
 					type->m_enumeration->m_underlying_type = add_type_impl<std::underlying_type_t<T>>();
 				}
@@ -74,10 +74,10 @@ namespace reflectpp
 				if (data != nullptr)
 				{
 					data->m_declaring_type = type;
-					data->m_getter = get_getter_addr(offset);
+					data->m_getter = property_getter_addr(offset);
 					data->m_id = id;
 					data->m_name = name;
-					data->m_setter = get_setter_addr<PropertyT>(offset);
+					data->m_setter = property_setter_addr<PropertyT>(offset);
 					data->m_specifiers = specifiers;
 					data->m_type = add_type_impl<decay<PropertyT>>();
 				}
@@ -99,10 +99,10 @@ namespace reflectpp
 			if (data != nullptr)
 			{
 				data->m_declaring_type = type;
-				data->m_getter = get_getter_func<T, PropertyT>(getter);
+				data->m_getter = property_getter_func<T, PropertyT>(getter);
 				data->m_id = id;
 				data->m_name = name;
-				data->m_setter = get_setter_func<T, PropertyT>(setter);
+				data->m_setter = property_setter_func<T, PropertyT>(setter);
 				data->m_specifiers = specifiers;
 				data->m_type = add_type_impl<decay<PropertyT>>();
 			}
@@ -148,9 +148,9 @@ namespace reflectpp
 
 				if (created)
 				{
-					data->m_constructor = get_constructor<T>();
-					data->m_copy = get_copy_constructor<T>();
-					data->m_destructor = get_destructor<T>();
+					data->m_constructor = factory_constructor<T>();
+					data->m_copy = factory_copy_constructor<T>();
+					data->m_destructor = factory_destructor<T>();
 				}
 
 				return data;
@@ -258,6 +258,7 @@ namespace reflectpp
 				data->m_size = sizeof(T);
 				data->m_type_info = get_type_info<T>();
 				data->m_utility = get_utility_impl<T>();
+				data->m_wrapper = get_wrapper_impl<T>();
 			}
 
 			return data;
@@ -294,14 +295,14 @@ namespace reflectpp
 					using iterator = typename decltype(associative_data)::iterator;
 					using key_type = typename decltype(associative_data)::key_type;
 
-					data->m_associative_at = get_associative_at<class_type, key_type>();
-					data->m_associative_clear = associative_data.m_clear != nullptr ? get_associative_clear<class_type>() : nullptr;
-					data->m_associative_equal_range = associative_data.m_equal_range != nullptr ? get_associative_equal_range<class_type, key_type>() : nullptr;
-					data->m_associative_erase = associative_data.m_erase != nullptr ? get_associative_erase<class_type, key_type>() : nullptr;
-					data->m_associative_find = associative_data.m_find != nullptr ? get_associative_find<class_type, key_type>() : nullptr;
-					if constexpr (!has_value_type<class_type>::value) data->m_associative_insert = get_associative_insert<class_type, iterator, key_type>();
-					else data->m_associative_insert = get_associative_insert<class_type, iterator, key_type, typename decltype(associative_data)::value_type>();
-					data->m_associative_size = get_associative_size<class_type>();
+					data->m_at = associative_view_at<class_type, key_type>();
+					data->m_clear = associative_data.m_clear != nullptr ? associative_view_clear<class_type>() : nullptr;
+					data->m_equal_range = associative_data.m_equal_range != nullptr ? associative_view_equal_range<class_type, key_type>() : nullptr;
+					data->m_erase = associative_data.m_erase != nullptr ? associative_view_erase<class_type, key_type>() : nullptr;
+					data->m_find = associative_data.m_find != nullptr ? associative_view_find<class_type, key_type>() : nullptr;
+					if constexpr (!has_value_type<class_type>::value) data->m_insert = associative_view_insert<class_type, iterator, key_type>();
+					else data->m_insert = associative_view_insert<class_type, iterator, key_type, typename decltype(associative_data)::value_type>();
+					data->m_size = associative_view_size<class_type>();
 					data->m_key_type = add_type_impl<key_type>();
 					if constexpr (has_value_type<class_type>::value) data->m_value_type = add_type_impl<typename decltype(associative_data)::value_type>();
 				}
@@ -340,13 +341,13 @@ namespace reflectpp
 					using class_type = typename decltype(sequence_data)::class_type;
 					using value_type = typename decltype(sequence_data)::value_type;
 
-					data->m_sequence_assign = sequence_data.m_at != nullptr ? get_sequence_assign<class_type, value_type>() : get_sequence_assign_impl<class_type, value_type>();
-					data->m_sequence_at = sequence_data.m_at != nullptr ? get_sequence_at<class_type>() : get_sequence_at_impl<class_type>();
-					data->m_sequence_clear = sequence_data.m_clear != nullptr ? get_sequence_clear<class_type>() : nullptr;
-					data->m_sequence_erase = sequence_data.m_erase != nullptr ? get_sequence_erase<class_type>() : nullptr;
-					data->m_sequence_insert = sequence_data.m_insert != nullptr ? get_sequence_insert<class_type, value_type>() : nullptr;
-					data->m_sequence_resize = sequence_data.m_resize != nullptr ? get_sequence_resize<class_type>() : nullptr;
-					data->m_sequence_size = sequence_data.m_size != nullptr ? get_sequence_size<class_type>() : get_sequence_size_impl<class_type>();
+					data->m_assign = sequence_data.m_at != nullptr ? sequential_view_assign<class_type, value_type>() : sequential_view_assign_impl<class_type, value_type>();
+					data->m_at = sequence_data.m_at != nullptr ? sequential_view_at<class_type>() : sequential_view_at_impl<class_type>();
+					data->m_clear = sequence_data.m_clear != nullptr ? sequential_view_clear<class_type>() : nullptr;
+					data->m_erase = sequence_data.m_erase != nullptr ? sequential_view_erase<class_type>() : nullptr;
+					data->m_insert = sequence_data.m_insert != nullptr ? sequential_view_insert<class_type, value_type>() : nullptr;
+					data->m_resize = sequence_data.m_resize != nullptr ? sequential_view_resize<class_type>() : nullptr;
+					data->m_size = sequence_data.m_size != nullptr ? sequential_view_size<class_type>() : sequential_view_size_impl<class_type>();
 					data->m_value_type = add_type_impl<value_type>();
 				}
 
@@ -364,12 +365,45 @@ namespace reflectpp
 			{
 				std::apply([&](auto... args){ (data->m_can_convert_from.emplace_back(std::is_convertible_v<decltype(args), T>), ...); }, m_arithmetic_types);
 				std::apply([&](auto... args){ (data->m_can_convert_to.emplace_back(std::is_convertible_v<T, decltype(args)>), ...); }, m_arithmetic_types);
-				data->m_compare = get_compare<T>();
-				std::apply([&](auto... args){ (data->m_convert_from.emplace_back(get_convert<decltype(args), T>()), ...); }, m_arithmetic_types);
-				std::apply([&](auto... args){ (data->m_convert_to.emplace_back(get_convert<T, decltype(args)>()), ...); }, m_arithmetic_types);
+				data->m_compare = utility_compare<T>();
+				std::apply([&](auto... args){ (data->m_convert_from.emplace_back(utility_convert<decltype(args), T>()), ...); }, m_arithmetic_types);
+				std::apply([&](auto... args){ (data->m_convert_to.emplace_back(utility_convert<T, decltype(args)>()), ...); }, m_arithmetic_types);
 			}
 
 			return data;
+		}
+
+		template<typename T>
+		REFLECTPP_INLINE wrapper_data* registry::get_wrapper_impl() REFLECTPP_NOEXCEPT
+		{
+			if constexpr (!is_smart_pointer<T>::value)
+			{
+				return nullptr;
+			}
+			else
+			{
+				bool created{ false };
+				auto data{ get_wrapper_impl(type_id<T>(), created) };
+
+				if (created)
+				{
+					auto smart_pointer_data{ get_smart_pointer_data(T()) };
+
+					if (smart_pointer_data.m_get == nullptr)
+					{
+						REFLECTPP_LOG("get function not linked to custom smart pointer");
+						return nullptr;
+					}
+
+					using class_type = typename decltype(smart_pointer_data)::class_type;
+					using value_type = typename decltype(smart_pointer_data)::value_type;
+
+					data->m_get = wrapper_get<class_type, value_type>();
+					data->m_value_type = add_type_impl<value_type>();
+				}
+
+				return data;
+			}
 		}
 	}
 }

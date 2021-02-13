@@ -167,7 +167,6 @@ namespace reflectpp
 
 		sequential_view_data* registry::get_sequential_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
 		{
-
 			for (auto& it : m_sequential_views)
 			{
 				if (it.first == id)
@@ -224,6 +223,23 @@ namespace reflectpp
 			created = true;
 			auto data{ new utility_data() };
 			m_utilities.emplace(id, data);
+			return data;
+		}
+
+		wrapper_data* registry::get_wrapper_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
+		{
+			for (auto& it : m_wrappers)
+			{
+				if (it.first == id)
+				{
+					created = false;
+					return it.second.get();
+				}
+			}
+
+			created = true;
+			auto data{ new wrapper_data() };
+			m_wrappers.emplace(id, data);
 			return data;
 		}
 	}

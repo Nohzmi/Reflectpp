@@ -75,7 +75,7 @@ namespace reflectpp
 	};
 }
 
-#include "details/inline/argument.inl"
+#include "details/impl/argument.inl"
 
 /**
 * @}

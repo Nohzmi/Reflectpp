@@ -2,7 +2,6 @@
 
 #include "enumeration.h"
 
-#include <string>
 #include "type.h"
 #include "argument.h"
 

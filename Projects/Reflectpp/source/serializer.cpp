@@ -6,6 +6,7 @@
 #include <iomanip>
 
 #include "argument.h"
+#include "instance.h"
 #include "property.h"
 #include "type.h"
 #include "variant_associative_view.h"

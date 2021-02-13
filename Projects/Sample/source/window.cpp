@@ -10,8 +10,7 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 
-#include <type.h>
-#include <argument.h>
+#include <reflectpp.h>
 
 using namespace reflectpp;
 

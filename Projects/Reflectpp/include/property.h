@@ -7,9 +7,9 @@
 */
 
 #pragma once
-#include "details/forward.h"
-#include "details/macros.h"
-#include "details/platform.h"
+#include "details/core/forward.h"
+#include "details/core/macros.h"
+#include "details/core/platform.h"
 
 /**
 * @addtogroup Reflectpp

@@ -7,9 +7,8 @@
 */
 
 #pragma once
-#include "details/reflectpp_cast_helper.h"
-#include "details/registry.h"
-#include "details/variant_data.h"
+#include "details/core/registry.h"
+#include "details/data/variant_data.h"
 
 /**
 * @addtogroup Reflectpp
@@ -152,7 +151,7 @@ namespace reflectpp
 	};
 }
 
-#include "details/inline/variant.inl"
+#include "details/impl/variant.inl"
 
 /**
 * @}

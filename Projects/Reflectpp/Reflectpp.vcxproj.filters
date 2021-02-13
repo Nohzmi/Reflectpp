@@ -13,8 +13,32 @@
     <Filter Include="source\details">
       <UniqueIdentifier>{1c468833-fec4-46b9-80d6-92eb776edf6d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\details\inline">
+    <Filter Include="include\details\data">
+      <UniqueIdentifier>{f4b32480-bae8-4544-9ebc-f17502a82a5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\details\lambda">
+      <UniqueIdentifier>{695137ee-fca1-4943-a43d-72351f90df99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\details\core">
+      <UniqueIdentifier>{97e4611c-1335-4de1-b161-218bd0be9654}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\details\core\impl">
+      <UniqueIdentifier>{91212673-8cfc-48d5-ad6b-cd4f360f9ded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\details\lambda\impl">
+      <UniqueIdentifier>{e273d70d-720e-4bbf-a11a-b045fefb3839}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\details\impl">
       <UniqueIdentifier>{cb8b1d7a-5d6e-4954-b340-77cf32b93732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\details\custom">
+      <UniqueIdentifier>{f0326fcb-69da-49aa-8320-8c5cfeef9105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\details\custom\impl">
+      <UniqueIdentifier>{dda0ee04-9b27-4118-be1b-9c92fa2eb7f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\details\core">
+      <UniqueIdentifier>{5503ad17-c3f6-416a-aeaa-8f338a810d53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -23,9 +47,6 @@
     </ClInclude>
     <ClInclude Include="include\type.h">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\registry.h">
-      <Filter>include\details</Filter>
     </ClInclude>
     <ClInclude Include="include\property.h">
       <Filter>include</Filter>
@@ -51,121 +72,166 @@
     <ClInclude Include="include\argument.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\hasher.hpp">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\platform.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\type_traits.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\property_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\type_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\factory_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\type_info_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\log.hpp">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\variant_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\forward.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\macros.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\specifiers.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\variant_associative_view.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\register_traits.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\custom_sequence_container.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\custom_associative_container.hpp">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\reflectpp.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\associative_container_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\sequence_container_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\associative_container.hpp">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\sequence_container.hpp">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\sequential_view_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\variant_sequential_view.h">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\associative_view_data.h">
-      <Filter>include\details</Filter>
     </ClInclude>
     <ClInclude Include="include\enumeration.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\enumeration_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\factory_lambda.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\sequential_view_lambda.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\associative_view_lambda.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\property_lambda.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\type_info_helper.hpp">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\utility_data.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\utility_lambda.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\utility_type_traits.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\reflectpp_cast_helper.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\reflectpp_cast.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\enumeration_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\factory_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\property_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\sequence_container_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\sequential_view_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\type_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\type_info_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\utility_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\variant_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\associative_container_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\data\associative_view_data.h">
+      <Filter>include\details\data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\lambda\factory_lambda.h">
+      <Filter>include\details\lambda</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\lambda\property_lambda.h">
+      <Filter>include\details\lambda</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\lambda\sequential_view_lambda.h">
+      <Filter>include\details\lambda</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\lambda\utility_lambda.h">
+      <Filter>include\details\lambda</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\lambda\associative_view_lambda.h">
+      <Filter>include\details\lambda</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\register_traits.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\registry.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\specifiers.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\type_traits.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\utility_type_traits.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\forward.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\log.hpp">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\macros.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\platform.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\reflectpp_cast_helper.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\type_info_helper.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\hasher.h">
+      <Filter>include\details\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\sequence_container.h">
+      <Filter>include\details</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\associative_container.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\associative_container_map.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\associative_container_set.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\associative_container_multimap.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\associative_container_multiset.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\associative_container_unordered_multiset.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\associative_container_unordered_set.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\associative_container_unordered_map.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\associative_container_unordered_multimap.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\custom_associative_container.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\sequence_container_forward_list.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\sequence_container_list.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\sequence_container_vector.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\sequence_container.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\sequence_container_array.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\sequence_container_basic_string.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\sequence_container_deque.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\custom_sequence_container.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\type.cpp">
       <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\details\registry.cpp">
-      <Filter>source\details</Filter>
     </ClCompile>
     <ClCompile Include="source\variant.cpp">
       <Filter>source</Filter>
@@ -200,55 +266,115 @@
     <ClCompile Include="source\enumeration.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\details\reflectpp_cast_helper.cpp">
-      <Filter>source\details</Filter>
+    <ClCompile Include="source\details\core\reflectpp_cast_helper.cpp">
+      <Filter>source\details\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\details\core\registry.cpp">
+      <Filter>source\details\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\details\inline\factory.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\core\impl\registry.inl">
+      <Filter>include\details\core\impl</Filter>
     </None>
-    <None Include="include\details\inline\registration.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\core\impl\reflectpp_cast_helper.inl">
+      <Filter>include\details\core\impl</Filter>
     </None>
-    <None Include="include\details\inline\type_info.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\lambda\impl\associative_view_lambda.inl">
+      <Filter>include\details\lambda\impl</Filter>
     </None>
-    <None Include="include\details\inline\variant.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\lambda\impl\factory_lambda.inl">
+      <Filter>include\details\lambda\impl</Filter>
     </None>
-    <None Include="include\details\inline\type.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\lambda\impl\property_lambda.inl">
+      <Filter>include\details\lambda\impl</Filter>
     </None>
-    <None Include="include\details\inline\instance.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\lambda\impl\sequential_view_lambda.inl">
+      <Filter>include\details\lambda\impl</Filter>
     </None>
-    <None Include="include\details\inline\argument.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\lambda\impl\utility_lambda.inl">
+      <Filter>include\details\lambda\impl</Filter>
     </None>
-    <None Include="include\details\inline\registry.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\impl\reflectpp_cast.inl">
+      <Filter>include\details\impl</Filter>
     </None>
-    <None Include="include\details\inline\factory_lambda.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\impl\registration.inl">
+      <Filter>include\details\impl</Filter>
     </None>
-    <None Include="include\details\inline\associative_view_lambda.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\impl\type.inl">
+      <Filter>include\details\impl</Filter>
     </None>
-    <None Include="include\details\inline\sequential_view_lambda.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\impl\type_info.inl">
+      <Filter>include\details\impl</Filter>
     </None>
-    <None Include="include\details\inline\property_lambda.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\impl\variant.inl">
+      <Filter>include\details\impl</Filter>
     </None>
-    <None Include="include\details\inline\utility_lambda.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\impl\argument.inl">
+      <Filter>include\details\impl</Filter>
     </None>
-    <None Include="include\details\inline\reflectpp_cast_helper.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\impl\factory.inl">
+      <Filter>include\details\impl</Filter>
     </None>
-    <None Include="include\details\inline\reflectpp_cast.inl">
-      <Filter>include\details\inline</Filter>
+    <None Include="include\details\impl\instance.inl">
+      <Filter>include\details\impl</Filter>
+    </None>
+    <None Include="include\details\core\impl\type_info_helper.inl">
+      <Filter>include\details\core\impl</Filter>
+    </None>
+    <None Include="include\details\core\impl\hasher.inl">
+      <Filter>include\details\core\impl</Filter>
+    </None>
+    <None Include="include\details\sequence_container.inl">
+      <Filter>include\details</Filter>
+    </None>
+    <None Include="include\details\custom\impl\associative_container.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\associative_container_map.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\associative_container_multimap.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\associative_container_set.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\associative_container_multiset.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\associative_container_unordered_multimap.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\associative_container_unordered_multiset.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\associative_container_unordered_set.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\associative_container_unordered_map.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\sequence_container_deque.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\sequence_container_forward_list.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\sequence_container_list.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\sequence_container_vector.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\sequence_container.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\sequence_container_array.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\sequence_container_basic_string.inl">
+      <Filter>include\details\custom\impl</Filter>
     </None>
   </ItemGroup>
 </Project>

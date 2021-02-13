@@ -9,7 +9,9 @@
 #pragma once
 #include <nlohmann/json.hpp>
 
-#include "instance.h"
+#include "details/core/forward.h"
+#include "details/core/macros.h"
+#include "details/core/platform.h"
 
 /**
 * @addtogroup Reflectpp

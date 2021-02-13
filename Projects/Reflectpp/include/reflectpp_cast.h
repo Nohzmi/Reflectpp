@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "details/reflectpp_cast_helper.h"
+#include "details/core/reflectpp_cast_helper.h"
 
 /**
 * @addtogroup Reflectpp
@@ -24,7 +24,7 @@ namespace reflectpp
 	REFLECTPP_INLINE T reflectpp_cast(U* object) REFLECTPP_NOEXCEPT;
 }
 
-#include "details/inline/reflectpp_cast.inl"
+#include "details/impl/reflectpp_cast.inl"
 
 /**
 * @}

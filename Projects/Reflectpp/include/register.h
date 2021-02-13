@@ -7,9 +7,9 @@
 */
 
 #pragma once
-#include "details/forward.h"
-#include "details/hasher.hpp"
-#include "details/type_info_helper.hpp"
+#include "details/core/forward.h"
+#include "details/core/hasher.h"
+#include "details/core/type_info_helper.h"
 
 #define REFLECT(T)																\
 private:																		\

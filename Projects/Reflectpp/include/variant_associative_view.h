@@ -9,10 +9,9 @@
 #pragma once
 #include <utility>
 
-#include "details/forward.h"
-#include "details/macros.h"
-#include "details/platform.h"
-#include "details/variant_data.h"
+#include "details/core/macros.h"
+#include "details/core/platform.h"
+#include "details/data/variant_data.h"
 
 /**
 * @addtogroup Reflectpp

@@ -2,6 +2,7 @@
 
 #include "variant.h"
 
+#include "details/core/reflectpp_cast_helper.h"
 #include "type.h"
 #include "variant_associative_view.h"
 #include "variant_sequential_view.h"

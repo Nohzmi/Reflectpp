@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "details/registry.h"
+#include "details/core/registry.h"
 
 /**
 * @addtogroup Reflectpp
@@ -100,7 +100,7 @@ namespace reflectpp
 	};
 }
 
-#include "details/inline/registration.inl"
+#include "details/impl/registration.inl"
 
 /**
 * @}

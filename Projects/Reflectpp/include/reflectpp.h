@@ -9,6 +9,8 @@
 #pragma once
 
 #include <argument.h>
+#include <custom_associative_container.h>
+#include <custom_sequence_container.h>
 #include <enumeration.h>
 #include <factory.h>
 #include <instance.h>

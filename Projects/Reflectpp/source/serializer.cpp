@@ -6,7 +6,6 @@
 #include <iomanip>
 
 #include "argument.h"
-#include "factory.h"
 #include "property.h"
 #include "type.h"
 #include "variant_associative_view.h"
@@ -56,15 +55,20 @@ namespace reflectpp
 			if (!j.is_array()) j = var.get_value<bool>();
 			else j.emplace_back(var.get_value<bool>());
 		}
+		else if (var.is_type<float>())
+		{
+			if (!j.is_array()) j = var.get_value<float>();
+			else j.emplace_back(var.get_value<float>());
+		}
 		else if (var.is_type<double>())
 		{
 			if (!j.is_array()) j = var.get_value<double>();
 			else j.emplace_back(var.get_value<double>());
 		}
-		else if (var.is_type<float>())
+		else if (var.is_type<long double>())
 		{
-			if (!j.is_array()) j = var.get_value<float>();
-			else j.emplace_back(var.get_value<float>());
+			if (!j.is_array()) j = var.get_value<long double>();
+			else j.emplace_back(var.get_value<long double>());
 		}
 		else if (var.is_type<int8_t>())
 		{
@@ -81,20 +85,15 @@ namespace reflectpp
 			if (!j.is_array()) j = var.get_value<int32_t>();
 			else j.emplace_back(var.get_value<int32_t>());
 		}
-		else if (var.is_type<int64_t>())
-		{
-			if (!j.is_array()) j = var.get_value<int64_t>();
-			else j.emplace_back(var.get_value<int64_t>());
-		}
 		else if (var.is_type<long>())
 		{
 			if (!j.is_array()) j = var.get_value<long>();
 			else j.emplace_back(var.get_value<long>());
 		}
-		else if (var.is_type<long double>())
+		else if (var.is_type<int64_t>())
 		{
-			if (!j.is_array()) j = var.get_value<long double>();
-			else j.emplace_back(var.get_value<long double>());
+			if (!j.is_array()) j = var.get_value<int64_t>();
+			else j.emplace_back(var.get_value<int64_t>());
 		}
 		else if (var.is_type<uint8_t>())
 		{
@@ -111,25 +110,35 @@ namespace reflectpp
 			if (!j.is_array()) j = var.get_value<uint32_t>();
 			else j.emplace_back(var.get_value<uint32_t>());
 		}
-		else if (var.is_type<uint64_t>())
-		{
-			if (!j.is_array()) j = var.get_value<uint64_t>();
-			else j.emplace_back(var.get_value<uint64_t>());
-		}
 		else if (var.is_type<unsigned long>())
 		{
 			if (!j.is_array()) j = var.get_value<unsigned long>();
 			else j.emplace_back(var.get_value<unsigned long>());
+		}
+		else if (var.is_type<uint64_t>())
+		{
+			if (!j.is_array()) j = var.get_value<uint64_t>();
+			else j.emplace_back(var.get_value<uint64_t>());
 		}
 		else if (var.is_type<char>())
 		{
 			if (!j.is_array()) j = std::string(1, var.get_value<char>());
 			else j.emplace_back(std::string(1, var.get_value<char>()));
 		}
-		else if (var.is_type<std::string>())
+		else if (var.is_type<char16_t>())
 		{
-			if (!j.is_array()) j = var.get_value<std::string>();
-			else j.emplace_back(var.get_value<std::string>());
+			if (!j.is_array()) j = var.get_value<char16_t>();
+			else j.emplace_back(var.get_value<char16_t>());
+		}
+		else if (var.is_type<char32_t>())
+		{
+			if (!j.is_array()) j = var.get_value<char32_t>();
+			else j.emplace_back(var.get_value<char32_t>());
+		}
+		else if (var.is_type<wchar_t>())
+		{
+			if (!j.is_array()) j = var.get_value<wchar_t>();
+			else j.emplace_back(var.get_value<wchar_t>());
 		}
 		else if (var.is_associative_container())
 		{
@@ -149,10 +158,35 @@ namespace reflectpp
 		}
 		else if (var.is_sequential_container())
 		{
-			j = json::array();
+			auto view{ var.create_sequential_view() };
+			
+			if (view.get_value_type() == type::get<char>())
+			{
+				std::string str;
 
-			for (auto it : var.create_sequential_view())
-				save_type(it, j);
+				for (auto it : view)
+					str.push_back(it.get_value<char>());
+
+				if (!j.is_array()) j = str;
+				else j.emplace_back(str);
+			}
+			else
+			{
+				if (!j.is_array())
+				{
+					j = json::array();
+
+					for (auto it : view)
+						save_type(it, j);
+				}
+				else
+				{
+					j.emplace_back(json::array());
+
+					for (auto it : view)
+						save_type(it, *(j.end()-1));
+				}
+			}
 		}
 		else if (var.get_type().is_class())
 		{
@@ -179,8 +213,8 @@ namespace reflectpp
 		}
 		else if (j.is_number_float())
 		{
-			if (var.is_type<double>()) var.get_value<double>() = j.get<double>();
-			else if (var.is_type<float>()) var.get_value<float>() = j.get<float>();
+			if (var.is_type<float>()) var.get_value<float>() = j.get<float>();
+			else if (var.is_type<double>()) var.get_value<double>() = j.get<double>();
 			else if (var.is_type<long double>()) var.get_value<long double>() = j.get<long double>();
 		}
 		else if (j.is_number_integer())
@@ -188,18 +222,32 @@ namespace reflectpp
 			if (var.is_type<int8_t>()) var.get_value<int8_t>() = j.get<int8_t>();
 			else if (var.is_type<int16_t>()) var.get_value<int16_t>() = j.get<int16_t>();
 			else if (var.is_type<int32_t>()) var.get_value<int32_t>() = j.get<int32_t>();
-			else if (var.is_type<int64_t>()) var.get_value<int64_t>() = j.get<int64_t>();
 			else if (var.is_type<long>()) var.get_value<long>() = j.get<long>();
+			else if (var.is_type<int64_t>()) var.get_value<int64_t>() = j.get<int64_t>();
 			else if (var.is_type<uint8_t>()) var.get_value<uint8_t>() = j.get<uint8_t>();
 			else if (var.is_type<uint16_t>()) var.get_value<uint16_t>() = j.get<uint16_t>();
 			else if (var.is_type<uint32_t>()) var.get_value<uint32_t>() = j.get<uint32_t>();
-			else if (var.is_type<uint64_t>()) var.get_value<uint64_t>() = j.get<uint64_t>();
 			else if (var.is_type<unsigned long>()) var.get_value<unsigned long>() = j.get<unsigned long>();
+			else if (var.is_type<uint64_t>()) var.get_value<uint64_t>() = j.get<uint64_t>();
+			else if (var.is_type<char16_t>()) var.get_value<char16_t>() = j.get<char16_t>();
+			else if (var.is_type<char32_t>()) var.get_value<char32_t>() = j.get<char32_t>();
+			else if (var.is_type<wchar_t>()) var.get_value<wchar_t>() = j.get<wchar_t>();
 		}
 		else if (j.is_string())
 		{
-			if (var.is_type<char>()) var.get_value<char>() = j.get<std::string>().at(0);
-			else if (var.is_type<std::string>()) var.get_value<std::string>() = j.get<std::string>();
+			if (var.is_type<char>())
+			{
+				std::string str{ j.get<std::string>() };
+				var.get_value<char>() = str.at(0);
+			}
+			else if (var.is_sequential_container())
+			{
+				auto view{ var.create_sequential_view() };
+				view.clear();
+
+				for (auto& it : j.get<std::string>())
+					view.insert(view.end(), it);
+			}
 		}
 		else if (j.is_array())
 		{

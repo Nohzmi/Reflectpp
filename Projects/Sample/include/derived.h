@@ -31,4 +31,6 @@ public:
 	std::vector<float> DerivedValue2;
 	std::map<char, float> DerivedValue3;
 	std::set<char> DerivedValue4;
+	std::wstring TestValue = L"sometext";
+	std::vector<std::vector<int>> TestValue2 = { {5, 6}, {12,13} };
 };

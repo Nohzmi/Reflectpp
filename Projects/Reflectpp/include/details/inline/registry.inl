@@ -362,11 +362,11 @@ namespace reflectpp
 
 			if (created)
 			{
-				std::apply([&](auto... args){ (data->m_can_convert_from.emplace_back(std::is_convertible_v<decltype(args), T>), ...); }, m_arithmetic_tuple);
-				std::apply([&](auto... args){ (data->m_can_convert_to.emplace_back(std::is_convertible_v<T, decltype(args)>), ...); }, m_arithmetic_tuple);
+				std::apply([&](auto... args){ (data->m_can_convert_from.emplace_back(std::is_convertible_v<decltype(args), T>), ...); }, m_arithmetic_types);
+				std::apply([&](auto... args){ (data->m_can_convert_to.emplace_back(std::is_convertible_v<T, decltype(args)>), ...); }, m_arithmetic_types);
 				data->m_compare = get_compare<T>();
-				std::apply([&](auto... args){ (data->m_convert_from.emplace_back(get_convert<decltype(args), T>()), ...); }, m_arithmetic_tuple);
-				std::apply([&](auto... args){ (data->m_convert_to.emplace_back(get_convert<T, decltype(args)>()), ...); }, m_arithmetic_tuple);
+				std::apply([&](auto... args){ (data->m_convert_from.emplace_back(get_convert<decltype(args), T>()), ...); }, m_arithmetic_types);
+				std::apply([&](auto... args){ (data->m_convert_to.emplace_back(get_convert<T, decltype(args)>()), ...); }, m_arithmetic_types);
 			}
 
 			return data;

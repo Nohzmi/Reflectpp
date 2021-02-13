@@ -1,11 +1,9 @@
 Sample
 	Mise à jour du sample (classe avec tous les types fondamentales, list of list, list of struct)
 	
-Other:
-	Cas du std::string
-	Optimization avec reference wrapper
+Optimization:
+	Essayer les reference wrapper (rttr)
 
 V2:
-	Custom string
 	Custom smart_ptr
 	Function reflection

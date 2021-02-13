@@ -6,6 +6,7 @@
 #include <reflectpp.h>
 //#include <vld/vld.h>
 
+#include "details/registry.h"
 #include "intern.h"
 #include "base.h"
 #include "derived.h"
@@ -162,6 +163,11 @@ int main()
 	std::cout << std::endl;
 
 	std::cout << "get_type_by_name: Base, getted: " << type::get_by_name("Base").get_name() << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "get all types" << std::endl;
+	for (auto& it : details::registry::get_instance().get_arithmetic_types())
+		std::cout << "  " << it->m_type_info->m_name << std::endl;
 	std::cout << std::endl;
 
 	std::cout << "get all types" << std::endl;

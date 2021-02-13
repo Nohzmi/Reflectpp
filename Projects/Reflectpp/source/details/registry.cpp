@@ -20,7 +20,7 @@ namespace reflectpp
 		std::vector<type_data*> registry::get_arithmetic_types() REFLECTPP_NOEXCEPT
 		{
 			std::vector<type_data*> types;
-			std::apply([&](auto... args){ (types.emplace_back(get_type<decltype(args)>()), ...); }, m_arithmetic_tuple);
+			std::apply([&](auto... args){ (types.emplace_back(get_type<decltype(args)>()), ...); }, m_arithmetic_types);
 			return types;
 		}
 

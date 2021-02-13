@@ -16,26 +16,35 @@ using json = nlohmann::json;
 
 namespace reflectpp
 {
-	serializer::serializer(const char*) REFLECTPP_NOEXCEPT
+	serializer::serializer(const char* path) REFLECTPP_NOEXCEPT :
+		m_path{ path }
 	{
-		m_path = "temp.json";// (std::string(path) + ".json").c_str();//TODO clean
+		
 	}
 
-	void serializer::save(instance object) const REFLECTPP_NOEXCEPT  //////
+	void serializer::save(instance object) const REFLECTPP_NOEXCEPT
 	{
 		json j;
-		variant* var{ static_cast<variant*>(object) };
-		save_type(*var, j);
+		save_type(*static_cast<variant*>(object), j);
 
-		std::ofstream out(m_path);
+		std::string path{ m_path };
+
+		if (path.substr(path.find_last_of(".") + 1) != "json")
+			path.append(".json");
+
+		std::ofstream out(path);
 		out << std::setw(4) << j;
 	}
 
-	void serializer::load(instance object) const REFLECTPP_NOEXCEPT   /////
+	void serializer::load(instance object) const REFLECTPP_NOEXCEPT
 	{
-		json j;
+		std::string path{ m_path };
 
-		std::ifstream in(m_path);
+		if (path.substr(path.find_last_of(".") + 1) != "json")
+			path.append(".json");
+
+		json j;
+		std::ifstream in(path);
 
 		if (!in.is_open())
 			return;

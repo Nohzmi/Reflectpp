@@ -58,7 +58,7 @@ namespace reflectpp
 		void save_type(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
 		void load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT;
 
-		const char* m_path{ "default" };
+		const char* m_path{ "default.json" };
 	};
 }
 

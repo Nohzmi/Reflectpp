@@ -210,6 +210,9 @@ namespace reflectpp
 		if (!is_valid() || m_data.m_type->m_associative_view->m_associative_insert == nullptr)
 			return std::make_pair(iterator(), false);
 
+		if (!static_cast<variant*>(value)->is_valid())
+			insert(std::move(key));
+
 		auto key_var{ static_cast<variant*>(key) };
 		auto value_var{ static_cast<variant*>(value) };
 

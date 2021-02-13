@@ -1,8 +1,8 @@
 {
-    "BaseValue0": 0.0,
+    "BaseValue0": -20.0,
     "BaseValue1": {
-        "InternValue0": 0,
-        "InternValue1": 0
+        "InternValue0": -11,
+        "InternValue1": 100
     },
     "DerivedValue0": 10.0,
     "DerivedValue1": {
@@ -25,16 +25,13 @@
     ],
     "DerivedValue4": [
         {
-            "key": "x",
-            "value": null
+            "key": "x"
         },
         {
-            "key": "y",
-            "value": null
+            "key": "y"
         },
         {
-            "key": "z",
-            "value": null
+            "key": "z"
         }
     ]
 }

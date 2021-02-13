@@ -106,7 +106,7 @@ int main()
 	std::cout << "is_valid: " << variant_associative.is_valid() << std::endl;
 	std::cout << "is_key_only_type: " << variant_associative.is_key_only_type() << std::endl;
 	std::cout << std::endl;
-
+	
 	/*variant_associative.clear();
 	std::cout << "size: " << variant_associative.get_size() << std::endl;
 	for (auto it : variant_associative)
@@ -176,6 +176,12 @@ int main()
 	std::cout << "//***** serialization test *****//" << std::endl;
 	std::cout << std::endl;
 
+	Intern intern;
+	intern.InternValue0 = -11;
+	intern.InternValue1 = 100;
+
+	object.SetValue0(-20.f);
+	object.SetValue1(intern);
 	object.DerivedValue0 = 10.f;
 	object.DerivedValue1.InternValue0 = 20;
 	object.DerivedValue1.InternValue1 = 21;
@@ -185,6 +191,9 @@ int main()
 
 	serializer s("test");
 	s.save(object);
+
+	Derived object2 = Derived();
+	s.load(object2);
 
 	return EXIT_SUCCESS;
 }

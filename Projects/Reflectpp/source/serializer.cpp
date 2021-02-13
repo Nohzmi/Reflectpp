@@ -6,6 +6,7 @@
 #include <iomanip>
 
 #include "argument.h"
+#include "factory.h"
 #include "property.h"
 #include "type.h"
 #include "variant_associative_view.h"
@@ -20,7 +21,7 @@ namespace reflectpp
 		m_path = "temp.json";// (std::string(path) + ".json").c_str();//TODO clean
 	}
 
-	void serializer::save(instance object) const REFLECTPP_NOEXCEPT
+	void serializer::save(instance object) const REFLECTPP_NOEXCEPT  //////
 	{
 		json j;
 		variant* var{ static_cast<variant*>(object) };
@@ -30,7 +31,7 @@ namespace reflectpp
 		out << std::setw(4) << j;
 	}
 
-	void serializer::load(instance object) const REFLECTPP_NOEXCEPT
+	void serializer::load(instance object) const REFLECTPP_NOEXCEPT   /////
 	{
 		json j;
 
@@ -46,15 +47,14 @@ namespace reflectpp
 
 	void serializer::save_type(const variant& var, json& j) const REFLECTPP_NOEXCEPT
 	{
-		if (var.is_type<bool>())
+		if (!var.is_valid())
+		{
+			return;
+		}
+		else if (var.is_type<bool>())
 		{
 			if (!j.is_array()) j = var.get_value<bool>();
 			else j.emplace_back(var.get_value<bool>());
-		}
-		else if (var.is_type<char>())
-		{
-			if (!j.is_array()) j = std::string(1, var.get_value<char>()); // à check
-			else j.emplace_back(std::string(1, var.get_value<char>()));
 		}
 		else if (var.is_type<double>())
 		{
@@ -121,15 +121,29 @@ namespace reflectpp
 			if (!j.is_array()) j = var.get_value<unsigned long>();
 			else j.emplace_back(var.get_value<unsigned long>());
 		}
+		else if (var.is_type<char>())
+		{
+			if (!j.is_array()) j = std::string(1, var.get_value<char>());
+			else j.emplace_back(std::string(1, var.get_value<char>()));
+		}
+		else if (var.is_type<std::string>())
+		{
+			if (!j.is_array()) j = var.get_value<std::string>();
+			else j.emplace_back(var.get_value<std::string>());
+		}
 		else if (var.is_associative_container())
 		{
 			j = json::array();
+			auto view{ var.create_associative_view() };
 
-			for (auto it : var.create_associative_view())
+			for (auto it : view)
 			{
 				json obj = json::object();
 				save_type(it.first, obj["key"]);
-				save_type(it.second, obj["value"]);
+
+				if (!view.is_key_only_type())
+					save_type(it.second, obj["value"]);
+
 				j.emplace_back(obj);
 			}
 		}
@@ -140,7 +154,7 @@ namespace reflectpp
 			for (auto it : var.create_sequential_view())
 				save_type(it, j);
 		}
-		else
+		else if (var.get_type().is_class())
 		{
 			for (auto& it : var.get_type().get_properties())
 			{
@@ -154,74 +168,86 @@ namespace reflectpp
 
 	void serializer::load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT
 	{
-		if (j.is_string())
+		if (j.is_null() || !var.is_valid())
 		{
-			if (var.is_type<char>()) var.get_value<char>() = j.get<char>();
-			else if (!var.is_valid())
-			{
-				auto str = j.get<std::string>();
-
-				if (str.size() == 1)
-					var = variant(std::move(j.get<std::string>()[0]));
-			}
+			return;
 		}
-		else if (j.is_number_integer())
+		else if (j.is_boolean())
 		{
-			if (var.is_type<int>())
-				var.get_value<int>() = j.get<int>();
-			else if (var.is_type<unsigned>())
-				var.get_value<unsigned>() = j.get<unsigned>();
-			else if (!var.is_valid())
-				var = variant(j.get<int>());
+			if (var.is_type<bool>())
+				var.get_value<bool>() = j.get<bool>();
 		}
 		else if (j.is_number_float())
 		{
-			if (var.is_type<float>())
-				var.get_value<float>() = j.get<float>();
-			else if (var.is_type<double>())
-				var.get_value<double>() = j.get<double>();
-			else if (!var.is_valid())
-				var = variant(j.get<float>());
+			if (var.is_type<double>()) var.get_value<double>() = j.get<double>();
+			else if (var.is_type<float>()) var.get_value<float>() = j.get<float>();
+			else if (var.is_type<long double>()) var.get_value<long double>() = j.get<long double>();
+		}
+		else if (j.is_number_integer())
+		{
+			if (var.is_type<int8_t>()) var.get_value<int8_t>() = j.get<int8_t>();
+			else if (var.is_type<int16_t>()) var.get_value<int16_t>() = j.get<int16_t>();
+			else if (var.is_type<int32_t>()) var.get_value<int32_t>() = j.get<int32_t>();
+			else if (var.is_type<int64_t>()) var.get_value<int64_t>() = j.get<int64_t>();
+			else if (var.is_type<long>()) var.get_value<long>() = j.get<long>();
+			else if (var.is_type<uint8_t>()) var.get_value<uint8_t>() = j.get<uint8_t>();
+			else if (var.is_type<uint16_t>()) var.get_value<uint16_t>() = j.get<uint16_t>();
+			else if (var.is_type<uint32_t>()) var.get_value<uint32_t>() = j.get<uint32_t>();
+			else if (var.is_type<uint64_t>()) var.get_value<uint64_t>() = j.get<uint64_t>();
+			else if (var.is_type<unsigned long>()) var.get_value<unsigned long>() = j.get<unsigned long>();
+		}
+		else if (j.is_string())
+		{
+			if (var.is_type<char>()) var.get_value<char>() = j.get<std::string>().at(0);
+			else if (var.is_type<std::string>()) var.get_value<std::string>() = j.get<std::string>();
 		}
 		else if (j.is_array())
 		{
 			if (var.is_associative_container())
 			{
-				auto v{ var.create_associative_view() };
-				v.clear();
-				
+				auto view{ var.create_associative_view() };
+				view.clear();
+
 				for (auto& it : j)
 				{
-					variant l1;
-					variant l2;
-					load_type(l1, it["key"]);
-					load_type(l2, it["value"]);
-					v.insert(l1, l2);
+					if (!it.is_object() || !it.contains("key"))
+						continue;
+
+					variant key_var{ view.get_key_type().create() };
+					variant value_var{ view.get_value_type().create() };
+					load_type(key_var, it.at("key"));
+
+					if (it.contains("value"))
+						load_type(value_var, it.at("value"));
+
+					view.insert(key_var, value_var);
 				}
 			}
 			else if (var.is_sequential_container())
 			{
-				auto v{ var.create_sequential_view() };
-				v.clear();
+				auto view{ var.create_sequential_view() };
+				view.clear();
 
 				for (auto& it : j)
 				{
-					variant l1 = variant();
-					load_type(l1, it);
-					v.insert(v.end(), l1);
+					variant value_var{ view.get_value_type().create() };
+					load_type(value_var, it);
+
+					view.insert(view.end(), value_var);
 				}
 			}
 		}
-		else
+		else if (j.is_object())
 		{
 			for (auto& it : var.get_type().get_properties())
 			{
 				if (!j.contains(it.get_name()))
 					continue;
 
-				variant pvar{ it.get_value(var) };
-				auto& pj{ j.at(it.get_name()) };
-				load_type(pvar, pj);
+				variant pvar{ it.get_type().create() };
+				load_type(pvar, j.at(it.get_name()));
+
+				it.set_value(var, pvar);
 			}
 		}
 	}

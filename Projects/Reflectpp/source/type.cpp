@@ -22,7 +22,7 @@ namespace reflectpp
 
 	variant type::create() const REFLECTPP_NOEXCEPT
 	{
-		return variant({ true, m_data, m_data->m_factory->m_constructor() });
+		return is_valid() ? variant({ true, m_data, m_data->m_factory->m_constructor() }) : variant();
 	}
 
 	bool type::destroy(variant& var) const REFLECTPP_NOEXCEPT

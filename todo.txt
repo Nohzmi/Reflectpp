@@ -1,6 +1,11 @@
-Serialization
-	Rework pour que ça fonctionne
-	Attention à la diférence map/set pour la serialization
-	Optimization en évitant les copy ce qui évite les new de variant (penser au std::move)
 Sample
-	Mise à jour du sample
+	Mise à jour du sample (classe avec tous les types fondamentales, list of list, list of struct)
+	
+Other:
+	Cas du std::string
+	Optimization avec reference wrapper
+
+V2:
+	Custom string
+	Custom smart_ptr
+	Function reflection

@@ -7,6 +7,8 @@
 */
 
 #pragma once
+#include <utility>
+
 #include "details/core/forward.h"
 
 namespace reflectpp
@@ -15,7 +17,7 @@ namespace reflectpp
 	{
 		struct wrapper_data final
 		{
-			void* (*m_get)(void*) { nullptr };
+			std::pair<type_data*, void*> (*m_get)(void*) { nullptr };
 			type_data* m_value_type{ nullptr };
 		};
 	}

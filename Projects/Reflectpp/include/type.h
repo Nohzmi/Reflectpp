@@ -118,6 +118,11 @@ namespace reflectpp
 		*/
 		static std::vector<type> get_types() REFLECTPP_NOEXCEPT;
 
+		/**
+		* Returns a type object which represent the wrapped type
+		*/
+		type get_wrapped_type() const REFLECTPP_NOEXCEPT;
+
 		/*
 		* Returns whether or not this type represents an arithmetic type
 		*/
@@ -171,6 +176,12 @@ namespace reflectpp
 		* Returns whether or not this type is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type represents a wrapper type
+		* Wrapper: std::unique_ptr<T>, ...etc
+		*/
+		bool is_wrapper() const REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this type is valid

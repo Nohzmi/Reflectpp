@@ -4,13 +4,14 @@ namespace reflectpp
 {
 	namespace details
 	{
-		template<typename Class, typename Value>
+		template<typename Class>
 		REFLECTPP_INLINE auto wrapper_get() REFLECTPP_NOEXCEPT
 		{
-			return [](void* container) -> Value*
+			return [](void* container) -> std::pair<type_data*, void*>
 			{
 				auto obj{ static_cast<Class*>(container) };
-				return static_cast<void*>(get_smart_pointer_data(*obj).m_get(obj));
+				auto value{ get_smart_pointer_data(obj).m_get(obj) };
+				return std::make_pair(registry::get_instance().get_type(value), static_cast<void*>(value));
 			};
 		}
 	}

@@ -387,7 +387,8 @@ namespace reflectpp
 
 				if (created)
 				{
-					auto smart_pointer_data{ get_smart_pointer_data(T()) };
+					auto smart_pointer_obj{ T() };
+					auto smart_pointer_data{ get_smart_pointer_data(&smart_pointer_obj) };
 
 					if (smart_pointer_data.m_get == nullptr)
 					{
@@ -398,7 +399,7 @@ namespace reflectpp
 					using class_type = typename decltype(smart_pointer_data)::class_type;
 					using value_type = typename decltype(smart_pointer_data)::value_type;
 
-					data->m_get = wrapper_get<class_type, value_type>();
+					data->m_get = wrapper_get<class_type>();
 					data->m_value_type = add_type_impl<value_type>();
 				}
 

@@ -12,5 +12,7 @@ REGISTRATION
 	.property("DerivedValue3", &Derived::DerivedValue3)
 	.property("DerivedValue4", &Derived::DerivedValue4)
 	.property("TestValue", &Derived::TestValue)
-	.property("TestValue2", &Derived::TestValue2);
+	.property("TestValue2", &Derived::TestValue2)
+	.property("TestPtrBase", &Derived::TestPtrBase)
+	.property("TestPtrDerived", &Derived::TestPtrDerived);
 }

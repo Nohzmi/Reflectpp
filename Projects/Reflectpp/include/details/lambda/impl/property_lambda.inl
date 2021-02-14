@@ -42,7 +42,15 @@ namespace reflectpp
 			return [offset](void* object, void* value)
 			{
 				auto& set = *reinterpret_cast<decay<PropertyT>*>(static_cast<char*>(object) + offset);
-				set = *static_cast<decay<PropertyT>*>(value);
+
+				if constexpr (std::is_copy_constructible_v<PropertyT> || std::is_copy_assignable_v<PropertyT>)
+				{
+					set = *static_cast<decay<PropertyT>*>(value);
+				}
+				else
+				{
+					set = std::move(*static_cast<decay<PropertyT>*>(value));
+				}
 			};
 		}
 

@@ -34,6 +34,8 @@
             "key": "z"
         }
     ],
+    "TestPtrBase": null,
+    "TestPtrDerived": null,
     "TestValue": [
         115,
         111,

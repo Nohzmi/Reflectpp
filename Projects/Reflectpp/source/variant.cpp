@@ -182,6 +182,15 @@ namespace reflectpp
 		return is_sequential_container() ? variant_sequential_view({ false, m_data.m_type, m_data.m_value }) : variant_sequential_view();
 	}
 
+	variant variant::extract_wrapped_value() const REFLECTPP_NOEXCEPT
+	{
+		if (!get_type().is_wrapper())
+			return variant();
+
+		auto get{ m_data.m_type->m_wrapper->m_get(m_data.m_value) };
+		return variant({ false, get.first, get.second });
+	}
+
 	type variant::get_type() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? type(m_data.m_type) : type();

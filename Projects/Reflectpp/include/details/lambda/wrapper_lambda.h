@@ -14,7 +14,7 @@ namespace reflectpp
 {
 	namespace details
 	{
-		template<typename Class, typename Value>
+		template<typename Class>
 		REFLECTPP_INLINE auto wrapper_get() REFLECTPP_NOEXCEPT;
 	}
 }

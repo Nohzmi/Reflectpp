@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <map>
 #include <reflectpp.h>
+#include <utility>
 //#include <vld/vld.h>
 
 #include "details/core/registry.h"
@@ -194,6 +195,17 @@ int main()
 	object.DerivedValue4.emplace('x');
 	object.DerivedValue4.emplace('y');
 	object.DerivedValue4.emplace('z');
+	object.TestPtrBase = std::make_unique<Base>();
+	object.TestPtrDerived = std::move(std::make_unique<Derived>());
+	
+	auto wrapper_type = type::get(object.TestPtrDerived);
+	auto wrapper_obj = variant(object.TestPtrDerived);
+	std::cout << "type: " << wrapper_type.get_name() << std::endl;
+	std::cout << "is wrapper: " << wrapper_type.is_wrapper() << std::endl;
+	std::cout << "wrapped type: " << wrapper_type.get_wrapped_type().get_name() << std::endl;
+	std::cout << "extracted type: " << wrapper_obj.extract_wrapped_value().get_type().get_name() << std::endl;
+	auto hldqh = wrapper_obj.get_wrapped_value<Base>();
+	auto& hldqhs = wrapper_obj.get_wrapped_value<Derived>();
 
 	serializer s("test");
 	s.save(object);

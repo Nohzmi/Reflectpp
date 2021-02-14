@@ -11,6 +11,3 @@ Temp:
 V2:
 	Custom smart_ptr
 	Function reflection
-	
-	
-	0x0000017cad6cf960

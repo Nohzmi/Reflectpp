@@ -15,7 +15,10 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		REFLECTPP_INLINE auto get_smart_pointer_data(T) REFLECTPP_NOEXCEPT;
+		struct smart_pointer
+		{
+			REFLECTPP_INLINE static auto get_data() REFLECTPP_NOEXCEPT;
+		};
 
 		template<typename>
 		struct is_smart_pointer : std::false_type {};

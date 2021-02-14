@@ -9,8 +9,7 @@ namespace reflectpp
 		{
 			return [](void* container) -> std::pair<type_data*, void*>
 			{
-				auto obj{ static_cast<Class*>(container) };
-				auto value{ get_smart_pointer_data(obj).m_get(obj) };
+				auto value{ smart_pointer<Class>::get_data().m_get(static_cast<Class*>(container)) };
 				return std::make_pair(registry::get_instance().get_type(value), static_cast<void*>(value));
 			};
 		}

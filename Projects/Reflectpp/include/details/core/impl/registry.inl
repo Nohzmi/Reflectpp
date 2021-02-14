@@ -387,8 +387,7 @@ namespace reflectpp
 
 				if (created)
 				{
-					auto smart_pointer_obj{ T() };
-					auto smart_pointer_data{ get_smart_pointer_data(&smart_pointer_obj) };
+					auto smart_pointer_data{ smart_pointer<T>::get_data() };
 
 					if (smart_pointer_data.m_get == nullptr)
 					{

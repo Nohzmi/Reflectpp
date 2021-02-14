@@ -272,10 +272,20 @@ namespace reflectpp
 			else if (var.is_sequential_container())
 			{
 				auto view{ var.create_sequential_view() };
-				view.clear();
+				std::string str{  };
 
-				for (auto& it : j.get<std::string>())
-					view.insert(view.end(), it);
+				if (view.is_empty())
+				{
+					for (auto& it : str)
+						view.insert(view.end(), it);
+				}
+				else
+				{
+					view.set_size(str.size());
+
+					for (auto [it, i] = std::tuple{ str.begin(), 0u }; it != str.end(); ++it, ++i)
+						view.set_value(i, it);
+				}
 			}
 		}
 		else if (j.is_array())
@@ -283,7 +293,9 @@ namespace reflectpp
 			if (var.is_associative_container())
 			{
 				auto view{ var.create_associative_view() };
-				view.clear();
+				
+				if (!view.is_empty())
+					view.clear();
 
 				for (auto& it : j)
 				{
@@ -303,14 +315,27 @@ namespace reflectpp
 			else if (var.is_sequential_container())
 			{
 				auto view{ var.create_sequential_view() };
-				view.clear();
 
-				for (auto& it : j)
+				if (view.is_empty())
 				{
-					variant value_var{ view.get_value_type().create() };
-					load_type(value_var, it);
+					for (auto& it : j)
+					{
+						variant value_var{ view.get_value_type().create() };
+						load_type(value_var, it);
 
-					view.insert(view.end(), value_var);
+						view.insert(view.end(), value_var);
+					}
+				}
+				else
+				{
+					view.set_size(j.size());
+
+					for (auto [it, i] = std::tuple{ j.begin(), 0u }; it != j.end(); ++it, ++i)
+					{
+						variant value_var{ view.get_value(i) };
+						load_type(value_var, *it);
+						view.set_value(i, value_var);
+					}
 				}
 			}
 		}
@@ -343,7 +368,7 @@ namespace reflectpp
 					if (!j.contains(it.get_name()))
 						continue;
 
-					variant pvar{ it.get_type().create() };
+					variant pvar{ it.get_value(var) };
 					load_type(pvar, j.at(it.get_name()));
 
 					it.set_value(var, pvar);

@@ -3,9 +3,10 @@ Sample
 	
 Optimization:
 	Essayer les reference wrapper (à voir)
-	Eviter les allocation dans le load de la serialization
-	-> cas du load depuis rien et cas du load d'update !!!
-	final dans les data !
+	Serilization:
+		Eviter les copy
+		Cas du load des associative container moins opti
+		Clean serializer (diviser en fonction) -> généraliser les case avec set_size
 
 V2:
 	Cas des shared_ptr dans les custom smart pointer

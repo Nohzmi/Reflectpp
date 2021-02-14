@@ -222,7 +222,7 @@ int main()
 
 	Derived object2 = Derived();
 	object2.TestPtrBase.reset(new Derived());
-	s.load(object2);
+	s.load(object);
 
 	return EXIT_SUCCESS;
 }

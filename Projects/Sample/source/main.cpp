@@ -195,8 +195,10 @@ int main()
 	object.DerivedValue4.emplace('x');
 	object.DerivedValue4.emplace('y');
 	object.DerivedValue4.emplace('z');
-	object.TestPtrBase = std::make_unique<Base>();
-	object.TestPtrDerived = std::move(std::make_unique<Derived>());
+	Base* base0 = new Base();
+	Base* base1 = new Derived();
+	object.TestPtrBase.reset(base0);
+	object.TestPtrDerived.reset(base1);
 	
 	auto wrapper_type = type::get(object.TestPtrDerived);
 	auto wrapper_obj = variant(object.TestPtrDerived);
@@ -208,7 +210,7 @@ int main()
 	auto& hldqhs = wrapper_obj.get_wrapped_value<Derived>();
 
 	serializer s("test");
-	s.save(object);
+	//s.save(object);
 
 	Derived object2 = Derived();
 	s.load(object2);

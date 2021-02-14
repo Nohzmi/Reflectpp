@@ -35,4 +35,5 @@ public:
 	std::vector<std::vector<int>> TestValue2 = { {5, 6}, {12,13} };
 	std::unique_ptr<Base> TestPtrBase;
 	std::unique_ptr<Base> TestPtrDerived;
+	E_Alignment EnumValue = E_Alignment::AlignJustify;
 };

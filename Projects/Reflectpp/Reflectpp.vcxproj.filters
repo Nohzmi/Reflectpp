@@ -171,9 +171,6 @@
     <ClInclude Include="include\details\core\hasher.h">
       <Filter>include\details\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\sequence_container.h">
-      <Filter>include\details</Filter>
-    </ClInclude>
     <ClInclude Include="include\details\custom\associative_container.h">
       <Filter>include\details\custom</Filter>
     </ClInclude>
@@ -342,9 +339,6 @@
     </None>
     <None Include="include\details\core\impl\hasher.inl">
       <Filter>include\details\core\impl</Filter>
-    </None>
-    <None Include="include\details\sequence_container.inl">
-      <Filter>include\details</Filter>
     </None>
     <None Include="include\details\custom\impl\associative_container.inl">
       <Filter>include\details\custom\impl</Filter>

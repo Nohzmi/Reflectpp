@@ -14,5 +14,6 @@ REGISTRATION
 	.property("TestValue", &Derived::TestValue)
 	.property("TestValue2", &Derived::TestValue2)
 	.property("TestPtrBase", &Derived::TestPtrBase)
-	.property("TestPtrDerived", &Derived::TestPtrDerived);
+	.property("TestPtrDerived", &Derived::TestPtrDerived)
+	.property("EnumValue", &Derived::EnumValue);
 }

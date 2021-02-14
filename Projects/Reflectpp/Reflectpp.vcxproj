@@ -71,7 +71,6 @@
     <ClInclude Include="include\details\lambda\sequential_view_lambda.h" />
     <ClInclude Include="include\details\lambda\utility_lambda.h" />
     <ClInclude Include="include\details\lambda\wrapper_lambda.h" />
-    <ClInclude Include="include\details\sequence_container.h" />
     <ClInclude Include="include\enumeration.h" />
     <ClInclude Include="include\factory.h" />
     <ClInclude Include="include\instance.h" />
@@ -141,7 +140,6 @@
     <None Include="include\details\lambda\impl\sequential_view_lambda.inl" />
     <None Include="include\details\lambda\impl\utility_lambda.inl" />
     <None Include="include\details\lambda\impl\wrapper_lambda.inl" />
-    <None Include="include\details\sequence_container.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -6,6 +6,7 @@
 #include <iomanip>
 
 #include "argument.h"
+#include "enumeration.h"
 #include "instance.h"
 #include "property.h"
 #include "type.h"
@@ -19,7 +20,6 @@ namespace reflectpp
 	serializer::serializer(const char* path) REFLECTPP_NOEXCEPT :
 		m_path{ path }
 	{
-		
 	}
 
 	void serializer::save(instance object) const REFLECTPP_NOEXCEPT
@@ -150,6 +150,11 @@ namespace reflectpp
 			if (!j.is_array()) j = var.get_value<wchar_t>();
 			else j.emplace_back(var.get_value<wchar_t>());
 		}
+		else if (var.get_type().is_enumeration())
+		{
+			if (!j.is_array()) j = std::string(var.get_type().get_enumeration().value_to_name(var));
+			else j.emplace_back(std::string(var.get_type().get_enumeration().value_to_name(var)));
+		}
 		else if (var.is_associative_container())
 		{
 			j = json::array();
@@ -197,6 +202,15 @@ namespace reflectpp
 						save_type(it, *(j.end()-1));
 				}
 			}
+		}
+		else if (var.get_type().is_wrapper())
+		{
+			auto wrapper = var.extract_wrapped_value();
+
+			j = json::object();
+			j["type"] = wrapper.get_type().get_name();
+
+			save_type(wrapper, j["value"]);
 		}
 		else if (var.get_type().is_class())
 		{
@@ -250,6 +264,11 @@ namespace reflectpp
 				std::string str{ j.get<std::string>() };
 				var.get_value<char>() = str.at(0);
 			}
+			else if (var.get_type().is_enumeration())
+			{
+				std::string str{ j.get<std::string>() };
+				var = var.get_type().get_enumeration().name_to_value(str.c_str());
+			}
 			else if (var.is_sequential_container())
 			{
 				auto view{ var.create_sequential_view() };
@@ -297,15 +316,26 @@ namespace reflectpp
 		}
 		else if (j.is_object())
 		{
-			for (auto& it : var.get_type().get_properties())
+			if (var.get_type().is_wrapper())
 			{
-				if (!j.contains(it.get_name()))
-					continue;
+				////// TODO
+				auto type = type::get_by_name(j["type"].get<std::string>().c_str()).create();
+				load_type(type, j["value"]);
+				var = std::move(type);
+				//////
+			}
+			else
+			{
+				for (auto& it : var.get_type().get_properties())
+				{
+					if (!j.contains(it.get_name()))
+						continue;
 
-				variant pvar{ it.get_type().create() };
-				load_type(pvar, j.at(it.get_name()));
+					variant pvar{ it.get_type().create() };
+					load_type(pvar, j.at(it.get_name()));
 
-				it.set_value(var, pvar);
+					it.set_value(var, pvar);
+				}
 			}
 		}
 	}

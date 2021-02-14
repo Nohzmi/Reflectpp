@@ -34,8 +34,64 @@
             "key": "z"
         }
     ],
-    "TestPtrBase": null,
-    "TestPtrDerived": null,
+    "EnumValue": "AlignJustify",
+    "TestPtrBase": {
+        "type": "Base",
+        "value": {
+            "BaseValue0": 42.0,
+            "BaseValue1": {
+                "InternValue0": 43,
+                "InternValue1": 44
+            }
+        }
+    },
+    "TestPtrDerived": {
+        "type": "Derived",
+        "value": {
+            "BaseValue0": 0.0,
+            "BaseValue1": {
+                "InternValue0": 0,
+                "InternValue1": 0
+            },
+            "DerivedValue0": 0.0,
+            "DerivedValue1": {
+                "InternValue0": 0,
+                "InternValue1": 0
+            },
+            "DerivedValue2": [],
+            "DerivedValue3": [],
+            "DerivedValue4": [],
+            "EnumValue": "AlignJustify",
+            "TestPtrBase": {
+                "type": "",
+                "value": null
+            },
+            "TestPtrDerived": {
+                "type": "",
+                "value": null
+            },
+            "TestValue": [
+                115,
+                111,
+                109,
+                101,
+                116,
+                101,
+                120,
+                116
+            ],
+            "TestValue2": [
+                [
+                    5,
+                    6
+                ],
+                [
+                    12,
+                    13
+                ]
+            ]
+        }
+    },
     "TestValue": [
         115,
         111,

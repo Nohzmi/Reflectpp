@@ -135,11 +135,6 @@ namespace reflectpp
 		return types;
 	}
 
-	type type::get_wrapped_type() const REFLECTPP_NOEXCEPT
-	{
-		return is_wrapper() ? type(m_data->m_wrapper->m_value_type) : type();
-	}
-
 	bool type::is_arithmetic() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? m_data->m_is_arithmetic : false;
@@ -196,7 +191,7 @@ namespace reflectpp
 
 	bool type::is_wrapper() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() ? m_data->m_wrapper != nullptr : false;
+		return is_valid() ? m_data->m_wrapper_view != nullptr : false;
 	}
 
 	type::operator bool() const REFLECTPP_NOEXCEPT

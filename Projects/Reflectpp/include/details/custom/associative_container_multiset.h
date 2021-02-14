@@ -16,16 +16,16 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename Key>
-		struct associative_container<std::multiset<Key>>
+		struct associative_container<std::multiset<Key>> final
 		{
 			REFLECTPP_INLINE static auto get_data() REFLECTPP_NOEXCEPT;
 		};
 
 		template<typename Key>
-		struct is_associative_container<std::multiset<Key>> : std::true_type {};
+		struct is_associative_container<std::multiset<Key>> final : std::true_type {};
 
 		template<typename Key>
-		struct has_value_type<std::multiset<Key>> : std::false_type {};
+		struct has_value_type<std::multiset<Key>> final : std::false_type {};
 	}
 }
 

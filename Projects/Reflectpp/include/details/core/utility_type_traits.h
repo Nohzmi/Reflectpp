@@ -12,6 +12,7 @@
 #include <forward_list>
 #include <list>
 #include <map>
+#include <memory>
 #include <set>
 #include <type_traits>
 #include <unordered_map>
@@ -23,7 +24,7 @@ namespace reflectpp
 	namespace details
 	{
 		template <typename T>
-		class has_operator_equal
+		class has_operator_equal final
 		{
 		private:
 
@@ -42,32 +43,34 @@ namespace reflectpp
 		};
 
 		template<typename>
-		struct is_std_container : std::false_type {};
+		struct is_std_container final : std::false_type {};
 		template<typename T, size_t Size>
-		struct is_std_container<std::array<T, Size>> : std::true_type {};
+		struct is_std_container<std::array<T, Size>> final : std::true_type {};
 		template<typename T>
-		struct is_std_container<std::deque<T>> : std::true_type {};
+		struct is_std_container<std::deque<T>> final : std::true_type {};
 		template<typename T>
-		struct is_std_container<std::forward_list<T>> : std::true_type {};
+		struct is_std_container<std::forward_list<T>> final : std::true_type {};
 		template<typename T>
-		struct is_std_container<std::list<T>> : std::true_type {};
+		struct is_std_container<std::list<T>> final : std::true_type {};
 		template<typename Key, typename T>
-		struct is_std_container<std::map<Key, T>> : std::true_type {};
+		struct is_std_container<std::map<Key, T>> final : std::true_type {};
 		template<typename Key, typename T>
-		struct is_std_container<std::multimap<Key, T>> : std::true_type {};
+		struct is_std_container<std::multimap<Key, T>> final : std::true_type {};
 		template<typename Key>
-		struct is_std_container<std::multiset<Key>> : std::true_type {};
+		struct is_std_container<std::multiset<Key>> final : std::true_type {};
 		template<typename Key>
-		struct is_std_container<std::set<Key>> : std::true_type {};
-		template<typename Key, typename T>
-		struct is_std_container<std::unordered_map<Key, T>> : std::true_type {};
-		template<typename Key, typename T>
-		struct is_std_container<std::unordered_multimap<Key, T>> : std::true_type {};
-		template<typename Key>
-		struct is_std_container<std::unordered_multiset<Key>> : std::true_type {};
-		template<typename Key>
-		struct is_std_container<std::unordered_set<Key>> : std::true_type {};
+		struct is_std_container<std::set<Key>> final : std::true_type {};
 		template<typename T>
-		struct is_std_container<std::vector<T>> : std::true_type {};
+		struct is_std_container<std::unique_ptr<T>> final : std::true_type {};
+		template<typename Key, typename T>
+		struct is_std_container<std::unordered_map<Key, T>> final : std::true_type {};
+		template<typename Key, typename T>
+		struct is_std_container<std::unordered_multimap<Key, T>> final : std::true_type {};
+		template<typename Key>
+		struct is_std_container<std::unordered_multiset<Key>> final : std::true_type {};
+		template<typename Key>
+		struct is_std_container<std::unordered_set<Key>> final : std::true_type {};
+		template<typename T>
+		struct is_std_container<std::vector<T>> final : std::true_type {};
 	}
 }

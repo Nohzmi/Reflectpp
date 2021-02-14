@@ -29,7 +29,7 @@ namespace reflectpp
 			size_t m_size{ 0 };
 			type_info_data* m_type_info{ nullptr };
 			utility_data* m_utility{ nullptr };
-			wrapper_data* m_wrapper{ nullptr };
+			wrapper_view_data* m_wrapper_view{ nullptr };
 		};
 	}
 }

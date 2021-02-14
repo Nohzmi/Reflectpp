@@ -8,7 +8,7 @@
 
 #pragma once
 #include "details/core/macros.h"
-#include "custom_smart_pointer.h"
+#include "custom_wrapper.h"
 
 namespace reflectpp
 {
@@ -16,6 +16,9 @@ namespace reflectpp
 	{
 		template<typename Class>
 		REFLECTPP_INLINE auto wrapper_get() REFLECTPP_NOEXCEPT;
+
+		template<typename Class, typename Value>
+		REFLECTPP_INLINE auto wrapper_reset() REFLECTPP_NOEXCEPT;
 	}
 }
 

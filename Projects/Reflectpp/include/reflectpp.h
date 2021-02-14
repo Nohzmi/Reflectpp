@@ -11,7 +11,7 @@
 #include <argument.h>
 #include <custom_associative_container.h>
 #include <custom_sequence_container.h>
-#include <custom_smart_pointer.h>
+#include <custom_wrapper.h>
 #include <enumeration.h>
 #include <factory.h>
 #include <instance.h>
@@ -24,3 +24,4 @@
 #include <variant.h>
 #include <variant_associative_view.h>
 #include <variant_sequential_view.h>
+#include <variant_wrapper_view.h>

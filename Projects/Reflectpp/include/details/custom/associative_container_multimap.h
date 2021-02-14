@@ -16,16 +16,16 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename Key, typename T>
-		struct associative_container<std::multimap<Key, T>>
+		struct associative_container<std::multimap<Key, T>> final
 		{
 			REFLECTPP_INLINE static auto get_data() REFLECTPP_NOEXCEPT;
 		};
 
 		template<typename Key, typename T>
-		struct is_associative_container<std::multimap<Key, T>> : std::true_type {};
+		struct is_associative_container<std::multimap<Key, T>> final : std::true_type {};
 
 		template<typename Key, typename T>
-		struct has_value_type<std::multimap<Key, T>> : std::true_type {};
+		struct has_value_type<std::multimap<Key, T>> final : std::true_type {};
 	}
 }
 

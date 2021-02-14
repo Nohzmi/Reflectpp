@@ -89,9 +89,9 @@ namespace reflectpp
 		variant_sequential_view create_sequential_view() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Extracts a variant with the wrapped value
+		* Creates a wrapper_sequential_view from the containing value
 		*/
-		variant extract_wrapped_value() const REFLECTPP_NOEXCEPT;
+		variant_wrapper_view create_wrapper_view() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns the type of the stored value
@@ -113,12 +113,6 @@ namespace reflectpp
 		REFLECTPP_INLINE const T& get_value() const REFLECTPP_NOEXCEPT;
 
 		/**
-		* Returns a reference to the contained wrapped value as requested type
-		*/
-		template<typename T>
-		REFLECTPP_INLINE const T& get_wrapped_value() const REFLECTPP_NOEXCEPT;
-
-		/**
 		* Returns whether or not this type is an associative container
 		*/
 		bool is_associative_container() const REFLECTPP_NOEXCEPT;
@@ -138,6 +132,11 @@ namespace reflectpp
 		* Returns whether or not the stored a value is valid
 		*/
 		bool is_valid() const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type represents a wrapper type
+		*/
+		bool is_wrapper() const REFLECTPP_NOEXCEPT;
 
 		/**
 		* Returns whether or not the stored a value is valid

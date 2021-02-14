@@ -22,7 +22,7 @@ namespace reflectpp
 		struct type_info_data;
 		struct utility_data;
 		struct variant_data;
-		struct wrapper_data;
+		struct wrapper_view_data;
 	}
 
 	class argument;
@@ -37,4 +37,5 @@ namespace reflectpp
 	class variant;
 	class variant_associative_view;
 	class variant_sequential_view;
+	class variant_wrapper_view;
 }

@@ -11,7 +11,7 @@
 
 #include "custom_associative_container.h"
 #include "custom_sequence_container.h"
-#include "custom_smart_pointer.h"
+#include "custom_wrapper.h"
 
 namespace reflectpp
 {
@@ -21,20 +21,20 @@ namespace reflectpp
 		using decay = std::remove_pointer_t<std::decay_t<T>>;
 
 		template<typename T>
-		struct is_auto_register_type : std::bool_constant<
+		struct is_auto_register_type final : std::bool_constant<
 			std::is_arithmetic_v<T> ||
 			is_associative_container<T>::value ||
 			is_sequence_container<T>::value ||
-			is_smart_pointer<T>::value>
+			is_wrapper<T>::value>
 		{};
 
 		template<typename T>
-		struct is_enum_type : std::bool_constant<
+		struct is_enum_type final : std::bool_constant<
 			std::is_enum_v<T> && !std::is_convertible_v<T, int>>
 		{};
 
 		template<typename T>
-		struct is_valid_param : std::bool_constant<
+		struct is_valid_param final : std::bool_constant<
 			!std::is_array_v<T> &&
 			!std::is_null_pointer_v<T> &&
 			!std::is_pointer_v<std::remove_pointer_t<std::decay_t<T>>> &&
@@ -42,7 +42,7 @@ namespace reflectpp
 		{};
 
 		template<typename T>
-		struct is_valid_type : std::bool_constant<
+		struct is_valid_type final : std::bool_constant<
 			!std::is_array_v<T> &&
 			!std::is_const_v<T> &&
 			!std::is_null_pointer_v<T> &&

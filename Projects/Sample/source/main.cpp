@@ -200,19 +200,28 @@ int main()
 	object.TestPtrBase.reset(base0);
 	object.TestPtrDerived.reset(base1);
 	
-	auto wrapper_type = type::get(object.TestPtrDerived);
+	/*auto wrapper_view = variant(object.TestPtrDerived).create_wrapper_view();
+	wrapper_view.reset(nullptr);
+	std::cout << "type: " << wrapper_view.get_type().get_name() << std::endl;
+	std::cout << "wrapped type: " << wrapper_view.get_wrapped_type().get_name() << std::endl;
+	std::cout << "wrapped value: " << wrapper_view.get_wrapped_value().get_type().get_name() << std::endl;
+	std::cout << "valid: " << wrapper_view.is_valid() << std::endl;
+	std::cout << "empty: " << wrapper_view.is_empty() << std::endl;*/
+
+	/*auto wrapper_type = type::get(object.TestPtrDerived);
 	auto wrapper_obj = variant(object.TestPtrDerived);
 	std::cout << "type: " << wrapper_type.get_name() << std::endl;
 	std::cout << "is wrapper: " << wrapper_type.is_wrapper() << std::endl;
 	std::cout << "wrapped type: " << wrapper_type.get_wrapped_type().get_name() << std::endl;
 	std::cout << "extracted type: " << wrapper_obj.extract_wrapped_value().get_type().get_name() << std::endl;
 	auto hldqh = wrapper_obj.get_wrapped_value<Base>();
-	auto& hldqhs = wrapper_obj.get_wrapped_value<Derived>();
+	auto& hldqhs = wrapper_obj.get_wrapped_value<Derived>();*/
 
 	serializer s("test");
 	//s.save(object);
 
 	Derived object2 = Derived();
+	object2.TestPtrBase.reset(new Derived());
 	s.load(object2);
 
 	return EXIT_SUCCESS;

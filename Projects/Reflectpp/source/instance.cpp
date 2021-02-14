@@ -61,6 +61,12 @@ namespace reflectpp
 		m_variant = new variant({ false, data->m_type, data->m_value });
 	}
 
+	instance::instance(variant&& var) REFLECTPP_NOEXCEPT :
+		m_is_owner{ true },
+		m_variant{ new variant(std::move(var)) }
+	{
+	}
+
 	type instance::get_type() const REFLECTPP_NOEXCEPT
 	{
 		return m_variant != nullptr ? m_variant->get_type() : type();

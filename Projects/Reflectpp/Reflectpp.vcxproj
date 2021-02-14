@@ -21,14 +21,14 @@
   <ItemGroup>
     <ClInclude Include="include\argument.h" />
     <ClInclude Include="include\custom_associative_container.h" />
-    <ClInclude Include="include\custom_smart_pointer.h" />
+    <ClInclude Include="include\custom_wrapper.h" />
     <ClInclude Include="include\details\core\forward.h" />
     <ClInclude Include="include\details\core\hasher.h" />
     <ClInclude Include="include\details\core\log.hpp" />
     <ClInclude Include="include\details\core\macros.h" />
     <ClInclude Include="include\details\core\platform.h" />
     <ClInclude Include="include\details\core\reflectpp_cast_helper.h" />
-    <ClInclude Include="include\details\core\register_traits.h" />
+    <ClInclude Include="include\details\core\register_type_traits.h" />
     <ClInclude Include="include\details\core\registry.h" />
     <ClInclude Include="include\details\core\specifiers.h" />
     <ClInclude Include="include\details\core\type_info_helper.h" />
@@ -50,8 +50,8 @@
     <ClInclude Include="include\details\custom\sequence_container_forward_list.h" />
     <ClInclude Include="include\details\custom\sequence_container_list.h" />
     <ClInclude Include="include\details\custom\sequence_container_vector.h" />
-    <ClInclude Include="include\details\custom\smart_pointer.h" />
-    <ClInclude Include="include\details\custom\smart_pointer_unique_ptr.h" />
+    <ClInclude Include="include\details\custom\wrapper.h" />
+    <ClInclude Include="include\details\custom\wrapper_unique_ptr.h" />
     <ClInclude Include="include\details\data\associative_container_data.h" />
     <ClInclude Include="include\details\data\associative_view_data.h" />
     <ClInclude Include="include\details\data\enumeration_data.h" />
@@ -59,12 +59,12 @@
     <ClInclude Include="include\details\data\property_data.h" />
     <ClInclude Include="include\details\data\sequence_container_data.h" />
     <ClInclude Include="include\details\data\sequential_view_data.h" />
-    <ClInclude Include="include\details\data\smart_pointer_data.h" />
+    <ClInclude Include="include\details\data\wrapper_data.h" />
     <ClInclude Include="include\details\data\type_data.h" />
     <ClInclude Include="include\details\data\type_info_data.h" />
     <ClInclude Include="include\details\data\utility_data.h" />
     <ClInclude Include="include\details\data\variant_data.h" />
-    <ClInclude Include="include\details\data\wrapper_data.h" />
+    <ClInclude Include="include\details\data\wrapper_view_data.h" />
     <ClInclude Include="include\details\lambda\associative_view_lambda.h" />
     <ClInclude Include="include\details\lambda\factory_lambda.h" />
     <ClInclude Include="include\details\lambda\property_lambda.h" />
@@ -86,6 +86,7 @@
     <ClInclude Include="include\variant.h" />
     <ClInclude Include="include\variant_associative_view.h" />
     <ClInclude Include="include\variant_sequential_view.h" />
+    <ClInclude Include="include\variant_wrapper_view.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\argument.cpp" />
@@ -102,6 +103,7 @@
     <ClCompile Include="source\variant.cpp" />
     <ClCompile Include="source\variant_associative_view.cpp" />
     <ClCompile Include="source\variant_sequential_view.cpp" />
+    <ClCompile Include="source\variant_wrapper_view.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\details\core\impl\hasher.inl" />
@@ -124,8 +126,8 @@
     <None Include="include\details\custom\impl\sequence_container_forward_list.inl" />
     <None Include="include\details\custom\impl\sequence_container_list.inl" />
     <None Include="include\details\custom\impl\sequence_container_vector.inl" />
-    <None Include="include\details\custom\impl\smart_pointer.inl" />
-    <None Include="include\details\custom\impl\smart_pointer_unique_ptr.inl" />
+    <None Include="include\details\custom\impl\wrapper.inl" />
+    <None Include="include\details\custom\impl\wrapper_unique_ptr.inl" />
     <None Include="include\details\impl\argument.inl" />
     <None Include="include\details\impl\factory.inl" />
     <None Include="include\details\impl\instance.inl" />

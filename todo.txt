@@ -5,6 +5,7 @@ Optimization:
 	Essayer les reference wrapper (à voir)
 	Eviter les allocation dans le load de la serialization
 	-> cas du load depuis rien et cas du load d'update !!!
+	final dans les data !
 
 V2:
 	Cas des shared_ptr dans les custom smart pointer

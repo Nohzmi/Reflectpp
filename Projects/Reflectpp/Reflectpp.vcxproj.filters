@@ -135,9 +135,6 @@
     <ClInclude Include="include\details\lambda\associative_view_lambda.h">
       <Filter>include\details\lambda</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\core\register_traits.h">
-      <Filter>include\details\core</Filter>
-    </ClInclude>
     <ClInclude Include="include\details\core\registry.h">
       <Filter>include\details\core</Filter>
     </ClInclude>
@@ -225,23 +222,29 @@
     <ClInclude Include="include\custom_sequence_container.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\custom_smart_pointer.h">
+    <ClInclude Include="include\details\lambda\wrapper_lambda.h">
+      <Filter>include\details\lambda</Filter>
+    </ClInclude>
+    <ClInclude Include="include\variant_wrapper_view.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\custom\smart_pointer.h">
-      <Filter>include\details\custom</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\data\smart_pointer_data.h">
+    <ClInclude Include="include\details\data\wrapper_view_data.h">
       <Filter>include\details\data</Filter>
-    </ClInclude>
-    <ClInclude Include="include\details\custom\smart_pointer_unique_ptr.h">
-      <Filter>include\details\custom</Filter>
     </ClInclude>
     <ClInclude Include="include\details\data\wrapper_data.h">
       <Filter>include\details\data</Filter>
     </ClInclude>
-    <ClInclude Include="include\details\lambda\wrapper_lambda.h">
-      <Filter>include\details\lambda</Filter>
+    <ClInclude Include="include\details\custom\wrapper.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\custom\wrapper_unique_ptr.h">
+      <Filter>include\details\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\custom_wrapper.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\details\core\register_type_traits.h">
+      <Filter>include\details\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="source\details\core\registry.cpp">
       <Filter>source\details\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\variant_wrapper_view.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -388,14 +394,14 @@
     <None Include="include\details\custom\impl\sequence_container_basic_string.inl">
       <Filter>include\details\custom\impl</Filter>
     </None>
-    <None Include="include\details\custom\impl\smart_pointer.inl">
-      <Filter>include\details\custom\impl</Filter>
-    </None>
-    <None Include="include\details\custom\impl\smart_pointer_unique_ptr.inl">
-      <Filter>include\details\custom\impl</Filter>
-    </None>
     <None Include="include\details\lambda\impl\wrapper_lambda.inl">
       <Filter>include\details\lambda\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\wrapper.inl">
+      <Filter>include\details\custom\impl</Filter>
+    </None>
+    <None Include="include\details\custom\impl\wrapper_unique_ptr.inl">
+      <Filter>include\details\custom\impl</Filter>
     </None>
   </ItemGroup>
 </Project>

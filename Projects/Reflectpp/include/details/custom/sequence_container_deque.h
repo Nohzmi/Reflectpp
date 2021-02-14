@@ -16,13 +16,13 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		struct sequence_container<std::deque<T>>
+		struct sequence_container<std::deque<T>> final
 		{
 			REFLECTPP_INLINE static auto get_data() REFLECTPP_NOEXCEPT;
 		};
 
 		template<typename T>
-		struct is_sequence_container<std::deque<T>> : std::true_type {};
+		struct is_sequence_container<std::deque<T>> final : std::true_type {};
 	}
 }
 

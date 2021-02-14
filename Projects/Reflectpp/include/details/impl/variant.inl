@@ -43,15 +43,6 @@ namespace reflectpp
 	}
 
 	template<typename T>
-	REFLECTPP_INLINE const T& variant::get_wrapped_value() const REFLECTPP_NOEXCEPT
-	{
-		variant var{ extract_wrapped_value() };
-		var.convert<T>();
-
-		return var.get_value<T>();
-	}
-
-	template<typename T>
 	REFLECTPP_INLINE bool variant::is_type() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? details::registry::get_instance().get_type<T>() == m_data.m_type : false;

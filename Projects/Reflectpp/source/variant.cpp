@@ -6,6 +6,7 @@
 #include "type.h"
 #include "variant_associative_view.h"
 #include "variant_sequential_view.h"
+#include "variant_wrapper_view.h"
 
 namespace reflectpp
 {
@@ -182,13 +183,9 @@ namespace reflectpp
 		return is_sequential_container() ? variant_sequential_view({ false, m_data.m_type, m_data.m_value }) : variant_sequential_view();
 	}
 
-	variant variant::extract_wrapped_value() const REFLECTPP_NOEXCEPT
+	variant_wrapper_view variant::create_wrapper_view() const REFLECTPP_NOEXCEPT
 	{
-		if (!get_type().is_wrapper())
-			return variant();
-
-		auto get{ m_data.m_type->m_wrapper->m_get(m_data.m_value) };
-		return variant({ false, get.first, get.second });
+		return is_wrapper() ? variant_wrapper_view({ false, m_data.m_type, m_data.m_value }) : variant_wrapper_view();
 	}
 
 	type variant::get_type() const REFLECTPP_NOEXCEPT
@@ -209,6 +206,11 @@ namespace reflectpp
 	bool variant::is_valid() const REFLECTPP_NOEXCEPT
 	{
 		return m_data.m_value != nullptr && m_data.m_type != nullptr;
+	}
+
+	bool variant::is_wrapper() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data.m_type->m_wrapper_view != nullptr : false;
 	}
 
 	variant::operator bool() const REFLECTPP_NOEXCEPT

@@ -226,9 +226,9 @@ namespace reflectpp
 			return data;
 		}
 
-		wrapper_data* registry::get_wrapper_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
+		wrapper_view_data* registry::get_wrapper_view_impl(size_t id, bool& created) REFLECTPP_NOEXCEPT
 		{
-			for (auto& it : m_wrappers)
+			for (auto& it : m_wrapper_views)
 			{
 				if (it.first == id)
 				{
@@ -238,8 +238,8 @@ namespace reflectpp
 			}
 
 			created = true;
-			auto data{ new wrapper_data() };
-			m_wrappers.emplace(id, data);
+			auto data{ new wrapper_view_data() };
+			m_wrapper_views.emplace(id, data);
 			return data;
 		}
 	}

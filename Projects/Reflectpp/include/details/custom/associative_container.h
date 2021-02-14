@@ -15,16 +15,16 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		struct associative_container
+		struct associative_container final
 		{
 			REFLECTPP_INLINE static auto get_data() REFLECTPP_NOEXCEPT;
 		};
 
 		template<typename>
-		struct has_value_type : std::false_type {};
+		struct has_value_type final : std::false_type {};
 
 		template<typename>
-		struct is_associative_container : std::false_type {};
+		struct is_associative_container final : std::false_type {};
 	}
 }
 

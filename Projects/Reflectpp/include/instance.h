@@ -38,6 +38,12 @@ namespace reflectpp
 		instance(const variant& var) REFLECTPP_NOEXCEPT;
 
 		/**
+		* Creates an instance from a variant
+		* @param var
+		*/
+		instance(variant&& var) REFLECTPP_NOEXCEPT;
+
+		/**
 		* Create an instance from an object
 		* @param object
 		*/

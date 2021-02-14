@@ -7,18 +7,29 @@
 */
 
 #pragma once
-#include <utility>
-
-#include "details/core/forward.h"
 
 namespace reflectpp
 {
 	namespace details
 	{
+		template<typename Container = void, typename Value = void>
 		struct wrapper_data final
 		{
-			std::pair<type_data*, void*> (*m_get)(void*) { nullptr };
-			type_data* m_value_type{ nullptr };
+			using class_type = Container;
+			using value_type = Value;
+
+			value_type* (*m_get)(class_type* container) { nullptr };
+			void (*m_reset)(class_type* container, value_type* ptr) { nullptr };
+		};
+
+		template<typename Container>
+		struct wrapper_data<Container, void> final
+		{
+		};
+
+		template<>
+		struct wrapper_data<void, void> final
+		{
 		};
 	}
 }

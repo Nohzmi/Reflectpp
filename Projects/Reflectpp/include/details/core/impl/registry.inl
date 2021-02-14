@@ -258,7 +258,7 @@ namespace reflectpp
 				data->m_size = sizeof(T);
 				data->m_type_info = get_type_info<T>();
 				data->m_utility = get_utility_impl<T>();
-				data->m_wrapper = get_wrapper_impl<T>();
+				data->m_wrapper_view = get_wrapper_view_impl<T>();
 			}
 
 			return data;
@@ -300,8 +300,8 @@ namespace reflectpp
 					data->m_equal_range = associative_data.m_equal_range != nullptr ? associative_view_equal_range<class_type, key_type>() : nullptr;
 					data->m_erase = associative_data.m_erase != nullptr ? associative_view_erase<class_type, key_type>() : nullptr;
 					data->m_find = associative_data.m_find != nullptr ? associative_view_find<class_type, key_type>() : nullptr;
-					if constexpr (!has_value_type<class_type>::value) data->m_insert = associative_view_insert<class_type, iterator, key_type>();
-					else data->m_insert = associative_view_insert<class_type, iterator, key_type, typename decltype(associative_data)::value_type>();
+					if constexpr (!has_value_type<class_type>::value) data->m_insert = associative_data.m_insert != nullptr ? associative_view_insert<class_type, iterator, key_type>() : nullptr;
+					else data->m_insert = associative_data.m_insert != nullptr ? associative_view_insert<class_type, iterator, key_type, typename decltype(associative_data)::value_type>() : nullptr;
 					data->m_size = associative_view_size<class_type>();
 					data->m_key_type = add_type_impl<key_type>();
 					if constexpr (has_value_type<class_type>::value) data->m_value_type = add_type_impl<typename decltype(associative_data)::value_type>();
@@ -374,32 +374,33 @@ namespace reflectpp
 		}
 
 		template<typename T>
-		REFLECTPP_INLINE wrapper_data* registry::get_wrapper_impl() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE wrapper_view_data* registry::get_wrapper_view_impl() REFLECTPP_NOEXCEPT
 		{
-			if constexpr (!is_smart_pointer<T>::value)
+			if constexpr (!is_wrapper<T>::value)
 			{
 				return nullptr;
 			}
 			else
 			{
 				bool created{ false };
-				auto data{ get_wrapper_impl(type_id<T>(), created) };
+				auto data{ get_wrapper_view_impl(type_id<T>(), created) };
 
 				if (created)
 				{
-					auto smart_pointer_data{ smart_pointer<T>::get_data() };
+					auto wrapper_data{ wrapper<T>::get_data() };
 
-					if (smart_pointer_data.m_get == nullptr)
+					if (wrapper_data.m_get == nullptr)
 					{
 						REFLECTPP_LOG("get function not linked to custom smart pointer");
 						return nullptr;
 					}
 
-					using class_type = typename decltype(smart_pointer_data)::class_type;
-					using value_type = typename decltype(smart_pointer_data)::value_type;
+					using class_type = typename decltype(wrapper_data)::class_type;
+					using value_type = typename decltype(wrapper_data)::value_type;
 
 					data->m_get = wrapper_get<class_type>();
-					data->m_value_type = add_type_impl<value_type>();
+					data->m_reset = wrapper_data.m_reset != nullptr ? wrapper_reset<class_type, value_type>() : nullptr;
+					data->m_wrapped_type = add_type_impl<value_type>();
 				}
 
 				return data;

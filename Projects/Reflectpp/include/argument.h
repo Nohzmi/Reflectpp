@@ -44,6 +44,12 @@ namespace reflectpp
 		argument(const variant& var) REFLECTPP_NOEXCEPT;
 
 		/**
+		* Creates an argument from a variant
+		* @param var
+		*/
+		argument(variant&& var) REFLECTPP_NOEXCEPT;
+
+		/**
 		* Create an argument from an object
 		* @param object
 		*/

@@ -12,6 +12,7 @@
 #include "type.h"
 #include "variant_associative_view.h"
 #include "variant_sequential_view.h"
+#include "variant_wrapper_view.h"
 
 using json = nlohmann::json;
 
@@ -203,14 +204,13 @@ namespace reflectpp
 				}
 			}
 		}
-		else if (var.get_type().is_wrapper())
+		else if (var.is_wrapper())
 		{
-			auto wrapper = var.extract_wrapped_value();
+			auto value{ var.create_wrapper_view().get_wrapped_value() };
 
 			j = json::object();
-			j["type"] = wrapper.get_type().get_name();
-
-			save_type(wrapper, j["value"]);
+			j["type"] = value.get_type().get_name();
+			save_type(value, j["value"]);
 		}
 		else if (var.get_type().is_class())
 		{
@@ -316,13 +316,25 @@ namespace reflectpp
 		}
 		else if (j.is_object())
 		{
-			if (var.get_type().is_wrapper())
+			if (var.is_wrapper())
 			{
-				////// TODO
-				auto type = type::get_by_name(j["type"].get<std::string>().c_str()).create();
-				load_type(type, j["value"]);
-				var = std::move(type);
-				//////
+				if (!j.contains("type") || !j.contains("value"))
+					return;
+
+				auto view{ var.create_wrapper_view() };
+				auto loaded_type{ type::get_by_name(j.at("type").get<std::string>().c_str()) };
+				
+				if (view.is_empty() || view.get_wrapped_value().get_type() != loaded_type)
+				{
+					variant ptr_var{ loaded_type.create() };
+					load_type(ptr_var, j.at("value"));
+					view.reset(std::move(ptr_var));
+				}
+				else
+				{
+					variant ptr_var{ view.get_wrapped_value() };
+					load_type(ptr_var, j.at("value"));
+				}
 			}
 			else
 			{

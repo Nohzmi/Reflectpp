@@ -5,9 +5,9 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		REFLECTPP_INLINE auto smart_pointer<T>::get_data() REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto wrapper<T>::get_data() REFLECTPP_NOEXCEPT
 		{
-			return smart_pointer_data();
+			return wrapper_data();
 		}
 	}
 }

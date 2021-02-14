@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Nohzmi. All rights reserved.
 
 /**
-* @file register_traits.h
+* @file register_type_traits.h
 * @author Nohzmi
 * @version 1.0
 */
@@ -13,7 +13,7 @@ namespace reflectpp
 	namespace details
 	{
 		template <typename T>
-		class has_registered
+		class has_registered final
 		{
 		private:
 

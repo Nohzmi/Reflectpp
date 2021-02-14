@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename Key>
-		REFLECTPP_INLINE auto get_associative_container_data(std::unordered_multiset<Key>) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_container<std::unordered_multiset<Key>>::get_data() REFLECTPP_NOEXCEPT
 		{
 			using class_type = typename std::unordered_multiset<Key>;
 			using iterator = typename class_type::iterator;

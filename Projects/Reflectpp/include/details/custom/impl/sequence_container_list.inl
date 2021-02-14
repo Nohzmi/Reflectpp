@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		REFLECTPP_INLINE auto get_sequence_container_data(std::list<T>) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto sequence_container<std::list<T>>::get_data() REFLECTPP_NOEXCEPT
 		{
 			using class_type = typename std::list<T>;
 			using iterator = typename class_type::iterator;

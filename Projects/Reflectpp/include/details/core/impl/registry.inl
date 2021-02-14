@@ -283,7 +283,7 @@ namespace reflectpp
 				
 				if (created)
 				{
-					auto associative_data{ get_associative_container_data(T()) };
+					auto associative_data{ associative_container<T>::get_data() };
 
 					if (associative_data.m_begin == nullptr || associative_data.m_end == nullptr || associative_data.m_size == nullptr)
 					{
@@ -330,7 +330,7 @@ namespace reflectpp
 
 				if (created)
 				{
-					auto sequence_data{ get_sequence_container_data(T()) };
+					auto sequence_data{ sequence_container<T>::get_data() };
 
 					if (sequence_data.m_begin == nullptr || sequence_data.m_end == nullptr)
 					{

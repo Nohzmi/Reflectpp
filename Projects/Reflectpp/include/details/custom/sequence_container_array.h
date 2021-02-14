@@ -16,7 +16,10 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T, size_t Size>
-		REFLECTPP_INLINE auto get_sequence_container_data(std::array<T, Size>) REFLECTPP_NOEXCEPT;
+		struct sequence_container<std::array<T, Size>>
+		{
+			REFLECTPP_INLINE static auto get_data() REFLECTPP_NOEXCEPT;
+		};
 		
 		template<typename T, size_t Size>
 		struct is_sequence_container<std::array<T, Size>> : std::true_type {};

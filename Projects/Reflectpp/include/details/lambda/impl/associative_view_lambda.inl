@@ -10,7 +10,7 @@ namespace reflectpp
 			return [](void* container, size_t index) -> std::pair<void*, void*>
 			{
 				auto obj{ static_cast<Class*>(container) };
-				auto data{ get_associative_container_data(*obj) };
+				auto data{ associative_container<Class>::get_data() };
 
 				for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 				{
@@ -36,8 +36,7 @@ namespace reflectpp
 		{
 			return [](void* container)
 			{
-				auto obj{ static_cast<Class*>(container) };
-				get_associative_container_data(*obj).m_clear(obj);
+				associative_container<Class>::get_data().m_clear(static_cast<Class*>(container));
 			};
 		}
 
@@ -47,7 +46,7 @@ namespace reflectpp
 			return [](void* container, void* key)->std::pair<size_t, size_t>
 			{
 				auto obj{ static_cast<Class*>(container) };
-				auto data{ get_associative_container_data(*obj) };
+				auto data{ associative_container<Class>::get_data() };
 				auto range{ data.m_equal_range(obj, *static_cast<Key*>(key)) };
 
 				if (range.first == range.second)
@@ -92,8 +91,7 @@ namespace reflectpp
 		{
 			return [](void* container, void* key) -> size_t
 			{
-				auto obj{ static_cast<Class*>(container) };
-				return get_associative_container_data(*obj).m_erase(obj, *static_cast<Key*>(key));
+				return associative_container<Class>::get_data().m_erase(static_cast<Class*>(container), *static_cast<Key*>(key));
 			};
 		}
 
@@ -103,7 +101,7 @@ namespace reflectpp
 			return [](void* container, void* key) -> size_t
 			{
 				auto obj{ static_cast<Class*>(container) };
-				auto data{ get_associative_container_data(*obj) };
+				auto data{ associative_container<Class>::get_data() };
 				auto find{ data.m_find(obj, *static_cast<Key*>(key)) };
 
 				if (find == data.m_begin(obj))
@@ -123,7 +121,7 @@ namespace reflectpp
 			return [](void* container, void* key, void* value) -> std::pair<size_t, bool>
 			{
 				auto obj{ static_cast<Class*>(container) };
-				auto data{ get_associative_container_data(*obj) };
+				auto data{ associative_container<Class>::get_data() };
 				auto insert{ data.m_insert(obj, *static_cast<Key*>(key), value != nullptr ? *static_cast<Value*>(value) : Value()) };
 
 				for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
@@ -140,7 +138,7 @@ namespace reflectpp
 			return [](void* container, void* key, void*) -> std::pair<size_t, bool>
 			{
 				auto obj{ static_cast<Class*>(container) };
-				auto data{ get_associative_container_data(*obj) };
+				auto data{ associative_container<Class>::get_data() };
 				auto insert{ data.m_insert(obj, *static_cast<Key*>(key)) };
 
 				for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
@@ -156,8 +154,7 @@ namespace reflectpp
 		{
 			return [](void* container) -> size_t
 			{
-				auto obj{ static_cast<Class*>(container) };
-				return get_associative_container_data(*obj).m_size(obj);
+				return associative_container<Class>::get_data().m_size(static_cast<Class*>(container));
 			};
 		}
 	}

@@ -7,7 +7,7 @@ namespace reflectpp
 		template<typename T>
 		REFLECTPP_INLINE auto smart_pointer<T>::get_data() REFLECTPP_NOEXCEPT
 		{
-			return smart_pointer_data<void, void>();
+			return smart_pointer_data();
 		}
 	}
 }

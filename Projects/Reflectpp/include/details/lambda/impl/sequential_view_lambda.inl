@@ -9,8 +9,7 @@ namespace reflectpp
 		{
 			return [](void* container, size_t index, void* value)
 			{
-				auto obj{ static_cast<Class*>(container) };
-				get_sequence_container_data(*obj).m_at(obj, index) = *static_cast<Value*>(value);
+				sequence_container<Class>::get_data().m_at(static_cast<Class*>(container), index) = *static_cast<Value*>(value);
 			};
 		}
 
@@ -20,7 +19,7 @@ namespace reflectpp
 			return [](void* container, size_t index, void* value)
 			{
 				auto obj{ static_cast<Class*>(container) };
-				auto data{ get_sequence_container_data(*obj) };
+				auto data{ sequence_container<Class>::get_data() };
 
 				for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 				{
@@ -38,8 +37,7 @@ namespace reflectpp
 		{
 			return [](void* container, size_t index) -> void*
 			{
-				auto obj{ static_cast<Class*>(container) };
-				return static_cast<void*>(&get_sequence_container_data(*obj).m_at(obj, index));
+				return static_cast<void*>(&sequence_container<Class>::get_data().m_at(static_cast<Class*>(container), index));
 			};
 		}
 
@@ -49,7 +47,7 @@ namespace reflectpp
 			return [](void* container, size_t index) -> void*
 			{
 				auto obj{ static_cast<Class*>(container) };
-				auto data{ get_sequence_container_data(*obj) };
+				auto data{ sequence_container<Class>::get_data() };
 
 				for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 					if (i == index)
@@ -64,8 +62,7 @@ namespace reflectpp
 		{
 			return [](void* container)
 			{
-				auto obj{ static_cast<Class*>(container) };
-				get_sequence_container_data(*obj).m_clear(obj);
+				sequence_container<Class>::get_data().m_clear(static_cast<Class*>(container));
 			};
 		}
 
@@ -75,7 +72,7 @@ namespace reflectpp
 			return [](void* container, size_t index)
 			{
 				auto obj{ static_cast<Class*>(container) };
-				auto data{ get_sequence_container_data(*obj) };
+				auto data{ sequence_container<Class>::get_data() };
 
 				for (auto [it, i] = std::tuple{ data.m_begin(obj), 0u }; it != data.m_end(obj); ++it, ++i)
 				{
@@ -95,7 +92,7 @@ namespace reflectpp
 			{
 				auto obj{ static_cast<Class*>(container) };
 				auto val{ static_cast<Value*>(value) };
-				auto data{ get_sequence_container_data(*obj) };
+				auto data{ sequence_container<Class>::get_data() };
 
 				bool has_insert{ false };
 				size_t i{ 0 };
@@ -120,8 +117,7 @@ namespace reflectpp
 		{
 			return [](void* container, size_t size)
 			{
-				auto obj{ static_cast<Class*>(container) };
-				get_sequence_container_data(*obj).m_resize(obj, size);
+				sequence_container<Class>::get_data().m_resize(static_cast<Class*>(container), size);
 			};
 		}
 
@@ -130,8 +126,7 @@ namespace reflectpp
 		{
 			return [](void* container) -> size_t
 			{
-				auto obj{ static_cast<Class*>(container) };
-				return get_sequence_container_data(*obj).m_size(obj);
+				return sequence_container<Class>::get_data().m_size(static_cast<Class*>(container));
 			};
 		}
 

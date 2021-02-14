@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename T>
-		REFLECTPP_INLINE auto get_associative_container_data(T) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_container<T>::get_data() REFLECTPP_NOEXCEPT
 		{
 			return associative_container_data();
 		}

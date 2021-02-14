@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename Key>
-		REFLECTPP_INLINE auto get_associative_container_data(std::set<Key>) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_container<std::set<Key>>::get_data() REFLECTPP_NOEXCEPT
 		{
 			using class_type = typename std::set<Key>;
 			using iterator = typename class_type::iterator;

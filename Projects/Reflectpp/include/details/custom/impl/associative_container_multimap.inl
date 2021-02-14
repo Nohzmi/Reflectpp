@@ -5,7 +5,7 @@ namespace reflectpp
 	namespace details
 	{
 		template<typename Key, typename T>
-		REFLECTPP_INLINE auto get_associative_container_data(std::multimap<Key, T>) REFLECTPP_NOEXCEPT
+		REFLECTPP_INLINE auto associative_container<std::multimap<Key, T>>::get_data() REFLECTPP_NOEXCEPT
 		{
 			using class_type = typename std::multimap<Key, T>;
 			using iterator = typename class_type::iterator;

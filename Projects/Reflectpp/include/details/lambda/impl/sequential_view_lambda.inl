@@ -9,7 +9,14 @@ namespace reflectpp
 		{
 			return [](void* container, size_t index, void* value)
 			{
-				sequence_container<Class>::get_data().m_at(static_cast<Class*>(container), index) = *static_cast<Value*>(value);
+				if constexpr (std::is_copy_constructible_v<Value> || std::is_copy_assignable_v<Value>) // TODO
+				{
+					sequence_container<Class>::get_data().m_at(static_cast<Class*>(container), index) = *static_cast<Value*>(value);
+				}
+				else
+				{
+					sequence_container<Class>::get_data().m_at(static_cast<Class*>(container), index) = std::move(*static_cast<Value*>(value));
+				}
 			};
 		}
 
@@ -25,7 +32,14 @@ namespace reflectpp
 				{
 					if (i == index)
 					{
-						*it = *static_cast<Value*>(value);
+						if constexpr (std::is_copy_constructible_v<Value> || std::is_copy_assignable_v<Value>) // TODO
+						{
+							*it = *static_cast<Value*>(value);
+						}
+						else
+						{
+							*it = std::move(*static_cast<Value*>(value));
+						}
 						break;
 					}
 				}
@@ -101,14 +115,14 @@ namespace reflectpp
 				{
 					if (i == index)
 					{
-						data.m_insert(obj, it, *val);
+						data.m_insert(obj, it, std::move(*val)); // TODO
 						has_insert = true;
 						break;
 					}
 				}
 
 				if (!has_insert && i == index)
-					data.m_insert(obj, data.m_end(obj), *val);
+					data.m_insert(obj, data.m_end(obj), std::move(*val)); // TODO
 			};
 		}
 

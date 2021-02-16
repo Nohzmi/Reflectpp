@@ -17,7 +17,7 @@ namespace reflectpp
 
 	instance::instance(const instance& copy) :
 		m_is_owner{ copy.m_variant != nullptr },
-		m_variant{ copy.m_variant != nullptr ? new variant(*copy.m_variant) : nullptr }
+		m_variant{ copy.m_variant != nullptr ? new variant(*copy.m_variant) : nullptr } // TODO et copy de instance/variant
 	{
 	}
 

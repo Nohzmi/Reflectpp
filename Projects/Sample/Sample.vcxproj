@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -168,9 +168,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\base.h" />
-    <ClInclude Include="include\derived.h" />
-    <ClInclude Include="include\intern.h" />
+    <ClInclude Include="include\component.h" />
+    <ClInclude Include="include\example.h" />
+    <ClInclude Include="include\transform.h" />
     <ClInclude Include="include\window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -181,9 +181,9 @@
     <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="source\base.cpp" />
-    <ClCompile Include="source\derived.cpp" />
-    <ClCompile Include="source\intern.cpp" />
+    <ClCompile Include="source\component.cpp" />
+    <ClCompile Include="source\example.cpp" />
+    <ClCompile Include="source\transform.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\window.cpp" />
   </ItemGroup>

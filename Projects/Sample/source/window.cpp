@@ -65,7 +65,7 @@ Window::~Window()
 
 void Window::Update() noexcept
 {
-	m_Serializer.load(m_Base);
+	m_Serializer.load(m_Components);
 
 	while (!glfwWindowShouldClose(m_Window))
 	{
@@ -86,7 +86,7 @@ void Window::Update() noexcept
 		glfwPollEvents();
 	}
 
-	m_Serializer.save(m_Base);
+	m_Serializer.save(m_Components);
 }
 
 void Window::MenuWindow()
@@ -96,12 +96,12 @@ void Window::MenuWindow()
 	ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
 
 	if (ImGui::Button("Save"))
-		m_Serializer.save(m_Base);
+		m_Serializer.save(m_Components);
 
 	ImGui::SameLine();
 
 	if (ImGui::Button("Load"))
-		m_Serializer.load(m_Base);
+		m_Serializer.load(m_Components);
 
 	ImGui::ColorEdit3("clear color", (float*)&m_ClearColor);
 
@@ -116,11 +116,56 @@ void Window::InspectorWindow()
 {
 	ImGui::Begin("Inspector");
 
-	if (ImGui::TreeNodeEx("Base", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::BeginPopup("AddComponentPopup"))
 	{
-		DisplayType(m_Base);
-		ImGui::TreePop();
+		reflectpp::type base_type{ reflectpp::type::get<Component>() };
+
+		for (auto& it : base_type.get_derived_classes())
+		{
+			if (ImGui::MenuItem(it.get_name()))
+			{
+				auto view{ variant(m_Components).create_sequential_view() };
+				auto var = reflectpp::type::get<std::unique_ptr<Component>>().create();
+				var.create_wrapper_view().reset(it.create());
+				view.insert(view.end(), var);
+			}
+		}
+
+		ImGui::EndPopup();
 	}
+
+	m_Index = 0;
+
+	for (auto it = m_Components.begin(); it != m_Components.end(); ++it, ++m_Index)
+	{
+		ImGui::Separator();
+
+		reflectpp::type type{ reflectpp::type::get(*it) };
+
+		if (ImGui::TreeNodeEx(GetLabel(type.get_name()).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			if (ImGui::BeginPopupContextItem("RightClickInspectorOptions"))
+			{
+				if (ImGui::MenuItem("Remove Component"))
+				{
+					m_Components.erase(it);
+					ImGui::EndPopup();
+					ImGui::TreePop();
+					break;
+				}
+
+				ImGui::EndPopup();
+			}
+
+			DisplayType(*it->get());
+			ImGui::TreePop();
+		}
+	}
+
+	ImGui::Separator();
+
+	if (ImGui::Button("Add Component", ImVec2(-1, 0)))
+		ImGui::OpenPopup("AddComponentPopup");
 
 	ImGui::End();
 }
@@ -134,15 +179,17 @@ void Window::DisplayType(const reflectpp::variant& var)
 
 		variant pvar{ prop.get_value(var) };
 
-		if (pvar.is_type<int>())
+		if (pvar.is_type<bool>())
+			DisplayBool(var, prop, pvar);
+		else if (pvar.is_type<int>())
 			DisplayInt(var, prop, pvar);
-		else if (pvar.is_type<unsigned>())
-			DisplayUnsigned(var, prop, pvar);
 		else if (pvar.is_type<float>())
 			DisplayFloat(var, prop, pvar);
-		else if (pvar.is_type<double>())
-			DisplayFloat(var, prop, pvar);
-		else if (ImGui::TreeNodeEx(prop.get_name(), ImGuiTreeNodeFlags_DefaultOpen))
+		else if (pvar.get_type().is_enumeration())
+			DisplayEnum(var, prop, pvar);
+		else if (pvar.is_type<std::string>())
+			DisplayString(var, prop, pvar);
+		else if (ImGui::TreeNodeEx(GetLabel(prop.get_name()).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			DisplayType(pvar);
 			ImGui::TreePop();
@@ -150,70 +197,60 @@ void Window::DisplayType(const reflectpp::variant& var)
 	}
 }
 
-void Window::DisplayInt(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var)
+void Window::DisplayBool(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var)
 {
-	int value = var.get_value<int>();
+	bool value{ var.get_value<bool>() };
 
-	if (ImGui::DragInt(prop.get_name(), &value))
+	if (ImGui::Checkbox(GetLabel(prop.get_name()).c_str(), &value))
 		prop.set_value(instance, value);
 }
 
-void Window::DisplayUnsigned(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var)
+void Window::DisplayInt(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var)
 {
-	unsigned value = var.get_value<unsigned>();
+	int value{ var.get_value<int>() };
 
-	if (ImGui::DragInt(prop.get_name(), (int*)&value))
+	if (ImGui::DragInt(GetLabel(prop.get_name()).c_str(), &value))
 		prop.set_value(instance, value);
 }
 
-void Window::DisplayFloat(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var)
+void Window::DisplayFloat(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var)
 {
-	float value = var.get_value<float>();
+	float value{ var.get_value<float>() };
 
-	if (ImGui::DragFloat(prop.get_name(), &value))
+	if (ImGui::DragFloat(GetLabel(prop.get_name()).c_str(), &value))
 		prop.set_value(instance, value);
 }
 
-void Window::DisplayDouble(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var)
+void Window::DisplayEnum(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var)
 {
-	double value = var.get_value<double>();
+	reflectpp::enumeration e{ prop.get_type().get_enumeration() };
+	std::vector<std::string> items;
 
-	if (ImGui::DragFloat(prop.get_name(), (float*)&value))
-		prop.set_value(instance, value);
-}
+	for (auto& name : e.get_names())
+		items.emplace_back(name);
 
-/*
-void Window::SampleWindow()
-{
-	ImGui::Begin("Another Window");
-	ImGui::Text("Hello from another window!");
-	if (ImGui::Button("Close Me"))
-		int i;
-	ImGui::End();
+	std::string current_item{ e.value_to_name(var) };
 
-	bool show_demo_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
+	if (ImGui::BeginCombo(GetLabel(prop.get_name()).c_str(), current_item.c_str()))
 	{
-		static float f = 0.0f;
-		static int counter = 0;
+		for (auto& item : items)
+			if (ImGui::Selectable(item.c_str(), item == current_item))
+				prop.set_value(instance, e.name_to_value(item.c_str()));
 
-		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-		ImGui::Checkbox("Another Window", &show_another_window);
-
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++;
-		ImGui::SameLine();
-		ImGui::Text("counter = %d", counter);
-
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::End();
+		ImGui::EndCombo();
 	}
-}*/
+}
+
+void Window::DisplayString(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var)
+{
+	char buffer[1000];
+	std::memcpy(buffer, var.get_value<std::string>().c_str(), 1000);
+
+	if (ImGui::InputText(GetLabel(prop.get_name()).c_str(), buffer, 1000))
+		prop.set_value(instance, std::string(buffer));
+}
+
+std::string Window::GetLabel(const char* label) const
+{
+	return std::string(label) + std::string("##") + std::to_string(m_Index);
+}

@@ -21,13 +21,13 @@
     <ClInclude Include="include\window.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\derived.h">
+    <ClInclude Include="include\component.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\intern.h">
+    <ClInclude Include="include\example.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\base.h">
+    <ClInclude Include="include\transform.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,15 +50,6 @@
     <ClCompile Include="..\..\Dependencies\Include\imgui\imgui.cpp">
       <Filter>dependencies\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="source\derived.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\intern.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\base.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_draw.cpp">
       <Filter>dependencies\imgui</Filter>
     </ClCompile>
@@ -67,6 +58,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\Include\imgui\imgui_demo.cpp">
       <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\component.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\example.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\transform.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

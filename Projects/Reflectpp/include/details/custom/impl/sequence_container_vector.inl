@@ -38,9 +38,9 @@ namespace reflectpp
 				return container->erase(pos);
 			};
 
-			data.m_insert = [](class_type* container, iterator pos, const value_type& value) -> iterator
+			data.m_insert = [](class_type* container, iterator pos, value_type&& value) -> iterator // TODO
 			{
-				return container->insert(pos, value);
+				return container->insert(pos, std::move(value)); // TODO
 			};
 
 			data.m_resize = [](class_type* container, size_t count)

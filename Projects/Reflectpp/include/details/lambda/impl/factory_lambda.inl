@@ -25,7 +25,11 @@ namespace reflectpp
 		{
 			return [](void* object) -> void*
 			{
-				if constexpr (std::is_copy_constructible_v<T>)
+				if constexpr (std::is_move_constructible_v<T>) // TODO order
+				{
+					return new T(std::move(*static_cast<T*>(object)));
+				}
+				else if constexpr (std::is_copy_constructible_v<T>)
 				{
 					return new T(*static_cast<T*>(object));
 				}

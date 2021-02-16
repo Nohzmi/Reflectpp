@@ -8,13 +8,12 @@
 
 #pragma once
 #include <imgui/imgui.h>
-#include <property.h>
-#include <serializer.h>
-#include <variant.h>
+#include <reflectpp.h>
+#include <vector>
 
-#include "base.h"
-#include "derived.h"
-#include "intern.h"
+#include "component.h"
+#include "example.h"
+#include "transform.h"
 
 struct GLFWwindow;
 
@@ -37,14 +36,17 @@ private:
 	void InspectorWindow();
 
 	void DisplayType(const reflectpp::variant& var);
-	void DisplayInt(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var);
-	void DisplayUnsigned(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var);
-	void DisplayFloat(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var);
-	void DisplayDouble(const reflectpp::instance& instance, const reflectpp::property& prop, const reflectpp::variant& var);
+	void DisplayBool(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var);
+	void DisplayInt(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var);
+	void DisplayFloat(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var);
+	void DisplayEnum(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var);
+	void DisplayString(const reflectpp::variant& instance, const reflectpp::property& prop, const reflectpp::variant& var);
+	std::string GetLabel(const char* label) const;
 
 	GLFWwindow* m_Window{ nullptr };
 	ImVec4 m_ClearColor{ ImVec4(0.2f, 0.3f, 0.3f, 1.0f) };
+	int m_Index{ 0 };
 
 	reflectpp::serializer m_Serializer{ "sample" };
-	Base m_Base{ };
+	std::vector<std::unique_ptr<Component>> m_Components;
 };

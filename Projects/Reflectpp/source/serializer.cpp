@@ -208,9 +208,19 @@ namespace reflectpp
 		{
 			auto value{ var.create_wrapper_view().get_wrapped_value() };
 
-			j = json::object();
-			j["type"] = value.get_type().get_name();
-			save_type(value, j["value"]);
+			if (!j.is_array())
+			{
+				j = json::object();
+				j["type"] = value.get_type().get_name();
+				save_type(value, j["value"]);
+			}
+			else
+			{
+				json j_obj = json::object();
+				j_obj["type"] = value.get_type().get_name();
+				save_type(value, j_obj["value"]);
+				j.emplace_back(j_obj);
+			}
 		}
 		else if (var.get_type().is_class())
 		{
@@ -272,7 +282,7 @@ namespace reflectpp
 			else if (var.is_sequential_container())
 			{
 				auto view{ var.create_sequential_view() };
-				std::string str{  };
+				std::string str{ j.get<std::string>() };
 
 				if (view.is_empty())
 				{
@@ -284,7 +294,7 @@ namespace reflectpp
 					view.set_size(str.size());
 
 					for (auto [it, i] = std::tuple{ str.begin(), 0u }; it != str.end(); ++it, ++i)
-						view.set_value(i, it);
+						view.set_value(i, *it);
 				}
 			}
 		}

@@ -75,6 +75,9 @@ namespace reflectpp
 		if (m_data.m_type == target_type_data)
 			return true;
 
+		//if (target_type_data->m_wrapper_view != nullptr && target_type_data->m_wrapper_view->m_wrapped_type == m_data.m_type) // TODO
+		//	return true;
+
 		bool is_enum{ m_data.m_type->m_enumeration != nullptr || target_type_data->m_enumeration != nullptr };
 		bool is_arithmetic{ m_data.m_type->m_is_arithmetic || target_type_data->m_is_arithmetic };
 

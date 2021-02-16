@@ -24,7 +24,7 @@ namespace reflectpp
 			void (*m_clear)(class_type* container) { nullptr };
 			iterator (*m_end)(class_type* container) { nullptr };
 			iterator (*m_erase)(class_type* container, iterator pos) { nullptr };
-			iterator (*m_insert)(class_type* container, iterator pos, const value_type& value) { nullptr };
+			iterator (*m_insert)(class_type* container, iterator pos, value_type&& value) { nullptr }; // TODO
 			void (*m_resize)(class_type* container, size_t count) { nullptr };
 			size_t (*m_size)(class_type* container) { nullptr };
 		};

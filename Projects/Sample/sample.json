@@ -2,19 +2,11 @@
     {
         "type": "Example",
         "value": {
-            "BoolValue": true,
+            "BoolValue": false,
             "EnumValue": "First",
-            "FloatValue": -11.0,
-            "IntValue": 20,
-            "StringValue": "second"
-        }
-    },
-    {
-        "type": "Transform",
-        "value": {
-            "X": 46.0,
-            "Y": 42.0,
-            "Z": 36.0
+            "FloatValue": 59.0,
+            "IntValue": -36,
+            "StringValue": "someText"
         }
     }
 ]

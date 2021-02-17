@@ -56,6 +56,15 @@ namespace reflectpp
 	private:
 
 		void save_type(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+		void save_associative_container(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+		void save_boolean(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+		void save_class(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+		void save_enum(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+		void save_floating_point(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+		void save_integral(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+		void save_sequential_container(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+		void save_wrapper(const variant& var, nlohmann::json& j) const REFLECTPP_NOEXCEPT;
+
 		void load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT;
 
 		const char* m_path{ "default.json" };

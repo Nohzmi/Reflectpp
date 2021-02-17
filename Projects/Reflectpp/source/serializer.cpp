@@ -58,28 +58,79 @@ namespace reflectpp
 	void serializer::save_type(const variant& var, json& j) const REFLECTPP_NOEXCEPT
 	{
 		if (!var.is_valid())
-		{
 			return;
-		}
-		else if (var.is_type<bool>())
+
+		if (var.is_associative_container())
+			save_associative_container(var, j);
+		else if (var.get_type().is_boolean())
+			save_boolean(var, j);
+		else if (var.get_type().is_class())
+			save_class(var, j);
+		else if (var.get_type().is_enumeration())
+			save_enum(var, j);
+		else if (var.get_type().is_floating_point())
+			save_floating_point(var, j);
+		else if (var.get_type().is_integral())
+			save_integral(var, j);
+		else if (var.is_sequential_container())
+			save_sequential_container(var, j);
+		else if (var.is_wrapper())
+			save_wrapper(var, j);
+	}
+
+	void serializer::save_boolean(const variant& var, json& j) const REFLECTPP_NOEXCEPT
+	{
+		if (!j.is_array()) j = var.get_value<bool>();
+		else j.emplace_back(var.get_value<bool>());
+	}
+
+	void serializer::save_class(const variant& var, json& j) const REFLECTPP_NOEXCEPT
+	{
+		for (auto& it : var.get_type().get_properties())
 		{
-			if (!j.is_array()) j = var.get_value<bool>();
-			else j.emplace_back(var.get_value<bool>());
+			if ((it.get_specifiers() & specifiers::Serialized) == 0)
+				continue;
+
+			save_type(it.get_value(var), j[it.get_name()]);
+		}
+	}
+
+	void serializer::save_floating_point(const variant& var, json& j) const REFLECTPP_NOEXCEPT
+	{
+		if (var.is_type<double>())
+		{
+			if (!j.is_array()) j = var.get_value<double>();
+			else j.emplace_back(var.get_value<double>());
 		}
 		else if (var.is_type<float>())
 		{
 			if (!j.is_array()) j = var.get_value<float>();
 			else j.emplace_back(var.get_value<float>());
 		}
-		else if (var.is_type<double>())
-		{
-			if (!j.is_array()) j = var.get_value<double>();
-			else j.emplace_back(var.get_value<double>());
-		}
+		
 		else if (var.is_type<long double>())
 		{
 			if (!j.is_array()) j = var.get_value<long double>();
 			else j.emplace_back(var.get_value<long double>());
+		}
+	}
+
+	void serializer::save_integral(const variant& var, json& j) const REFLECTPP_NOEXCEPT
+	{
+		if (var.is_type<char>())
+		{
+			if (!j.is_array()) j = std::string(1, var.get_value<char>());
+			else j.emplace_back(std::string(1, var.get_value<char>()));
+		}
+		else if (var.is_type<char16_t>())
+		{
+			if (!j.is_array()) j = var.get_value<char16_t>();
+			else j.emplace_back(var.get_value<char16_t>());
+		}
+		else if (var.is_type<char32_t>())
+		{
+			if (!j.is_array()) j = var.get_value<char32_t>();
+			else j.emplace_back(var.get_value<char32_t>());
 		}
 		else if (var.is_type<int8_t>())
 		{
@@ -96,15 +147,15 @@ namespace reflectpp
 			if (!j.is_array()) j = var.get_value<int32_t>();
 			else j.emplace_back(var.get_value<int32_t>());
 		}
-		else if (var.is_type<long>())
-		{
-			if (!j.is_array()) j = var.get_value<long>();
-			else j.emplace_back(var.get_value<long>());
-		}
 		else if (var.is_type<int64_t>())
 		{
 			if (!j.is_array()) j = var.get_value<int64_t>();
 			else j.emplace_back(var.get_value<int64_t>());
+		}
+		else if (var.is_type<long>())
+		{
+			if (!j.is_array()) j = var.get_value<long>();
+			else j.emplace_back(var.get_value<long>());
 		}
 		else if (var.is_type<uint8_t>())
 		{
@@ -121,117 +172,85 @@ namespace reflectpp
 			if (!j.is_array()) j = var.get_value<uint32_t>();
 			else j.emplace_back(var.get_value<uint32_t>());
 		}
-		else if (var.is_type<unsigned long>())
-		{
-			if (!j.is_array()) j = var.get_value<unsigned long>();
-			else j.emplace_back(var.get_value<unsigned long>());
-		}
 		else if (var.is_type<uint64_t>())
 		{
 			if (!j.is_array()) j = var.get_value<uint64_t>();
 			else j.emplace_back(var.get_value<uint64_t>());
 		}
-		else if (var.is_type<char>())
+		else if (var.is_type<unsigned long>())
 		{
-			if (!j.is_array()) j = std::string(1, var.get_value<char>());
-			else j.emplace_back(std::string(1, var.get_value<char>()));
-		}
-		else if (var.is_type<char16_t>())
-		{
-			if (!j.is_array()) j = var.get_value<char16_t>();
-			else j.emplace_back(var.get_value<char16_t>());
-		}
-		else if (var.is_type<char32_t>())
-		{
-			if (!j.is_array()) j = var.get_value<char32_t>();
-			else j.emplace_back(var.get_value<char32_t>());
+			if (!j.is_array()) j = var.get_value<unsigned long>();
+			else j.emplace_back(var.get_value<unsigned long>());
 		}
 		else if (var.is_type<wchar_t>())
 		{
 			if (!j.is_array()) j = var.get_value<wchar_t>();
 			else j.emplace_back(var.get_value<wchar_t>());
 		}
-		else if (var.get_type().is_enumeration())
+	}
+
+	void serializer::save_enum(const variant& var, json& j) const REFLECTPP_NOEXCEPT
+	{
+		if (!j.is_array()) j = std::string(var.get_type().get_enumeration().value_to_name(var)); // TODO conversion string
+		else j.emplace_back(std::string(var.get_type().get_enumeration().value_to_name(var))); // TODO conversion string
+	}
+
+	void serializer::save_associative_container(const variant& var, json& j) const REFLECTPP_NOEXCEPT
+	{
+		auto view{ var.create_associative_view() };
+		auto j_array{ json::array() };
+
+		for (auto it : view)
 		{
-			if (!j.is_array()) j = std::string(var.get_type().get_enumeration().value_to_name(var));
-			else j.emplace_back(std::string(var.get_type().get_enumeration().value_to_name(var)));
+			auto j_object{ json::object() };
+			save_type(it.first, j_object["key"]);
+
+			if (!view.is_key_only_type())
+				save_type(it.second, j_object["value"]);
+
+			j_array.emplace_back(j_object);
 		}
-		else if (var.is_associative_container())
+
+		if (!j.is_array()) j = j_array;
+		else j.emplace_back(j_array);
+	}
+
+	void serializer::save_sequential_container(const variant& var, json& j) const REFLECTPP_NOEXCEPT
+	{
+		auto view{ var.create_sequential_view() };
+
+		if (view.get_value_type() == type::get<char>())
 		{
-			j = json::array();
-			auto view{ var.create_associative_view() };
+			std::string str;
 
 			for (auto it : view)
-			{
-				json obj = json::object();
-				save_type(it.first, obj["key"]);
+				str.push_back(it.get_value<char>());
 
-				if (!view.is_key_only_type())
-					save_type(it.second, obj["value"]);
-
-				j.emplace_back(obj);
-			}
+			if (!j.is_array()) j = str;
+			else j.emplace_back(str);
 		}
-		else if (var.is_sequential_container())
+		else
 		{
-			auto view{ var.create_sequential_view() };
-			
-			if (view.get_value_type() == type::get<char>())
-			{
-				std::string str;
+			auto j_array{ json::array() };
 
-				for (auto it : view)
-					str.push_back(it.get_value<char>());
+			for (auto it : view)
+				save_type(it, j_array);
 
-				if (!j.is_array()) j = str;
-				else j.emplace_back(str);
-			}
-			else
-			{
-				if (!j.is_array())
-				{
-					j = json::array();
-
-					for (auto it : view)
-						save_type(it, j);
-				}
-				else
-				{
-					j.emplace_back(json::array());
-
-					for (auto it : view)
-						save_type(it, *(j.end()-1));
-				}
-			}
+			if (!j.is_array()) j = j_array;
+			else j.emplace_back(j_array);
 		}
-		else if (var.is_wrapper())
-		{
-			auto value{ var.create_wrapper_view().get_wrapped_value() };
+	}
 
-			if (!j.is_array())
-			{
-				j = json::object();
-				j["type"] = value.get_type().get_name();
-				save_type(value, j["value"]);
-			}
-			else
-			{
-				json j_obj = json::object();
-				j_obj["type"] = value.get_type().get_name();
-				save_type(value, j_obj["value"]);
-				j.emplace_back(j_obj);
-			}
-		}
-		else if (var.get_type().is_class())
-		{
-			for (auto& it : var.get_type().get_properties())
-			{
-				if ((it.get_specifiers() & specifiers::Serialized) == 0)
-					continue;
+	void serializer::save_wrapper(const variant& var, json& j) const REFLECTPP_NOEXCEPT
+	{
+		auto value{ var.create_wrapper_view().get_wrapped_value() };
+		auto j_object{ json::object() };
 
-				save_type(it.get_value(var), j[it.get_name()]);
-			}
-		}
+		j_object["type"] = value.get_type().get_name();
+		save_type(value, j_object["value"]);
+
+		if (!j.is_array()) j = j_object;
+		else j.emplace_back(j_object);
 	}
 
 	void serializer::load_type(variant& var, const nlohmann::json& j) const REFLECTPP_NOEXCEPT

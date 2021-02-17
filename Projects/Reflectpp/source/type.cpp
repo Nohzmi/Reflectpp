@@ -159,12 +159,12 @@ namespace reflectpp
 
 	bool type::is_boolean() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() ? !m_data->m_is_boolean : false;
+		return is_valid() ? m_data->m_is_boolean : false;
 	}
 
 	bool type::is_class() const REFLECTPP_NOEXCEPT
 	{
-		return is_valid() ? !m_data->m_is_arithmetic : false;
+		return !is_arithmetic() && !is_associative_container() && !is_enumeration() && !is_sequential_container() && !is_wrapper();
 	}
 
 	bool type::is_derived_of(const type& other) const REFLECTPP_NOEXCEPT

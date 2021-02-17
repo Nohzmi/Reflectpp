@@ -128,7 +128,7 @@ namespace reflectpp
 #pragma warning(push)
 #pragma warning(disable: 4251)
 
-			std::tuple<bool, float, double, long double, int8_t, int16_t, int32_t, long, int64_t, uint8_t, uint16_t, uint32_t, unsigned long, uint64_t, char, char16_t, char32_t, wchar_t> m_arithmetic_types;
+			std::tuple<bool, char, char16_t, char32_t, double, float, int8_t, int16_t, int32_t, int64_t, long, long double, uint8_t, uint16_t, uint32_t, uint64_t, unsigned long, wchar_t> m_arithmetic_types;
 			std::unordered_map<size_t, std::unique_ptr<associative_view_data>> m_associative_views;
 			std::unordered_map<size_t, std::unique_ptr<enumeration_data>> m_enumerations;
 			std::unordered_map<size_t, std::unique_ptr<factory_data>> m_factories;

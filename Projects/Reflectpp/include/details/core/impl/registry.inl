@@ -254,6 +254,9 @@ namespace reflectpp
 				data->m_associative_view = get_associative_view_impl<T>();
 				data->m_factory = get_factory<T>();
 				data->m_is_arithmetic = std::is_arithmetic_v<T>;
+				data->m_is_boolean = std::is_same_v<T, bool>;
+				data->m_is_floating_point = std::is_floating_point_v<T>;
+				data->m_is_integral = std::is_integral_v<T> && &&!std::is_same_v<T, bool>;
 				data->m_sequential_view = get_sequential_view_impl<T>();
 				data->m_size = sizeof(T);
 				data->m_type_info = get_type_info<T>();

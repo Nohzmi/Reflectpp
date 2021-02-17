@@ -141,6 +141,11 @@ namespace reflectpp
 		bool is_base_of(const type& other) const REFLECTPP_NOEXCEPT;
 
 		/*
+		* Returns whether or not this type represents a boolean type
+		*/
+		bool is_boolean() const REFLECTPP_NOEXCEPT;
+
+		/*
 		* Returns whether or not this type represents a class
 		*/
 		bool is_class() const REFLECTPP_NOEXCEPT;
@@ -161,6 +166,16 @@ namespace reflectpp
 		* Returns whether or not the given type represents an enumeration
 		*/
 		bool is_enumeration() const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type represents a floating-point type
+		*/
+		bool is_floating_point() const REFLECTPP_NOEXCEPT;
+
+		/*
+		* Returns whether or not this type represents an integral type
+		*/
+		bool is_integral() const REFLECTPP_NOEXCEPT;
 
 		/*
 		* Returns whether or not this type is a sequential container

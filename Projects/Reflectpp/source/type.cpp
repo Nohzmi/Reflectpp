@@ -157,6 +157,11 @@ namespace reflectpp
 		return false;
 	}
 
+	bool type::is_boolean() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? !m_data->m_is_boolean : false;
+	}
+
 	bool type::is_class() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? !m_data->m_is_arithmetic : false;
@@ -177,6 +182,16 @@ namespace reflectpp
 	bool type::is_enumeration() const REFLECTPP_NOEXCEPT
 	{
 		return is_valid() ? m_data->m_enumeration != nullptr : false;
+	}
+
+	bool type::is_floating_point() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data->m_is_floating_point : false;
+	}
+
+	bool type::is_integral() const REFLECTPP_NOEXCEPT
+	{
+		return is_valid() ? m_data->m_is_integral : false;
 	}
 
 	bool type::is_sequential_container() const REFLECTPP_NOEXCEPT

@@ -24,6 +24,9 @@ namespace reflectpp
 			factory_data* m_factory{ nullptr };
 			size_t m_hierarchy_id{ 0 };
 			bool m_is_arithmetic{ false };
+			bool m_is_boolean{ false };
+			bool m_is_floating_point{ false };
+			bool m_is_integral{ false };
 			std::vector<property_data*> m_properties;
 			sequential_view_data* m_sequential_view{ nullptr };
 			size_t m_size{ 0 };
